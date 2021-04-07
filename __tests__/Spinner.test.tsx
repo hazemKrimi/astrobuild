@@ -1,0 +1,1 @@
+describe('Spinner test suite', () => {});
