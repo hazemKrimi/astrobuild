@@ -1,37 +1,65 @@
 module.exports = {
-	extends: [
-		'airbnb-typescript',
-		'airbnb/hooks',
-		'plugin:@typescript-eslint/recommended',
-		'plugin:jest/recommended',
-		'plugin:prettier/recommended'
-	],
-	plugins: ['react', '@typescript-eslint', 'jest'],
-	env: {
-		browser: true,
-		es6: true,
-		jest: true
-	},
-	globals: {
-		Atomics: 'readonly',
-		SharedArrayBuffer: 'readonly'
-	},
-	parser: '@typescript-eslint/parser',
-	parserOptions: {
-		ecmaFeatures: {
-			jsx: true
-		},
-		ecmaVersion: 2018,
-		sourceType: 'module',
-		project: './tsconfig.json'
-	},
-	rules: {
-		'linebreak-style': 'off',
-		'prettier/prettier': [
-			'error',
-			{
-				endOfLine: 'auto'
-			}
-		]
-	}
+  extends: [
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:jest/recommended',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  plugins: ['react', '@typescript-eslint', 'jest', 'prettier'],
+  env: {
+    browser: true,
+    es6: true,
+    jest: true,
+  },
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
+  },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    project: './tsconfig.json',
+  },
+  rules: {
+    'no-nested-ternary': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': [
+      'warn',
+      { allowShortCircuit: true, allowTernary: true },
+    ],
+    'react-hooks/exhaustive-deps': 1,
+    'import/no-cycle': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'import/prefer-default-export': 'off',
+    'no-prototype-builtins': 'off',
+    'no-plusplus': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 0,
+    'linebreak-style': 'off',
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        labelComponents: [],
+        labelAttributes: [],
+        controlComponents: [],
+        assert: 'either',
+        depth: 25,
+      },
+    ],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
+  },
 };
