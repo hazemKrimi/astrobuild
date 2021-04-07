@@ -1,0 +1,1 @@
+describe('Box test suite', () => {});
