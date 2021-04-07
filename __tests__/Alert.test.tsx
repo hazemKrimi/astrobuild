@@ -1,0 +1,1 @@
+describe('Alert test suite', () => {});
