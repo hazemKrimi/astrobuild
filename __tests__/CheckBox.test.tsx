@@ -1,0 +1,1 @@
+describe('CheckBox test suite', () => {});
