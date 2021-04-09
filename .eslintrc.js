@@ -35,6 +35,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 1,
     'import/no-cycle': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'react/require-default-props': 0,
     'import/prefer-default-export': 'off',
     'no-prototype-builtins': 'off',
     'no-plusplus': 'off',
