@@ -26,18 +26,22 @@ declare module 'styled-components' {
       client: {
         main: string;
         light: string;
+        dark: string;
       };
       productOwner: {
         main: string;
         light: string;
+        dark: string;
       };
       developer: {
         main: string;
         light: string;
+        dark: string;
       };
       admin: {
         main: string;
         light: string;
+        dark: string;
       };
     };
   }
