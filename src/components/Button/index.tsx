@@ -31,9 +31,9 @@ const Button = ({
       fullWidth={fullWidth}
       onClick={onClick}
     >
-      {iconLeft && iconLeft}
+      {iconLeft && <span className='icon left'>{iconLeft}</span>}
       {text}
-      {iconRight && iconRight}
+      {iconRight && <span className='icon right'>{iconRight}</span>}
     </Wrapper>
   );
 };
