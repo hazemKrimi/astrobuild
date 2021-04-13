@@ -1,4 +1,5 @@
 import Button from './Button';
 import Box from './Box';
+import Text from './Text';
 
-export { Box, Button };
+export { Button, Box, Text };
