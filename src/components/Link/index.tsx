@@ -4,7 +4,17 @@ import { Wrapper } from './styles';
 type LinkProps = {
   href: string;
   children?: React.ReactNode | JSX.Element | string;
-  color?: 'client' | 'productOwner' | 'developer' | 'admin' | string;
+  color?:
+    | 'client'
+    | 'productOwner'
+    | 'developer'
+    | 'admin'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'black'
+    | 'white'
+    | string;
   className?: string;
   iconLeft?: React.SVGProps<SVGSVGElement>;
   onClick?: () => void;
