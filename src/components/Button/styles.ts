@@ -33,6 +33,11 @@ export const Wrapper = styled.button<WrapperProps>`
     return '';
   }}
 
+  .icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .icon.left {
     margin-right: 0.5rem;
   }
@@ -110,14 +115,6 @@ export const Wrapper = styled.button<WrapperProps>`
 
           .icon svg path {
             stroke: #262628;
-          }
-
-          &:hover {
-            color: ${theme.colors.white.main};
-
-            .icon svg path {
-              stroke: ${theme.colors.white.main};
-            }
           }
         `;
       case 'outlined':
