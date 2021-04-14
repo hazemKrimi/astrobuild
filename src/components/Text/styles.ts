@@ -1,7 +1,17 @@
 import styled, { css } from 'styled-components';
 
 type WrapperProps = {
-  color?: 'client' | 'productOwner' | 'developer' | 'admin' | string;
+  color?:
+    | 'client'
+    | 'productOwner'
+    | 'developer'
+    | 'admin'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'black'
+    | 'white'
+    | string;
   align?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
   display?: 'initial' | 'block' | 'inline';
   gutterBottom?: boolean;

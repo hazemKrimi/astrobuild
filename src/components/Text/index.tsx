@@ -4,7 +4,17 @@ type TextProps = {
   children?: React.ReactNode | JSX.Element | string;
   className?: string;
   variant?: 'display' | 'headline' | 'title' | 'subheader' | 'body' | 'caption';
-  color?: 'client' | 'productOwner' | 'developer' | 'admin' | string;
+  color?:
+    | 'client'
+    | 'productOwner'
+    | 'developer'
+    | 'admin'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'black'
+    | 'white'
+    | string;
   align?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
   display?: 'initial' | 'block' | 'inline';
   gutterBottom?: boolean;
