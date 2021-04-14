@@ -1,7 +1,24 @@
+import { Link as RouterLink } from 'react-router-dom';
 import { Wrapper } from './styles';
 
-const Link = () => {
-  return <Wrapper></Wrapper>;
+type LinkProps = {
+  href: string;
+  children?: React.ReactNode | JSX.Element | string;
+  color?: 'client' | 'productOwner' | 'developer' | 'admin' | string;
+  className?: string;
+  iconLeft?: React.SVGProps<SVGSVGElement>;
+  onClick?: () => void;
+};
+
+const Link = ({ href, children, iconLeft, ...props }: LinkProps) => {
+  return (
+    <Wrapper {...props}>
+      <RouterLink to={href}>
+        {iconLeft && <span className='icon left'>{iconLeft}</span>}
+        {children}
+      </RouterLink>
+    </Wrapper>
+  );
 };
 
 export default Link;
