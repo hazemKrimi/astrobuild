@@ -1,7 +1,16 @@
 import styled, { css } from 'styled-components';
 
 type WrapperProps = {
-  color: 'client' | 'productOwner' | 'developer' | 'admin';
+  color:
+    | 'client'
+    | 'productOwner'
+    | 'developer'
+    | 'admin'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'black'
+    | 'white';
   size?: 'small' | 'big';
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
   iconLeft?: React.SVGProps<SVGSVGElement>;
