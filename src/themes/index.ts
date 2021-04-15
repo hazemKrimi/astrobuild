@@ -10,12 +10,24 @@ export const theme: DefaultTheme = {
       main: '#FFFFFF',
       light: '',
     },
+    gray: {
+      main: '#C2C9D1',
+      light: '',
+      dark: `linear-gradient(
+        rgba(0, 0, 0, .3),
+        rgba(0, 0, 0, .3)
+      ),
+      linear-gradient(
+        #C2C9D1,
+        #C2C9D1
+      )`,
+    },
     success: {
       main: '',
       light: '',
     },
     error: {
-      main: '',
+      main: '#F03738',
       light: '',
     },
     warning: {
