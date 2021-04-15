@@ -8,9 +8,7 @@ type WrapperProps = {
     | 'admin'
     | 'success'
     | 'warning'
-    | 'error'
-    | 'black'
-    | 'white';
+    | 'error';
   size?: 'small' | 'big';
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
   iconLeft?: React.SVGProps<SVGSVGElement>;
