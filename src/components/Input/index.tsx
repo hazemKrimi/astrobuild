@@ -21,7 +21,6 @@ type InputProps = {
   type?: 'text' | 'email' | 'password' | 'file' | 'number';
   placeholder?: string;
   fullWidth?: boolean;
-  multiline?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
