@@ -17,7 +17,7 @@ type SelectProps = {
   errorMessage?: string;
   options: Array<{ value: any; label: string }>;
   value: string;
-  label: string;
+  label?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
