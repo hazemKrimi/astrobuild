@@ -15,7 +15,7 @@ type WrapperProps = {
   error?: boolean;
   errorMessage?: string;
   type?: 'text' | 'email' | 'password' | 'file' | 'number';
-  label: string;
+  label?: string;
   fullWidth?: boolean;
 };
 

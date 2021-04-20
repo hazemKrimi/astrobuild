@@ -17,7 +17,7 @@ type InputProps = {
   error?: boolean;
   errorMessage?: string;
   value: string;
-  label: string;
+  label?: string;
   type?: 'text' | 'email' | 'password' | 'file' | 'number';
   placeholder?: string;
   fullWidth?: boolean;
@@ -28,6 +28,7 @@ const Input = ({
   type = 'text',
   color = 'client',
   label,
+  placeholder,
   value,
   onChange,
   error,
@@ -54,7 +55,13 @@ const Input = ({
             <Upload />
           </span>
         )}
-        <input type={type} value={value} onChange={onChange} accept='image/*' />
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          accept='image/*'
+          placeholder={placeholder}
+        />
       </div>
     </Wrapper>
   );
