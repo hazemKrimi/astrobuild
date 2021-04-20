@@ -16,7 +16,7 @@ type TextAreaProps = {
   error?: boolean;
   errorMessage?: string;
   value: string;
-  label: string;
+  label?: string;
   placeholder?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -25,6 +25,7 @@ type TextAreaProps = {
 const TextArea = ({
   color = 'client',
   label,
+  placeholder,
   value,
   onChange,
   error,
@@ -46,7 +47,12 @@ const TextArea = ({
         )}
       </div>
       <div className='textarea'>
-        <textarea rows={10} value={value} onChange={onChange} />
+        <textarea
+          rows={10}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
       </div>
     </Wrapper>
   );

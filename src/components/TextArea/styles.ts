@@ -14,7 +14,7 @@ type WrapperProps = {
     | 'white';
   error?: boolean;
   errorMessage?: string;
-  label: string;
+  label?: string;
   fullWidth?: boolean;
 };
 
