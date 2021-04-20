@@ -5,5 +5,6 @@ import Link from './Link';
 import Input from './Input';
 import TextArea from './TextArea';
 import Select from './Select';
+import ContextMenu from './ContextMenu';
 
-export { Button, Box, Text, Link, Input, TextArea, Select };
+  ContextMenu,
