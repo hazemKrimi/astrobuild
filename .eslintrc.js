@@ -42,9 +42,11 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/self-closing-comp': 0,
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    '@typescript-eslint/no-explicit-any': 0,
     'linebreak-style': 'off',
     'jsx-a11y/label-has-associated-control': [
       'error',
@@ -56,6 +58,7 @@ module.exports = {
         depth: 25,
       },
     ],
+    'jsx-a11y/control-has-associated-label': 0,
     'prettier/prettier': [
       'error',
       {
