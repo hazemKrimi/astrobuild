@@ -5,6 +5,8 @@ import Link from './Link';
 import Input from './Input';
 import TextArea from './TextArea';
 import Select from './Select';
+import Search from './Search';
 import ContextMenu from './ContextMenu';
 
+  Search,
   ContextMenu,
