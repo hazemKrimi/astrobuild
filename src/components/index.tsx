@@ -6,7 +6,9 @@ import Input from './Input';
 import TextArea from './TextArea';
 import Select from './Select';
 import Search from './Search';
+import Avatar from './Avatar';
 import ContextMenu from './ContextMenu';
 
   Search,
+  Avatar,
   ContextMenu,
