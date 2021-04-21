@@ -4,15 +4,12 @@ export const theme: DefaultTheme = {
   colors: {
     black: {
       main: '#000000',
-      light: '',
     },
     white: {
       main: '#FFFFFF',
-      light: '',
     },
     gray: {
       main: '#C2C9D1',
-      light: '',
       dark: `linear-gradient(
         rgba(0, 0, 0, .3),
         rgba(0, 0, 0, .3)
@@ -23,16 +20,37 @@ export const theme: DefaultTheme = {
       )`,
     },
     success: {
-      main: '',
-      light: '',
+      main: '#3CC13B',
+      light: `linear-gradient(
+        rgba(255, 255, 255, .75),
+        rgba(255, 255, 255, .75)
+      ),
+      linear-gradient(
+        #3CC13B,
+        #3CC13B
+      )`,
     },
     error: {
       main: '#F03738',
-      light: '',
+      light: `linear-gradient(
+        rgba(255, 255, 255, .75),
+        rgba(255, 255, 255, .75)
+      ),
+      linear-gradient(
+        #F03738,
+        #F03738
+      )`,
     },
     warning: {
-      main: '',
-      light: '',
+      main: '#F3BB1C',
+      light: `linear-gradient(
+        rgba(255, 255, 255, .75),
+        rgba(255, 255, 255, .75)
+      ),
+      linear-gradient(
+        #F3BB1C,
+        #F3BB1C
+      )`,
     },
     client: {
       main: '#5F6CAD',
