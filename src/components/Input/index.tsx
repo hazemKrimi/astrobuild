@@ -18,6 +18,7 @@ type InputProps = {
   errorMessage?: string;
   value: string;
   label?: string;
+  name: string;
   type?: 'text' | 'email' | 'password' | 'file' | 'number';
   placeholder?: string;
   fullWidth?: boolean;
@@ -28,6 +29,7 @@ const Input = ({
   type = 'text',
   color = 'client',
   label,
+  name,
   placeholder,
   value,
   onChange,
@@ -59,7 +61,8 @@ const Input = ({
           type={type}
           value={value}
           onChange={onChange}
-          accept='image/*'
+          name={name}
+          accept={type === 'file' ? 'image/*' : undefined}
           placeholder={placeholder}
         />
       </div>
