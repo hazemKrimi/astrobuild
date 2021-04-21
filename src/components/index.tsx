@@ -10,6 +10,7 @@ import Search from './Search';
 import Avatar from './Avatar';
 import ContextMenu from './ContextMenu';
 import Spinner from './Spinner';
+import Alert from './Alert';
 
 export {
   Button,
@@ -24,4 +25,5 @@ export {
   Avatar,
   ContextMenu,
   Spinner,
+  Alert,
 };
