@@ -17,6 +17,7 @@ type SelectProps = {
   errorMessage?: string;
   options: Array<{ value: any; label: string }>;
   value: string;
+  name: string;
   label?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -25,6 +26,7 @@ type SelectProps = {
 const Select = ({
   color = 'client',
   label,
+  name,
   value,
   options,
   onChange,
@@ -47,7 +49,7 @@ const Select = ({
         )}
       </div>
       <div className='select'>
-        <select value={value} onChange={onChange}>
+        <select value={value} name={name} onChange={onChange}>
           {options.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
