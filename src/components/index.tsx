@@ -11,6 +11,7 @@ import Avatar from './Avatar';
 import ContextMenu from './ContextMenu';
 import Spinner from './Spinner';
 import Alert from './Alert';
+import CheckBox from './CheckBox';
 
 export {
   Button,
@@ -26,4 +27,5 @@ export {
   ContextMenu,
   Spinner,
   Alert,
+  CheckBox,
 };
