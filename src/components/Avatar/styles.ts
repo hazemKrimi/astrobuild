@@ -6,11 +6,12 @@ type WrapperProps = {
 };
 
 export const Wrapper = styled.div<WrapperProps>`
+  user-select: none;
   border-radius: 50%;
   background: ${({ theme, color }) =>
     color ? theme.colors[color].main : theme.colors.client.main};
   color: ${({ theme }) => theme.colors.white.main};
-  display: grid;
+  display: inline-grid;
   justify-content: center;
   align-items: center;
   font-weight: bold;
