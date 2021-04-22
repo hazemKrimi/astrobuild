@@ -11,6 +11,10 @@ const GlobalStyles = createGlobalStyle`
 		line-height: 1.5;
 		outline: none;
   }
+
+  ul {
+    list-style: none
+  }
 `;
 
 export default GlobalStyles;
