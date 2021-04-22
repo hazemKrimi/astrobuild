@@ -12,6 +12,7 @@ import ContextMenu from './ContextMenu';
 import Spinner from './Spinner';
 import Alert from './Alert';
 import CheckBox from './CheckBox';
+import Menu from './Menu';
 
 export {
   Button,
@@ -25,6 +26,7 @@ export {
   Search,
   Avatar,
   ContextMenu,
+  Menu,
   Spinner,
   Alert,
   CheckBox,
