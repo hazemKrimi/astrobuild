@@ -14,7 +14,7 @@ type WrapperProps = {
     | 'white';
   error?: boolean;
   errorMessage?: string;
-  type?: 'text' | 'email' | 'password' | 'file' | 'number';
+  type?: 'text' | 'email' | 'tel' | 'password' | 'file' | 'number';
   label?: string;
   fullWidth?: boolean;
 };
@@ -24,32 +24,20 @@ export const Wrapper = styled.div<WrapperProps>`
     width: inherit;
     height: inherit;
     border-radius: 5px;
-    padding: 1rem;
-    position: relative;
+    padding: 2px;
     color: ${({ theme }) => theme.colors.black.main};
-    background: ${({ theme }) => theme.colors.white.main};
-    background-clip: padding-box;
-    border: 2px solid transparent;
 
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      width: inherit;
-      height: inherit;
-      z-index: -1;
-      margin: -2px;
-      border-radius: inherit;
+    div {
+      background: ${({ theme }) => theme.colors.white.main};
+      padding: 1rem;
+      border-radius: 5px;
     }
   }
 
   .info {
     margin-bottom: 5px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr auto;
     align-items: center;
 
     p {
@@ -85,7 +73,7 @@ export const Wrapper = styled.div<WrapperProps>`
   ${({ type }) => {
     if (type === 'file')
       return css`
-        .input {
+        .input div {
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -108,7 +96,7 @@ export const Wrapper = styled.div<WrapperProps>`
     switch (color) {
       case 'client':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.client.light};
           }
 
@@ -122,7 +110,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'productOwner':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.productOwner.light};
           }
 
@@ -136,7 +124,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'developer':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.developer.light};
           }
 
@@ -150,7 +138,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'admin':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.admin.light};
           }
 
@@ -164,7 +152,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'success':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.success.main};
           }
 
@@ -178,7 +166,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'warning':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.warning.main};
           }
 
@@ -192,7 +180,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'error':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.error.main};
           }
 
@@ -206,7 +194,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'black':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.black.main};
           }
 
@@ -220,7 +208,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'white':
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.white.main};
           }
 
@@ -234,7 +222,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       default:
         return css`
-          .input:before {
+          .input {
             background: ${theme.colors.client.light};
           }
 
@@ -258,7 +246,7 @@ export const Wrapper = styled.div<WrapperProps>`
         -webkit-text-fill-color: transparent;
       }
 
-      .input:before {
+      .input {
         background: ${theme.colors.error.main};
       }
 

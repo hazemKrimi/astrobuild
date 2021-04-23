@@ -19,7 +19,7 @@ type InputProps = {
   value: string;
   label?: string;
   name: string;
-  type?: 'text' | 'email' | 'password' | 'file' | 'number';
+  type?: 'text' | 'email' | 'tel' | 'password' | 'file' | 'number';
   placeholder?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -52,19 +52,21 @@ const Input = ({
         )}
       </div>
       <div className='input'>
-        {type === 'file' && (
-          <span className='icon left'>
-            <Upload />
-          </span>
-        )}
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          name={name}
-          accept={type === 'file' ? 'image/*' : undefined}
-          placeholder={placeholder}
-        />
+        <div>
+          {type === 'file' && (
+            <span className='icon left'>
+              <Upload />
+            </span>
+          )}
+          <input
+            type={type}
+            value={value}
+            onChange={onChange}
+            name={name}
+            accept={type === 'file' ? 'image/*' : undefined}
+            placeholder={placeholder}
+          />
+        </div>
       </div>
     </Wrapper>
   );
