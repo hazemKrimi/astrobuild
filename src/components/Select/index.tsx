@@ -49,11 +49,15 @@ const Select = ({
         )}
       </div>
       <div className='select'>
-        <select value={value} name={name} onChange={onChange}>
-          {options.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
+        <div>
+          <select value={value} name={name} onChange={onChange}>
+            {options.map((option) => (
+              <option key={value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </Wrapper>
   );
