@@ -20,6 +20,10 @@ export const Wrapper = styled.div<WrapperProps>`
 
   a {
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   ${({ color, theme }) => {
