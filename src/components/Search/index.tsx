@@ -27,15 +27,17 @@ const Search = ({
   return (
     <Wrapper color={color} {...props}>
       <div className='search'>
-        <span className='icon left'>
-          <SearchIcon />
-        </span>
-        <input
-          type='text'
-          value={value}
-          onChange={onChange}
-          placeholder='Search'
-        />
+        <div>
+          <span className='icon left'>
+            <SearchIcon />
+          </span>
+          <input
+            type='text'
+            value={value}
+            onChange={onChange}
+            placeholder='Search'
+          />
+        </div>
       </div>
     </Wrapper>
   );

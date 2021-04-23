@@ -21,28 +21,16 @@ export const Wrapper = styled.div<WrapperProps>`
     width: inherit;
     height: inherit;
     border-radius: 5px;
-    padding: 1rem;
-    position: relative;
+    padding: 2px;
     color: ${({ theme }) => theme.colors.black.main};
-    background: ${({ theme }) => theme.colors.white.main};
-    background-clip: padding-box;
-    border: 2px solid transparent;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
 
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      width: inherit;
-      height: inherit;
-      z-index: -1;
-      margin: -2px;
-      border-radius: inherit;
+    div {
+      background: ${({ theme }) => theme.colors.white.main};
+      padding: 1rem;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
 
@@ -67,7 +55,7 @@ export const Wrapper = styled.div<WrapperProps>`
     switch (color) {
       case 'client':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.client.light};
           }
 
@@ -77,7 +65,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'productOwner':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.productOwner.light};
           }
 
@@ -87,7 +75,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'developer':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.developer.light};
           }
 
@@ -97,7 +85,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'admin':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.admin.light};
           }
 
@@ -107,7 +95,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'success':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.success.main};
           }
 
@@ -117,7 +105,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'warning':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.warning.main};
           }
 
@@ -127,7 +115,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'error':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.error.main};
           }
 
@@ -137,7 +125,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'black':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.black.main};
           }
 
@@ -147,7 +135,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       case 'white':
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.white.main};
           }
 
@@ -157,7 +145,7 @@ export const Wrapper = styled.div<WrapperProps>`
         `;
       default:
         return css`
-          .search:before {
+          .search {
             background: ${theme.colors.client.light};
           }
 
