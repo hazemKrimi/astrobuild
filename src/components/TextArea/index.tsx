@@ -49,13 +49,15 @@ const TextArea = ({
         )}
       </div>
       <div className='textarea'>
-        <textarea
-          rows={10}
-          value={value}
-          name={name}
-          onChange={onChange}
-          placeholder={placeholder}
-        />
+        <div>
+          <textarea
+            rows={10}
+            value={value}
+            name={name}
+            onChange={onChange}
+            placeholder={placeholder}
+          />
+        </div>
       </div>
     </Wrapper>
   );

@@ -23,32 +23,20 @@ export const Wrapper = styled.div<WrapperProps>`
     width: inherit;
     height: inherit;
     border-radius: 5px;
-    padding: 1rem;
-    position: relative;
+    padding: 2px;
     color: ${({ theme }) => theme.colors.black.main};
-    background: ${({ theme }) => theme.colors.white.main};
-    background-clip: padding-box;
-    border: 2px solid transparent;
 
-    &:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      width: inherit;
-      height: inherit;
-      z-index: -1;
-      margin: -2px;
-      border-radius: inherit;
+    div {
+      background: ${({ theme }) => theme.colors.white.main};
+      padding: 1rem;
+      border-radius: 5px;
     }
   }
 
   .info {
     margin-bottom: 5px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr auto;
     align-items: center;
 
     p {
@@ -78,61 +66,61 @@ export const Wrapper = styled.div<WrapperProps>`
     switch (color) {
       case 'client':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.client.light};
           }
         `;
       case 'productOwner':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.productOwner.light};
           }
         `;
       case 'developer':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.developer.light};
           }
         `;
       case 'admin':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.admin.light};
           }
         `;
       case 'success':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.success.main};
           }
         `;
       case 'warning':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.warning.main};
           }
         `;
       case 'error':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.error.main};
           }
         `;
       case 'black':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.black.main};
           }
         `;
       case 'white':
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.white.main};
           }
         `;
       default:
         return css`
-          .textarea:before {
+          .textarea {
             background: ${theme.colors.client.light};
           }
         `;
@@ -148,7 +136,7 @@ export const Wrapper = styled.div<WrapperProps>`
         -webkit-text-fill-color: transparent;
       }
 
-      .textarea:before {
+      .textarea {
         background: ${theme.colors.error.main};
       }
     `}
