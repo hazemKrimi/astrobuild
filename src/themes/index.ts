@@ -4,12 +4,17 @@ export const theme: DefaultTheme = {
   colors: {
     black: {
       main: '#000000',
+      light: '',
+      dark: '',
     },
     white: {
       main: '#FFFFFF',
+      light: '',
+      dark: '',
     },
     gray: {
       main: '#C2C9D1',
+      light: '',
       dark: `linear-gradient(
         rgba(0, 0, 0, .3),
         rgba(0, 0, 0, .3)
@@ -29,6 +34,7 @@ export const theme: DefaultTheme = {
         #3CC13B,
         #3CC13B
       )`,
+      dark: '',
     },
     error: {
       main: '#F03738',
@@ -40,6 +46,7 @@ export const theme: DefaultTheme = {
         #F03738,
         #F03738
       )`,
+      dark: '',
     },
     warning: {
       main: '#F3BB1C',
@@ -51,6 +58,7 @@ export const theme: DefaultTheme = {
         #F3BB1C,
         #F3BB1C
       )`,
+      dark: '',
     },
     client: {
       main: '#5F6CAD',
