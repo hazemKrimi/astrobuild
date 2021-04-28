@@ -21,6 +21,7 @@ type SelectProps = {
   label?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLSelectElement>) => void;
 };
 
 const Select = ({
@@ -30,6 +31,7 @@ const Select = ({
   value,
   options,
   onChange,
+  onBlur,
   error,
   errorMessage,
   ...props
@@ -50,7 +52,7 @@ const Select = ({
       </div>
       <div className='select'>
         <div>
-          <select value={value} name={name} onChange={onChange}>
+          <select value={value} name={name} onChange={onChange} onBlur={onBlur}>
             {options.map((option) => (
               <option key={value} value={option.value}>
                 {option.label}
