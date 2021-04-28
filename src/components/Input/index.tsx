@@ -23,6 +23,7 @@ type InputProps = {
   placeholder?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 };
 
 const Input = ({
@@ -33,6 +34,7 @@ const Input = ({
   placeholder,
   value,
   onChange,
+  onBlur,
   error,
   errorMessage,
   ...props
@@ -62,6 +64,7 @@ const Input = ({
             type={type}
             value={value}
             onChange={onChange}
+            onBlur={onBlur}
             name={name}
             accept={type === 'file' ? 'image/*' : undefined}
             placeholder={placeholder}

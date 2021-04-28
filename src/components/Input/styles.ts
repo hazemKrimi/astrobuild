@@ -98,6 +98,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           .input {
             background: ${theme.colors.client.light};
+
+            &:focus-within {
+              background: ${theme.colors.client.main};
+            }
           }
 
           input[type='file'] {
@@ -112,6 +116,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           .input {
             background: ${theme.colors.productOwner.light};
+
+            &:focus-within {
+              background: ${theme.colors.productOwner.main};
+            }
           }
 
           input[type='file'] {
@@ -126,6 +134,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           .input {
             background: ${theme.colors.developer.light};
+
+            &:focus-within {
+              background: ${theme.colors.developer.main};
+            }
           }
 
           input[type='file'] {
@@ -140,6 +152,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           .input {
             background: ${theme.colors.admin.light};
+
+            &:focus-within {
+              background: ${theme.colors.admin.main};
+            }
           }
 
           input[type='file'] {
@@ -224,6 +240,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           .input {
             background: ${theme.colors.client.light};
+
+            &:focus-within {
+              background: ${theme.colors.client.main};
+            }
           }
 
           input[type='file'] {
@@ -248,6 +268,10 @@ export const Wrapper = styled.div<WrapperProps>`
 
       .input {
         background: ${theme.colors.error.main};
+
+        &:focus-within {
+          background: ${theme.colors.error.main};
+        }
       }
 
       input[type='file'] {
