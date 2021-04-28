@@ -1,33 +1,35 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import { ProtectedRoute, AuthRoute } from './components';
 import {
   AdditionalInfo,
   ForgotPassword,
   Login,
   RecoverAccount,
   Signup,
+  Main,
 } from './pages';
 
 const App = () => {
   return (
     <Switch>
-      <Route path='/' exact>
-        <Redirect to='/login' />
-      </Route>
-      <Route path='/login' exact>
+      <ProtectedRoute path='/' exact>
+        <Main />
+      </ProtectedRoute>
+      <AuthRoute path='/login' exact>
         <Login />
-      </Route>
-      <Route path='/signup' exact>
+      </AuthRoute>
+      <AuthRoute path='/signup' exact>
         <Signup />
-      </Route>
-      <Route path='/additional-info' exact>
+      </AuthRoute>
+      <AuthRoute path='/additional-info' exact>
         <AdditionalInfo />
-      </Route>
-      <Route path='/forgot-password' exact>
+      </AuthRoute>
+      <AuthRoute path='/forgot-password' exact>
         <ForgotPassword />
-      </Route>
-      <Route path='/recover-account' exact>
+      </AuthRoute>
+      <AuthRoute path='/recover-account' exact>
         <RecoverAccount />
-      </Route>
+      </AuthRoute>
     </Switch>
   );
 };
