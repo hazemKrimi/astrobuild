@@ -13,6 +13,10 @@ import Spinner from './Spinner';
 import Alert from './Alert';
 import CheckBox from './CheckBox';
 import Menu from './Menu';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+import ProtectedRoute from './ProtectedRoute';
+import AuthRoute from './AuthRoute';
 
 export {
   Button,
@@ -30,4 +34,8 @@ export {
   Spinner,
   Alert,
   CheckBox,
+  Navbar,
+  Sidebar,
+  ProtectedRoute,
+  AuthRoute,
 };
