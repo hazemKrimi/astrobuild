@@ -1,15 +1,8 @@
 import styled, { css } from 'styled-components';
 
 type WrapperProps = {
-  color:
-    | 'client'
-    | 'productOwner'
-    | 'developer'
-    | 'admin'
-    | 'success'
-    | 'warning'
-    | 'error';
-  size?: 'small' | 'big';
+  color?: 'client' | 'productOwner' | 'developer' | 'admin';
+  size?: 'small' | 'medium' | 'big';
   icon?: React.SVGProps<SVGSVGElement>;
 };
 
@@ -20,7 +13,8 @@ export const Wrapper = styled.button<WrapperProps>`
   border-radius: 50%;
   background: none;
   font-weight: bold;
-  background: ${({ theme, color }) => theme.colors[color].main};
+  background: ${({ theme, color }) =>
+    color ? theme.colors[color].main : theme.colors.client.main};
   display: grid;
   justify-content: center;
   align-items: center;
@@ -44,6 +38,16 @@ export const Wrapper = styled.button<WrapperProps>`
           svg {
             width: 12.5px;
             height: 12.5px;
+          }
+        `;
+      case 'medium':
+        return css`
+          width: 35px;
+          height: 35px;
+
+          svg {
+            width: 17.5px;
+            height: 17.5px;
           }
         `;
       case 'big':

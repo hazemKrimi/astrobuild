@@ -1,25 +1,15 @@
 import { Wrapper } from './styles';
 
-type IconButtonProps = Omit<
-  React.AllHTMLAttributes<HTMLButtonElement>,
-  'size'
-> & {
-  color:
-    | 'client'
-    | 'productOwner'
-    | 'developer'
-    | 'admin'
-    | 'success'
-    | 'warning'
-    | 'error';
-  size?: 'small' | 'big';
+type IconButtonProps = {
+  color?: 'client' | 'productOwner' | 'developer' | 'admin';
+  size?: 'small' | 'medium' | 'big';
   icon?: React.SVGProps<SVGSVGElement>;
   onClick: () => void;
 };
 
 const IconButton = ({
   color,
-  size = 'small',
+  size = 'medium',
   icon,
   onClick,
 }: IconButtonProps) => {
