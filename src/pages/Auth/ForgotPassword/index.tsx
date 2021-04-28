@@ -1,9 +1,50 @@
+import * as Yup from 'yup';
+import { useMutation } from '@apollo/client';
+import { useFormik } from 'formik';
+import { useState } from 'react';
 import { Login as LoginIllustration, Logo } from '../../../assets';
-import { Box, Button, Input, Link, Text } from '../../../components';
+import { Box, Button, Input, Link, Text, Alert } from '../../../components';
+import { RESET_PASSWORD } from '../../../graphql/auth.api';
+import {
+  ResetPasswordMutation,
+  ResetPasswordMutationVariables,
+} from '../../../graphql/types';
 import { theme } from '../../../themes';
 import { Wrapper } from './styles';
 
 const ForgotPassword = () => {
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<boolean>(false);
+
+  const [resetPassword, { loading }] = useMutation<
+    ResetPasswordMutation,
+    ResetPasswordMutationVariables
+  >(RESET_PASSWORD, {
+    onCompleted() {
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    },
+    onError({ graphQLErrors }) {
+      setError(graphQLErrors[0]?.extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
+
+  const form = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object().shape({
+      email: Yup.string()
+        .required('Email is required')
+        .email('Email is invalid'),
+    }),
+    onSubmit: ({ email }) => {
+      resetPassword({ variables: { email } });
+    },
+  });
+
   return (
     <Wrapper>
       <Box
@@ -22,48 +63,70 @@ const ForgotPassword = () => {
             <Box marginRight='0.625rem'>
               <Logo />
             </Box>
-            <Text variant='headline' weight='bold'>
-              astrobuild
-            </Text>
           </Box>
-          <Text variant='headline' weight='bold'>
-            Forgot Password
-          </Text>
           <Box
             display='grid'
-            gridTemplateColumns='auto'
+            gridTemplateColumns='auto 1fr'
+            columnGap='1rem'
             alignItems='center'
-            rowGap='0.5rem'
-            padding='1.563rem 0rem'
           >
-            <Input label='Email' name='email' value='' onChange={() => {}} />
-            <Input label='Code' name='code' value='' onChange={() => {}} />
+            <Text variant='headline' weight='bold'>
+              Forgot Password
+            </Text>
+            {error && <Alert color='error' text={error} />}
+            {success && (
+              <Alert
+                color='success'
+                text='Check your email to recover your account'
+              />
+            )}
+          </Box>
+          <form onSubmit={form.handleSubmit}>
             <Box
               display='grid'
               gridTemplateColumns='auto'
-              rowGap='1rem'
-              marginTop='0.5rem'
+              alignItems='center'
+              rowGap='0.5rem'
+              padding='1.563rem 0rem'
             >
-              <Button
-                variant='primary-action'
-                fullWidth
-                color='client'
-                text='Receive Code'
-                onClick={() => {}}
+              <Input
+                label='Email'
+                name='email'
+                value={form.values.email}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
+                error={!!form.errors.email}
+                errorMessage={form.errors.email}
               />
-            </Box>
-            <Box display='flex' flexDirection='row'>
-              <Box flexGrow='1'>
-                <Text variant='body' display='inline'>
-                  Don’t have an account ?{' '}
-                </Text>
-                <Link href='/signup'>Signup</Link>
+              <Box
+                display='grid'
+                gridTemplateColumns='auto'
+                rowGap='1rem'
+                marginTop='0.5rem'
+              >
+                <Button
+                  variant='primary-action'
+                  fullWidth
+                  color='client'
+                  type='submit'
+                  text='Send Reset Link'
+                  loading={loading}
+                  disabled={loading}
+                />
               </Box>
-              <Link href='/' color='gray'>
-                Build a Project
-              </Link>
+              <Box display='flex' flexDirection='row'>
+                <Box flexGrow='1'>
+                  <Text variant='body' display='inline'>
+                    Don’t have an account ?{' '}
+                  </Text>
+                  <Link href='/signup'>Signup</Link>
+                </Box>
+                <Link href='/' color='gray'>
+                  Build a Project
+                </Link>
+              </Box>
             </Box>
-          </Box>
+          </form>
         </Box>
         <Box
           background={theme.colors.client.main}
