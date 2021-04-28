@@ -1,7 +1,14 @@
 import { Wrapper } from './styles';
 
 type SpinnerProps = {
-  color?: 'client' | 'productOwner' | 'developer' | 'admin';
+  color?:
+    | 'client'
+    | 'productOwner'
+    | 'developer'
+    | 'admin'
+    | 'white'
+    | 'black'
+    | 'gray';
   fullScreen?: boolean;
 };
 

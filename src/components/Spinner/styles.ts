@@ -1,7 +1,14 @@
 import styled, { css } from 'styled-components';
 
 type WrapperProps = {
-  color?: 'client' | 'productOwner' | 'developer' | 'admin';
+  color?:
+    | 'client'
+    | 'productOwner'
+    | 'developer'
+    | 'admin'
+    | 'white'
+    | 'black'
+    | 'gray';
   fullScreen?: boolean;
 };
 
