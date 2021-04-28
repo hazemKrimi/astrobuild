@@ -37,6 +37,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 0,
     'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': 0,
     'no-prototype-builtins': 'off',
     'no-plusplus': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
