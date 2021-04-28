@@ -1,9 +1,41 @@
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Google, Signup as SignupIllustration, Logo } from '../../../assets';
-import { Box, Button, Input, Link, Text } from '../../../components';
+import { Box, Button, Input, Link, Text, Alert } from '../../../components';
 import { theme } from '../../../themes';
 import { Wrapper } from './styles';
 
 const Signup = () => {
+  const history = useHistory();
+  const [error, setError] = useState<string>('');
+
+  const form = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: Yup.object().shape({
+      email: Yup.string()
+        .required('Email is required')
+        .email('Email is invalid'),
+      password: Yup.string()
+        .required('Password is required')
+        .min(6, 'Password is 6 characters minimum'),
+    }),
+    onSubmit: ({ email, password }, { resetForm }) => {
+      try {
+        history.push(`/additional-info?email=${email}&password=${password}`);
+      } catch (err) {
+        setError(err.message);
+        setTimeout(() => setError(''), 3000);
+      } finally {
+        resetForm();
+      }
+    },
+  });
+
   return (
     <Wrapper>
       <Box
@@ -22,62 +54,79 @@ const Signup = () => {
             <Box marginRight='0.625rem'>
               <Logo />
             </Box>
-            <Text variant='headline' weight='bold'>
-              astrobuild
-            </Text>
           </Box>
-          <Text variant='headline' weight='bold'>
-            Signup
-          </Text>
           <Box
             display='grid'
-            gridTemplateColumns='auto'
+            gridTemplateColumns='auto 1fr'
+            columnGap='1rem'
             alignItems='center'
-            rowGap='0.5rem'
-            padding='1.563rem 0rem'
           >
-            <Input label='Email' name='email' value='' onChange={() => {}} />
-            <Input
-              label='Password'
-              name='password'
-              type='password'
-              value=''
-              onChange={() => {}}
-            />
+            <Text variant='headline' weight='bold'>
+              Signup
+            </Text>
+            {error && <Alert color='error' text={error} />}
+          </Box>
+          <form onSubmit={form.handleSubmit}>
             <Box
               display='grid'
               gridTemplateColumns='auto'
-              marginTop='0.5rem'
-              rowGap='1rem'
+              alignItems='center'
+              rowGap='0.5rem'
+              padding='1.563rem 0rem'
             >
-              <Button
-                variant='primary-action'
-                fullWidth
-                color='client'
-                text='Signup'
-                onClick={() => {}}
+              <Input
+                label='Email'
+                name='email'
+                value={form.values.email}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
+                error={!!form.errors.email}
+                errorMessage={form.errors.email}
               />
-              <Button
-                variant='secondary-action'
-                fullWidth
-                color='client'
-                text='Signup with Google'
-                iconLeft={<Google />}
-                onClick={() => {}}
+              <Input
+                label='Password'
+                name='password'
+                type='password'
+                value={form.values.password}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
+                error={!!form.errors.password}
+                errorMessage={form.errors.password}
               />
-            </Box>
-            <Box display='flex' flexDirection='row'>
-              <Box flexGrow='1'>
-                <Text variant='body' display='inline'>
-                  Already have an account ?{' '}
-                </Text>
-                <Link href='/login'>Login</Link>
+              <Box
+                display='grid'
+                gridTemplateColumns='auto'
+                marginTop='0.5rem'
+                rowGap='1rem'
+              >
+                <Button
+                  variant='primary-action'
+                  fullWidth
+                  type='submit'
+                  color='client'
+                  text='Signup'
+                />
+                <Button
+                  variant='secondary-action'
+                  fullWidth
+                  color='client'
+                  text='Signup with Google'
+                  iconLeft={<Google />}
+                />
               </Box>
-              <Link href='/' color='gray'>
-                Build a Project
-              </Link>
+              <Box display='flex' flexDirection='row'>
+                <Box flexGrow='1'>
+                  <Text variant='body' display='inline'>
+                    Already have an account ?{' '}
+                  </Text>
+                  <Link href='/login'>Login</Link>
+                </Box>
+                <Link href='/' color='gray'>
+                  Build a Project
+                </Link>
+              </Box>
             </Box>
-          </Box>
+          </form>
         </Box>
         <Box
           background={theme.colors.client.main}
