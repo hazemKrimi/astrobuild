@@ -21,6 +21,7 @@ type TextAreaProps = {
   placeholder?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
 };
 
 const TextArea = ({
@@ -30,6 +31,7 @@ const TextArea = ({
   placeholder,
   value,
   onChange,
+  onBlur,
   error,
   errorMessage,
   ...props
@@ -55,6 +57,7 @@ const TextArea = ({
             value={value}
             name={name}
             onChange={onChange}
+            onBlur={onBlur}
             placeholder={placeholder}
           />
         </div>
