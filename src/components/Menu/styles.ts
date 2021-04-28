@@ -20,11 +20,12 @@ export const Wrapper = styled.div<WrapperProps>`
 
     li {
       cursor: pointer;
-      display: flex;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      column-gap: 10px;
+      justify-content: flex-start;
 
       .icon {
-        margin-right: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
