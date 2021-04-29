@@ -47,7 +47,6 @@ const RecoverAccount = () => {
     }),
     onSubmit: ({ newPassword }) => {
       confirmResetPassword({
-        // eslint-disable-next-line
         variables: { id: params.get('code')!, password: newPassword },
       });
     },
@@ -94,6 +93,7 @@ const RecoverAccount = () => {
               <Input
                 label='New Password'
                 name='newPassword'
+                type='password'
                 value={form.values.newPassword}
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
@@ -103,6 +103,7 @@ const RecoverAccount = () => {
               <Input
                 label='Confirm New Password'
                 name='confirmNewPassword'
+                type='password'
                 value={form.values.confirmNewPassword}
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
