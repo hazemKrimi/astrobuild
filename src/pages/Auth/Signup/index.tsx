@@ -2,14 +2,38 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Google, Signup as SignupIllustration, Logo } from '../../../assets';
+import { useMutation } from '@apollo/client';
+import { Signup as SignupIllustration, Logo } from '../../../assets';
 import { Box, Button, Input, Link, Text, Alert } from '../../../components';
 import { theme } from '../../../themes';
 import { Wrapper } from './styles';
+import {
+  SignupMutation,
+  SignupMutationVariables,
+} from '../../../graphql/types';
+import { SIGNUP } from '../../../graphql/auth.api';
+import { roleVar, tokenVar, userVar } from '../../../graphql/state';
 
 const Signup = () => {
   const history = useHistory();
   const [error, setError] = useState<string>('');
+
+  const [signup, { loading }] = useMutation<
+    SignupMutation,
+    SignupMutationVariables
+  >(SIGNUP, {
+    onCompleted({ signup: { token, user } }) {
+      roleVar('client');
+      tokenVar(token);
+      userVar(user);
+      localStorage.setItem('token', token);
+      history.push('/additional-info');
+    },
+    onError({ graphQLErrors }) {
+      setError(graphQLErrors[0]?.extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
 
   const form = useFormik({
     initialValues: {
@@ -24,15 +48,8 @@ const Signup = () => {
         .required('Password is required')
         .min(6, 'Password is 6 characters minimum'),
     }),
-    onSubmit: ({ email, password }, { resetForm }) => {
-      try {
-        history.push(`/additional-info?email=${email}&password=${password}`);
-      } catch (err) {
-        setError(err.message);
-        setTimeout(() => setError(''), 3000);
-      } finally {
-        resetForm();
-      }
+    onSubmit: ({ email, password }) => {
+      signup({ variables: { email, password } });
     },
   });
 
@@ -105,14 +122,16 @@ const Signup = () => {
                   type='submit'
                   color='client'
                   text='Signup'
+                  loading={loading}
+                  disabled={loading}
                 />
-                <Button
+                {/* <Button
                   variant='secondary-action'
                   fullWidth
                   color='client'
                   text='Signup with Google'
                   iconLeft={<Google />}
-                />
+                /> */}
               </Box>
               <Box display='flex' flexDirection='row'>
                 <Box flexGrow='1'>
