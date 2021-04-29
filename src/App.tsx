@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Switch } from 'react-router-dom';
 import { ProtectedRoute, AuthRoute } from './components';
+import { tokenVar } from './graphql/state';
 import {
   AdditionalInfo,
   ForgotPassword,
@@ -10,6 +12,12 @@ import {
 } from './pages';
 
 const App = () => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) tokenVar(token);
+  }, []);
+
   return (
     <Switch>
       <ProtectedRoute path='/' exact>
