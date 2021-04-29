@@ -4,7 +4,7 @@ import { useMutation } from '@apollo/client';
 import { useHistory } from 'react-router';
 import { useState } from 'react';
 import { tokenVar, roleVar, userVar } from '../../../graphql/state';
-import { Google, Login as LoginIllustration, Logo } from '../../../assets';
+import { Login as LoginIllustration, Logo } from '../../../assets';
 import { Alert, Box, Button, Input, Link, Text } from '../../../components';
 import { theme } from '../../../themes';
 import { Wrapper } from './styles';
@@ -38,6 +38,7 @@ const Login = () => {
       }
       tokenVar(token);
       userVar(user);
+      localStorage.setItem('token', token);
       history.push('/');
     },
     onError({ graphQLErrors }) {
@@ -134,13 +135,13 @@ const Login = () => {
                   loading={loading}
                   disabled={loading}
                 />
-                <Button
+                {/* <Button
                   variant='secondary-action'
                   fullWidth
                   color='client'
                   text='Login with Google'
                   iconLeft={<Google />}
-                />
+                /> */}
               </Box>
               <Box display='flex' flexDirection='row'>
                 <Box flexGrow='1'>
