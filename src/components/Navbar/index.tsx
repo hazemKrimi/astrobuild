@@ -16,7 +16,7 @@ const Navbar = ({ withSidebar }: NavbarProps) => {
 
   return (
     <Wrapper color={role} withSidebar={withSidebar}>
-      <Link href='/client'>
+      <Link href='/'>
         <Logo />
       </Link>
       <div className='menu'></div>
@@ -37,6 +37,7 @@ const Navbar = ({ withSidebar }: NavbarProps) => {
                   label: 'Logout',
                   action: () => {
                     tokenVar(undefined);
+                    localStorage.removeItem('token');
                     history.push('/login');
                   },
                   avoid: true,
