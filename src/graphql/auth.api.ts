@@ -1,26 +1,8 @@
 import gql from 'graphql-tag';
 
 export const SIGNUP = gql`
-  mutation Signup(
-    $email: String!
-    $password: String!
-    $firstName: String!
-    $lastName: String!
-    $phone: PhoneInputModel!
-    $address: AddressInputModel!
-    $active: Boolean!
-    $role: Role!
-  ) {
-    signup(
-      email: $email
-      password: $password
-      firstName: $firstName
-      lastName: $lastName
-      phone: $phone
-      address: $address
-      active: $active
-      role: $role
-    ) {
+  mutation Signup($email: String!, $password: String!) {
+    signup(email: $email, password: $password) {
       user {
         id
         email
@@ -96,6 +78,43 @@ export const RESET_PASSWORD = gql`
 export const CONFIRM_USER_RESET_PASSWORD = gql`
   mutation ConfirmUserResetPassword($id: String!, $password: String!) {
     confirmUserResetPassword(id: $id, password: $password) {
+      id
+      email
+      firstName
+      lastName
+      phone {
+        prefix
+        number
+      }
+      address {
+        place
+        city
+        country
+        zip
+      }
+      active
+      role
+    }
+  }
+`;
+
+export const UPDATE_USER_INFO = gql`
+  mutation UpdateUserInfo(
+    $id: String!
+    $email: String!
+    $firstName: String!
+    $lastName: String!
+    $phone: PhoneInputModel!
+    $address: AddressInputModel!
+  ) {
+    updateUserInfo(
+      id: $id
+      email: $email
+      firstName: $firstName
+      lastName: $lastName
+      phone: $phone
+      address: $address
+    ) {
       id
       email
       firstName
