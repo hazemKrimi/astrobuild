@@ -41,6 +41,8 @@ module.exports = {
     'no-prototype-builtins': 'off',
     'no-plusplus': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 0,
+    '@typescript-eslint/no-non-null-assertion': 0,
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/self-closing-comp': 0,
