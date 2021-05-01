@@ -134,3 +134,26 @@ export const UPDATE_USER_INFO = gql`
     }
   }
 `;
+
+export const UPDATE_USER_PASSWORD = gql`
+  mutation UpdateUserPassword($id: String!, $password: PasswordInputModel!) {
+    updateUserPassword(id: $id, password: $password) {
+      id
+      email
+      firstName
+      lastName
+      phone {
+        prefix
+        number
+      }
+      address {
+        place
+        city
+        country
+        zip
+      }
+      active
+      role
+    }
+  }
+`;

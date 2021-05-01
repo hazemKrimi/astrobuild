@@ -447,3 +447,24 @@ export type UpdateUserInfoMutation = (
     ) }
   ) }
 );
+
+export type UpdateUserPasswordMutationVariables = Exact<{
+  id: Scalars['String'];
+  password: PasswordInputModel;
+}>;
+
+
+export type UpdateUserPasswordMutation = (
+  { __typename?: 'MutationRoot' }
+  & { updateUserPassword: (
+    { __typename?: 'UserResponseModel' }
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+    & { phone: (
+      { __typename?: 'PhoneModel' }
+      & Pick<PhoneModel, 'prefix' | 'number'>
+    ), address: (
+      { __typename?: 'AddressModel' }
+      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+    ) }
+  ) }
+);
