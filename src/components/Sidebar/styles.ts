@@ -8,6 +8,7 @@ export const Wrapper = styled.div<WrapperProps>`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 100;
   width: 75px;
   height: 100%;
   background: ${({ theme, color }) =>
