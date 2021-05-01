@@ -2,7 +2,7 @@ import { Spinner } from '..';
 import { Wrapper } from './styles';
 
 type ButtonProps = {
-  color: 'client' | 'productOwner' | 'developer' | 'admin';
+  color: 'client' | 'productOwner' | 'developer' | 'admin' | 'error';
   size?: 'small' | 'big';
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
   type?: 'submit' | 'button' | 'reset';
