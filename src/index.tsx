@@ -12,7 +12,7 @@ const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_API,
   cache: new InMemoryCache(),
   headers: {
-    authorization: localStorage.getItem('token') || '',
+    authorization: localStorage.getItem('token')!,
   },
 });
 
