@@ -16,6 +16,7 @@ export const Wrapper = styled.div<WrapperProps>`
   user-select: none;
   position: sticky;
   top: 0;
+  z-index: 99;
 
   svg {
     display: flex;

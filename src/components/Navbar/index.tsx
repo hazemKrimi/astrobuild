@@ -31,7 +31,11 @@ const Navbar = ({ withSidebar }: NavbarProps) => {
         items={
           role !== 'admin'
             ? [
-                { icon: <Settings />, label: 'Settings', action: () => {} },
+                {
+                  icon: <Settings />,
+                  label: 'Settings',
+                  action: () => history.push('/settings'),
+                },
                 {
                   icon: <Logout />,
                   label: 'Logout',
