@@ -6,7 +6,7 @@ type WrapperProps = {
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
   iconLeft?: React.SVGProps<SVGSVGElement>;
   iconRight?: React.SVGProps<SVGSVGElement>;
-  loading?: boolean;
+  load?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
 };
@@ -24,8 +24,8 @@ export const Wrapper = styled.button<WrapperProps>`
     align-items: center;
   }
 
-  ${({ iconLeft, iconRight, loading }) => {
-    if (iconLeft || iconRight || loading)
+  ${({ iconLeft, iconRight, load }) => {
+    if (iconLeft || iconRight || load)
       return css`
         display: flex;
         flex-direction: row;

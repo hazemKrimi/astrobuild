@@ -37,7 +37,7 @@ const Button = ({
       iconLeft={iconLeft || undefined}
       iconRight={iconRight || undefined}
       fullWidth={fullWidth}
-      loading={loading}
+      load={loading}
       disabled={disabled}
       onClick={onClick}
     >
