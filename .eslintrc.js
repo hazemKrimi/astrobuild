@@ -46,6 +46,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/self-closing-comp': 0,
+    'react/no-array-index-key': 0,
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
