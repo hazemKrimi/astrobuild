@@ -5,60 +5,49 @@ import { Wrapper } from './styles';
 import { Avatar, Link, Menu, Text } from '..';
 import { Settings, Logout, Logo } from '../../assets';
 
-type NavbarProps = {
-  withSidebar: boolean;
-};
-
-const Navbar = ({ withSidebar }: NavbarProps) => {
+const Navbar = () => {
   const user = useReactiveVar(userVar);
   const role = useReactiveVar(roleVar);
   const history = useHistory();
 
   return (
-    <Wrapper color={role} withSidebar={withSidebar}>
+    <Wrapper color={role}>
       <Link href='/'>
         <Logo />
       </Link>
       <div className='menu'></div>
       <div className='user' id='user'>
-        <Avatar text='H' color={role} />
+        <Avatar
+          text={
+            (user?.firstName && user?.firstName[0].toLocaleUpperCase()) ||
+            (role && role[0].toLocaleUpperCase()) ||
+            'C'
+          }
+          color={role}
+        />
         <Text variant='body' weight='bold'>
           {user?.firstName} {user?.lastName}
         </Text>
       </div>
       <Menu
         component='user'
-        items={
-          role !== 'admin'
-            ? [
-                {
-                  icon: <Settings />,
-                  label: 'Settings',
-                  action: () => history.push('/settings'),
-                },
-                {
-                  icon: <Logout />,
-                  label: 'Logout',
-                  action: () => {
-                    tokenVar(undefined);
-                    localStorage.removeItem('token');
-                    history.push('/login');
-                  },
-                  avoid: true,
-                },
-              ]
-            : [
-                {
-                  icon: <Logout />,
-                  label: 'Logout',
-                  action: () => {
-                    tokenVar(undefined);
-                    history.push('/login');
-                  },
-                  avoid: true,
-                },
-              ]
-        }
+        items={[
+          {
+            icon: <Settings />,
+            label: 'Settings',
+            action: () => history.push('/settings'),
+          },
+          {
+            icon: <Logout />,
+            label: 'Logout',
+            action: () => {
+              tokenVar(undefined);
+              localStorage.removeItem('token');
+              history.push('/login');
+            },
+            avoid: true,
+          },
+        ]}
       />
     </Wrapper>
   );

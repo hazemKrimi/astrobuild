@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 type WrapperProps = {
   color?: 'client' | 'productOwner' | 'developer' | 'admin';
-  withSidebar: boolean;
 };
 
 export const Wrapper = styled.div<WrapperProps>`
@@ -11,8 +10,7 @@ export const Wrapper = styled.div<WrapperProps>`
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: ${({ withSidebar }) =>
-    withSidebar ? '15px 45px 15px 120px' : '15px 45px'};
+  padding: 15px 45px 15px 120px;
   user-select: none;
   position: sticky;
   top: 0;
