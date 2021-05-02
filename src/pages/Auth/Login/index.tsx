@@ -109,7 +109,7 @@ const Login = () => {
                 value={form.values.email}
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
-                error={!!form.errors.email}
+                error={form.touched.email && !!form.errors.email}
                 errorMessage={form.errors.email}
               />
               <Input
@@ -119,7 +119,7 @@ const Login = () => {
                 value={form.values.password}
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
-                error={!!form.errors.password}
+                error={form.touched.password && !!form.errors.password}
                 errorMessage={form.errors.password}
               />
               <Box textAlign='right'>
