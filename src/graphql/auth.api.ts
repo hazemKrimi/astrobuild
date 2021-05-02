@@ -18,7 +18,6 @@ export const SIGNUP = gql`
           country
           zip
         }
-        active
         role
       }
       token
@@ -44,7 +43,6 @@ export const LOGIN = gql`
           country
           zip
         }
-        active
         role
       }
       token
@@ -69,7 +67,6 @@ export const RESET_PASSWORD = gql`
         country
         zip
       }
-      active
       role
     }
   }
@@ -92,7 +89,6 @@ export const CONFIRM_USER_RESET_PASSWORD = gql`
         country
         zip
       }
-      active
       role
     }
   }
@@ -129,7 +125,6 @@ export const UPDATE_USER_INFO = gql`
         country
         zip
       }
-      active
       role
     }
   }
@@ -152,8 +147,60 @@ export const UPDATE_USER_PASSWORD = gql`
         country
         zip
       }
-      active
       role
+    }
+  }
+`;
+
+export const DELETE_USER = gql`
+  mutation DeleteUser($id: String!, $password: String!) {
+    deleteUser(id: $id, password: $password) {
+      id
+      email
+      firstName
+      lastName
+      phone {
+        prefix
+        number
+      }
+      address {
+        place
+        city
+        country
+        zip
+      }
+      role
+    }
+  }
+`;
+
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: String!) {
+    getUserById(id: $id) {
+      id
+      email
+      firstName
+      lastName
+      phone {
+        prefix
+        number
+      }
+      address {
+        place
+        city
+        country
+        zip
+      }
+      role
+    }
+  }
+`;
+
+export const GET_COUNTRY_CODES = gql`
+  query GetCountryCodes {
+    getCountryCode {
+      prefix
+      country
     }
   }
 `;

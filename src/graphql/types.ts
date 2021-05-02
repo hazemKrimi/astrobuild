@@ -41,6 +41,12 @@ export type CategoryResponseModel = {
   image: File;
 };
 
+export type CountryPrefixModel = {
+  __typename?: 'CountryPrefixModel';
+  country: Scalars['String'];
+  prefix: Scalars['String'];
+};
+
 export type FeatureResponseModel = {
   __typename?: 'FeatureResponseModel';
   id: Scalars['String'];
@@ -94,8 +100,7 @@ export type MutationRoot = {
   deleteCategory: CategoryResponseModel;
   deleteFeature: FeatureResponseModel;
   deleteTemplate: TemplateModel;
-  addTemplateFeature: TemplateResponseModel;
-  deleteTemplateFeature: TemplateResponseModel;
+  updateTemplateFeature: TemplateResponseModel;
   addTemplateSpecification: TemplateResponseModel;
 };
 
@@ -113,7 +118,6 @@ export type MutationRootCreateUserArgs = {
   lastName: Scalars['String'];
   phone: PhoneInputModel;
   address: AddressInputModel;
-  active: Scalars['Boolean'];
   role: Role;
 };
 
@@ -172,15 +176,9 @@ export type MutationRootDeleteTemplateArgs = {
 };
 
 
-export type MutationRootAddTemplateFeatureArgs = {
+export type MutationRootUpdateTemplateFeatureArgs = {
   id: Scalars['String'];
   featuresId: Array<Scalars['String']>;
-};
-
-
-export type MutationRootDeleteTemplateFeatureArgs = {
-  id: Scalars['String'];
-  featuerId: Scalars['String'];
 };
 
 
@@ -249,6 +247,7 @@ export type QueryRoot = {
   getAllCategories: Array<CategoryResponseModel>;
   getAllFeatures: Array<FeatureResponseModel>;
   getAllTemplates: Array<TemplateResponseModel>;
+  getCountryCode: Array<CountryPrefixModel>;
 };
 
 
@@ -328,7 +327,6 @@ export type UserResponseModel = {
   lastName: Scalars['String'];
   phone: PhoneModel;
   address: AddressModel;
-  active: Scalars['Boolean'];
   role: Scalars['String'];
 };
 
@@ -345,7 +343,7 @@ export type SignupMutation = (
     & Pick<AuthResponseModel, 'token'>
     & { user: (
       { __typename?: 'UserResponseModel' }
-      & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+      & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
       & { phone: (
         { __typename?: 'PhoneModel' }
         & Pick<PhoneModel, 'prefix' | 'number'>
@@ -370,7 +368,7 @@ export type LoginMutation = (
     & Pick<AuthResponseModel, 'token'>
     & { user: (
       { __typename?: 'UserResponseModel' }
-      & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+      & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
       & { phone: (
         { __typename?: 'PhoneModel' }
         & Pick<PhoneModel, 'prefix' | 'number'>
@@ -391,7 +389,7 @@ export type ResetPasswordMutation = (
   { __typename?: 'MutationRoot' }
   & { resetUserPassword: (
     { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
       { __typename?: 'PhoneModel' }
       & Pick<PhoneModel, 'prefix' | 'number'>
@@ -412,7 +410,7 @@ export type ConfirmUserResetPasswordMutation = (
   { __typename?: 'MutationRoot' }
   & { confirmUserResetPassword: (
     { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
       { __typename?: 'PhoneModel' }
       & Pick<PhoneModel, 'prefix' | 'number'>
@@ -437,7 +435,7 @@ export type UpdateUserInfoMutation = (
   { __typename?: 'MutationRoot' }
   & { updateUserInfo: (
     { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
       { __typename?: 'PhoneModel' }
       & Pick<PhoneModel, 'prefix' | 'number'>
@@ -458,7 +456,7 @@ export type UpdateUserPasswordMutation = (
   { __typename?: 'MutationRoot' }
   & { updateUserPassword: (
     { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'active' | 'role'>
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
       { __typename?: 'PhoneModel' }
       & Pick<PhoneModel, 'prefix' | 'number'>
@@ -467,4 +465,56 @@ export type UpdateUserPasswordMutation = (
       & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
+);
+
+export type DeleteUserMutationVariables = Exact<{
+  id: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type DeleteUserMutation = (
+  { __typename?: 'MutationRoot' }
+  & { deleteUser: (
+    { __typename?: 'UserResponseModel' }
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    & { phone: (
+      { __typename?: 'PhoneModel' }
+      & Pick<PhoneModel, 'prefix' | 'number'>
+    ), address: (
+      { __typename?: 'AddressModel' }
+      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+    ) }
+  ) }
+);
+
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetUserByIdQuery = (
+  { __typename?: 'QueryRoot' }
+  & { getUserById: (
+    { __typename?: 'UserResponseModel' }
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    & { phone: (
+      { __typename?: 'PhoneModel' }
+      & Pick<PhoneModel, 'prefix' | 'number'>
+    ), address: (
+      { __typename?: 'AddressModel' }
+      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+    ) }
+  ) }
+);
+
+export type GetCountryCodesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCountryCodesQuery = (
+  { __typename?: 'QueryRoot' }
+  & { getCountryCode: Array<(
+    { __typename?: 'CountryPrefixModel' }
+    & Pick<CountryPrefixModel, 'prefix' | 'country'>
+  )> }
 );
