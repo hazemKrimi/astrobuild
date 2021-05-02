@@ -17,6 +17,7 @@ type SelectProps = {
   errorMessage?: string;
   options: Array<{ value: any; label: string }>;
   value: string;
+  select?: any;
   name: string;
   label?: string;
   fullWidth?: boolean;
@@ -29,6 +30,7 @@ const Select = ({
   label,
   name,
   value,
+  select = null,
   options,
   onChange,
   onBlur,
@@ -52,9 +54,14 @@ const Select = ({
       </div>
       <div className='select'>
         <div>
-          <select value={value} name={name} onChange={onChange} onBlur={onBlur}>
-            {options.map((option) => (
-              <option key={value} value={option.value}>
+          <select
+            value={select || value}
+            name={name}
+            onChange={onChange}
+            onBlur={onBlur}
+          >
+            {options.map((option, index) => (
+              <option key={index} value={option.value}>
                 {option.label}
               </option>
             ))}
