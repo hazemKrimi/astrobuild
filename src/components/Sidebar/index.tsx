@@ -9,7 +9,9 @@ const Sidebar = () => {
 
   return (
     <Wrapper color={role}>
-      <IconButton icon={<Add />} color={role} onClick={() => {}} />
+      {role !== 'admin' && (
+        <IconButton icon={<Add />} color={role} onClick={() => {}} />
+      )}
     </Wrapper>
   );
 };
