@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { BoxProps } from '.';
 
 export const Wrapper = styled.div<BoxProps>`
+  ${({ cursor }) => cursor && `cursor: ${cursor}`}
+
   ${({ position }) => position && `position: ${position}`};
   ${({ zIndex }) => zIndex && `z-index: ${zIndex}`};
   ${({ top }) => top && `top: ${top}`};
@@ -36,6 +38,8 @@ export const Wrapper = styled.div<BoxProps>`
   ${({ alignItems }) => alignItems && `align-items: ${alignItems}`};
   ${({ justifyContent }) =>
     justifyContent && `justify-content: ${justifyContent}`};
+  ${({ alignSelf }) => alignSelf && `align-self: ${alignSelf}`};
+  ${({ justifySelf }) => justifySelf && `justify-self: ${justifySelf}`};
 
   ${({ boxSizing }) => boxSizing && `box-sizing: ${boxSizing}`};
   ${({ width }) => width && `width: ${width}`};

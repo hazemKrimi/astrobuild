@@ -5,6 +5,9 @@ export type BoxProps = {
   className?: string;
   children?: React.ReactNode | JSX.Element | string;
 
+  onClick?: () => void;
+  cursor?: 'pointer' | 'default';
+
   position?: 'static' | 'relative' | 'absolute' | 'fixed' | 'sticky';
   zIndex?: string;
   top?: string;
@@ -40,6 +43,8 @@ export type BoxProps = {
     | 'flex-end'
     | 'space-between'
     | 'space-around';
+  alignSelf?: 'center' | 'flex-start' | 'flex-end';
+  justifySelf?: 'center' | 'flex-start' | 'flex-end';
 
   boxSizing?: 'content-box' | 'border-box';
   width?: string;
