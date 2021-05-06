@@ -1,5 +1,5 @@
 import { useReactiveVar } from '@apollo/client';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { roleVar, tokenVar, userVar } from '../../graphql/state';
 import { Wrapper } from './styles';
 import { Avatar, Link, Menu, Text } from '..';
@@ -9,12 +9,42 @@ const Navbar = () => {
   const user = useReactiveVar(userVar);
   const role = useReactiveVar(roleVar);
   const history = useHistory();
+  const location = useLocation();
 
   return (
     <Wrapper color={role}>
       <Link href='/'>
         <Logo />
       </Link>
+      <nav>
+        {role === 'admin' && (
+          <>
+            <Link
+              href='/clients'
+              color={location.pathname === '/clients' ? 'admin' : 'black'}
+              selected={location.pathname === '/clients'}
+            >
+              Clients
+            </Link>
+            <Link
+              href='/product-owners'
+              color={
+                location.pathname === '/product-owners' ? 'admin' : 'black'
+              }
+              selected={location.pathname === '/product-owners'}
+            >
+              Product Owners
+            </Link>
+            <Link
+              href='/developers'
+              color={location.pathname === '/developers' ? 'admin' : 'black'}
+              selected={location.pathname === '/developers'}
+            >
+              Developers
+            </Link>
+          </>
+        )}
+      </nav>
       <div className='menu'></div>
       <div className='user' id='user'>
         <Avatar

@@ -7,8 +7,8 @@ type WrapperProps = {
 export const Wrapper = styled.div<WrapperProps>`
   background: ${({ theme }) => theme.colors.white.main};
   box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.25);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   padding: 15px 45px 15px 120px;
   user-select: none;
@@ -24,6 +24,15 @@ export const Wrapper = styled.div<WrapperProps>`
   .logo-icon {
     fill: ${({ theme, color }) =>
       color ? theme.colors[color].main : theme.colors.client.main};
+  }
+
+  nav {
+    flex-grow: 1;
+    margin-left: 60px;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    column-gap: 20px;
+    justify-content: flex-start;
   }
 
   .user {
