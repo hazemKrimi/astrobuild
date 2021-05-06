@@ -6,6 +6,7 @@ import RecoverAccount from './Auth/RecoverAccount';
 import Project from './Project';
 import Clients from './Clients';
 import Settings from './Settings';
+import UserSettings from './UserSettings';
 
 export {
   Login,
@@ -16,4 +17,5 @@ export {
   Project,
   Clients,
   Settings,
+  UserSettings,
 };
