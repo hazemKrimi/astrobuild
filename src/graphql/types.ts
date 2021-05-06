@@ -330,6 +330,70 @@ export type UserResponseModel = {
   role: Scalars['String'];
 };
 
+export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllUsersQuery = (
+  { __typename?: 'QueryRoot' }
+  & { getAllUsers: Array<(
+    { __typename?: 'UserResponseModel' }
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    & { phone: (
+      { __typename?: 'PhoneModel' }
+      & Pick<PhoneModel, 'prefix' | 'number'>
+    ), address: (
+      { __typename?: 'AddressModel' }
+      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+    ) }
+  )> }
+);
+
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetUserByIdQuery = (
+  { __typename?: 'QueryRoot' }
+  & { getUserById: (
+    { __typename?: 'UserResponseModel' }
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    & { phone: (
+      { __typename?: 'PhoneModel' }
+      & Pick<PhoneModel, 'prefix' | 'number'>
+    ), address: (
+      { __typename?: 'AddressModel' }
+      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+    ) }
+  ) }
+);
+
+export type CreateUserMutationVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  phone: PhoneInputModel;
+  address: AddressInputModel;
+  role: Role;
+}>;
+
+
+export type CreateUserMutation = (
+  { __typename?: 'MutationRoot' }
+  & { createUser: (
+    { __typename?: 'UserResponseModel' }
+    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    & { phone: (
+      { __typename?: 'PhoneModel' }
+      & Pick<PhoneModel, 'prefix' | 'number'>
+    ), address: (
+      { __typename?: 'AddressModel' }
+      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+    ) }
+  ) }
+);
+
 export type SignupMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -476,26 +540,6 @@ export type DeleteUserMutationVariables = Exact<{
 export type DeleteUserMutation = (
   { __typename?: 'MutationRoot' }
   & { deleteUser: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
-    & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
-    ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
-    ) }
-  ) }
-);
-
-export type GetUserByIdQueryVariables = Exact<{
-  id: Scalars['String'];
-}>;
-
-
-export type GetUserByIdQuery = (
-  { __typename?: 'QueryRoot' }
-  & { getUserById: (
     { __typename?: 'UserResponseModel' }
     & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
