@@ -12,6 +12,7 @@ type WrapperProps = {
     | 'black'
     | 'white'
     | string;
+  selected: boolean;
   iconLeft?: React.SVGProps<SVGSVGElement>;
 };
 
@@ -19,7 +20,7 @@ export const Wrapper = styled.div<WrapperProps>`
   display: inline;
 
   a {
-    text-decoration: none;
+    text-decoration: ${({ selected }) => (selected ? 'underline' : 'none')};
 
     &:hover {
       text-decoration: underline;
@@ -30,6 +31,10 @@ export const Wrapper = styled.div<WrapperProps>`
     if (!color)
       return css`
         color: #3e66fb;
+
+        a {
+          color: #3e66fb;
+        }
 
         .icon svg path {
           stroke: #3e66fb;
@@ -44,6 +49,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           color: ${theme.colors.client.main};
 
+          a {
+            color: ${theme.colors.client.main};
+          }
+
           .icon svg path {
             stroke: ${theme.colors.client.main};
           }
@@ -55,6 +64,10 @@ export const Wrapper = styled.div<WrapperProps>`
       case 'productOwner':
         return css`
           color: ${theme.colors.productOwner.main};
+
+          a {
+            color: ${theme.colors.productOwner.main};
+          }
 
           .icon svg path {
             stroke: ${theme.colors.productOwner.main};
@@ -68,6 +81,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           color: ${theme.colors.developer.main};
 
+          a {
+            color: ${theme.colors.developer.main};
+          }
+
           .icon svg path {
             stroke: ${theme.colors.developer.main};
           }
@@ -79,6 +96,10 @@ export const Wrapper = styled.div<WrapperProps>`
       case 'admin':
         return css`
           color: ${theme.colors.admin.main};
+
+          a {
+            color: ${theme.colors.admin.main};
+          }
 
           .icon svg path {
             stroke: ${theme.colors.admin.main};
@@ -92,6 +113,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           color: ${theme.colors.success.main};
 
+          a {
+            color: ${theme.colors.success.main};
+          }
+
           .icon svg path {
             stroke: ${theme.colors.success.main};
           }
@@ -103,6 +128,10 @@ export const Wrapper = styled.div<WrapperProps>`
       case 'warning':
         return css`
           color: ${theme.colors.warning.main};
+
+          a {
+            color: ${theme.colors.warning.main};
+          }
 
           .icon svg path {
             stroke: ${theme.colors.warning.main};
@@ -116,6 +145,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           color: ${theme.colors.error.main};
 
+          a {
+            color: ${theme.colors.error.main};
+          }
+
           .icon svg path {
             stroke: ${theme.colors.error.main};
           }
@@ -127,6 +160,10 @@ export const Wrapper = styled.div<WrapperProps>`
       case 'black':
         return css`
           color: ${theme.colors.black.main};
+
+          a {
+            color: ${theme.colors.black.main};
+          }
 
           .icon svg path {
             stroke: ${theme.colors.black.main};
@@ -140,6 +177,10 @@ export const Wrapper = styled.div<WrapperProps>`
         return css`
           color: ${theme.colors.white.main};
 
+          a {
+            color: ${theme.colors.white.main};
+          }
+
           .icon svg path {
             stroke: ${theme.colors.white.main};
           }
@@ -151,6 +192,10 @@ export const Wrapper = styled.div<WrapperProps>`
       default:
         return css`
           color: ${color};
+
+          a {
+            color: ${color};
+          }
 
           .icon svg path {
             stroke: ${color};

@@ -15,14 +15,21 @@ type LinkProps = {
     | 'black'
     | 'white'
     | string;
+  selected?: boolean;
   className?: string;
   iconLeft?: React.SVGProps<SVGSVGElement>;
   onClick?: () => void;
 };
 
-const Link = ({ href, children, iconLeft, ...props }: LinkProps) => {
+const Link = ({
+  href,
+  children,
+  iconLeft,
+  selected = false,
+  ...props
+}: LinkProps) => {
   return (
-    <Wrapper {...props}>
+    <Wrapper {...props} selected={selected}>
       <RouterLink to={href}>
         {iconLeft && <span className='icon left'>{iconLeft}</span>}
         {children}
