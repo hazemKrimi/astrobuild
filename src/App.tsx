@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { useEffect } from 'react';
-import { Switch } from 'react-router-dom';
+import { Redirect, Switch } from 'react-router-dom';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import {
   ProtectedRoute,
@@ -17,7 +17,9 @@ import {
   RecoverAccount,
   Signup,
   Project,
+  Clients,
   Settings,
+  UserSettings,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -75,13 +77,23 @@ const App = () => {
       )}
       <Switch>
         <ProtectedRoute path='/' exact>
-          <Project />
+          {role !== 'admin' ? (
+            <Redirect to='/project' />
+          ) : (
+            <Redirect to='/clients' />
+          )}
         </ProtectedRoute>
         <ProtectedRoute path='/project' exact>
           <Project />
         </ProtectedRoute>
+        <ProtectedRoute path='/clients' exact>
+          <Clients />
+        </ProtectedRoute>
         <ProtectedRoute path='/settings' exact>
           <Settings />
+        </ProtectedRoute>
+        <ProtectedRoute path='/user-settings/:id' exact>
+          <UserSettings />
         </ProtectedRoute>
         <AuthRoute path='/login' exact>
           <Login />
