@@ -4,6 +4,7 @@ import AdditionalInfo from './Auth/AdditionalInfo';
 import ForgotPassword from './Auth/ForgotPassword';
 import RecoverAccount from './Auth/RecoverAccount';
 import Project from './Project';
+import Clients from './Clients';
 import Settings from './Settings';
 
 export {
@@ -13,5 +14,6 @@ export {
   ForgotPassword,
   RecoverAccount,
   Project,
+  Clients,
   Settings,
 };
