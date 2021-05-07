@@ -13,7 +13,6 @@ import {
   Select,
   Alert,
   Spinner,
-  Modal,
 } from '../../components';
 import { Wrapper } from './styles';
 import { ArrowLeft, Profile, Security } from '../../assets';
@@ -24,14 +23,11 @@ import {
   UpdateUserPasswordMutationVariables,
   GetCountryCodesQuery,
   GetCountryCodesQueryVariables,
-  DeleteUserMutation,
-  DeleteUserMutationVariables,
   GetUserByIdQuery,
   GetUserByIdQueryVariables,
   UserResponseModel,
 } from '../../graphql/types';
 import {
-  DELETE_USER,
   GET_COUNTRY_CODES,
   GET_USER_BY_ID,
   UPDATE_USER_INFO,
@@ -64,7 +60,6 @@ const UserSettings = () => {
   >('general');
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
-  const [deleteAccountModal, setDeleteAccountModal] = useState<boolean>(false);
 
   const [updateUserInfo, { loading: generalLoading }] = useMutation<
     UpdateUserInfoMutation,
@@ -182,39 +177,6 @@ const UserSettings = () => {
           password: { oldPassword, newPassword },
         },
       }),
-  });
-
-  const [deleteUser] = useMutation<
-    DeleteUserMutation,
-    DeleteUserMutationVariables
-  >(DELETE_USER, {
-    onCompleted() {
-      setDeleteAccountModal(false);
-      history.goBack();
-    },
-    onError({ graphQLErrors }) {
-      setDeleteAccountModal(false);
-      setError(graphQLErrors[0]?.extensions?.info);
-      setTimeout(() => setError(''), 3000);
-    },
-  });
-
-  const deleteAccountForm = useFormik({
-    initialValues: {
-      password: '',
-    },
-    validationSchema: Yup.object().shape({
-      password: Yup.string()
-        .required('Password is required')
-        .min(6, 'Password is 6 characters minimum'),
-    }),
-    onSubmit: ({ password }, { resetForm }) => {
-      try {
-        deleteUser({ variables: { id: userToEdit?.id!, password } });
-      } finally {
-        resetForm();
-      }
-    },
   });
 
   return role === 'admin' ? (
@@ -446,98 +408,71 @@ const UserSettings = () => {
             </>
           )}
           {selectedSection === 'security' && (
-            <>
-              {deleteAccountModal && (
-                <Modal
+            <form onSubmit={securityForm.handleSubmit}>
+              <Box
+                display='grid'
+                gridTemplateColumns='auto'
+                rowGap='0.5rem'
+                position='relative'
+              >
+                <Input
+                  name='oldPassword'
+                  label='Old Password'
                   color={role || 'client'}
-                  title='Delete Account'
-                  description='Enter password to confirm account deletion.
-                If you delete your account you cannot recover any of your projects.'
-                  onClose={() => setDeleteAccountModal(false)}
-                  onConfirm={deleteAccountForm.handleSubmit}
-                >
-                  <Input
-                    type='password'
-                    placeholder='Password'
-                    name='password'
-                    value={deleteAccountForm.values.password}
-                    onChange={deleteAccountForm.handleChange}
-                    onBlur={deleteAccountForm.handleBlur}
-                    color={role || 'client'}
-                    error={
-                      deleteAccountForm.touched.password &&
-                      !!deleteAccountForm.errors.password
-                    }
-                    errorMessage={deleteAccountForm.errors.password}
-                  />
-                </Modal>
-              )}
-              <form onSubmit={securityForm.handleSubmit}>
+                  type='password'
+                  value={securityForm.values.oldPassword}
+                  onChange={securityForm.handleChange}
+                  onBlur={securityForm.handleBlur}
+                  error={
+                    securityForm.touched.oldPassword &&
+                    !!securityForm.errors.oldPassword
+                  }
+                  errorMessage={securityForm.errors.oldPassword}
+                />
+                <Input
+                  name='newPassword'
+                  label='New Password'
+                  color={role || 'client'}
+                  type='password'
+                  value={securityForm.values.newPassword}
+                  onChange={securityForm.handleChange}
+                  onBlur={securityForm.handleBlur}
+                  error={
+                    securityForm.touched.newPassword &&
+                    !!securityForm.errors.newPassword
+                  }
+                  errorMessage={securityForm.errors.newPassword}
+                />
+                <Input
+                  name='confirmNewPassword'
+                  label='Confirm New Password'
+                  color={role || 'client'}
+                  type='password'
+                  value={securityForm.values.confirmNewPassword}
+                  onChange={securityForm.handleChange}
+                  onBlur={securityForm.handleBlur}
+                  error={
+                    securityForm.touched.confirmNewPassword &&
+                    !!securityForm.errors.confirmNewPassword
+                  }
+                  errorMessage={securityForm.errors.confirmNewPassword}
+                />
                 <Box
-                  display='grid'
-                  gridTemplateColumns='auto'
-                  rowGap='0.5rem'
-                  position='relative'
+                  marginTop='0.5rem'
+                  display='flex'
+                  justifyContent='flex-end'
                 >
-                  <Input
-                    name='oldPassword'
-                    label='Old Password'
+                  <Button
+                    variant='primary-action'
                     color={role || 'client'}
-                    type='password'
-                    value={securityForm.values.oldPassword}
-                    onChange={securityForm.handleChange}
-                    onBlur={securityForm.handleBlur}
-                    error={
-                      securityForm.touched.oldPassword &&
-                      !!securityForm.errors.oldPassword
-                    }
-                    errorMessage={securityForm.errors.oldPassword}
+                    text='Save'
+                    type='submit'
+                    loading={securityLoading}
+                    disabled={securityLoading}
                   />
-                  <Input
-                    name='newPassword'
-                    label='New Password'
-                    color={role || 'client'}
-                    type='password'
-                    value={securityForm.values.newPassword}
-                    onChange={securityForm.handleChange}
-                    onBlur={securityForm.handleBlur}
-                    error={
-                      securityForm.touched.newPassword &&
-                      !!securityForm.errors.newPassword
-                    }
-                    errorMessage={securityForm.errors.newPassword}
-                  />
-                  <Input
-                    name='confirmNewPassword'
-                    label='Confirm New Password'
-                    color={role || 'client'}
-                    type='password'
-                    value={securityForm.values.confirmNewPassword}
-                    onChange={securityForm.handleChange}
-                    onBlur={securityForm.handleBlur}
-                    error={
-                      securityForm.touched.confirmNewPassword &&
-                      !!securityForm.errors.confirmNewPassword
-                    }
-                    errorMessage={securityForm.errors.confirmNewPassword}
-                  />
-                  <Box
-                    marginTop='0.5rem'
-                    display='flex'
-                    justifyContent='flex-end'
-                  >
-                    <Button
-                      variant='primary-action'
-                      color={role || 'client'}
-                      text='Save'
-                      type='submit'
-                      loading={securityLoading}
-                      disabled={securityLoading}
-                    />
-                  </Box>
                 </Box>
-              </form>
-            </>
+              </Box>
+            </form>
           )}
         </Box>
       </Box>
