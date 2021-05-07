@@ -17,9 +17,10 @@ import {
   RecoverAccount,
   Signup,
   Project,
-  Clients,
+  Users,
   Settings,
   UserSettings,
+  CreateUser,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -87,13 +88,22 @@ const App = () => {
           <Project />
         </ProtectedRoute>
         <ProtectedRoute path='/clients' exact>
-          <Clients />
+          <Users />
         </ProtectedRoute>
-        <ProtectedRoute path='/settings' exact>
-          <Settings />
+        <ProtectedRoute path='/product-owners' exact>
+          <Users />
+        </ProtectedRoute>
+        <ProtectedRoute path='/developers' exact>
+          <Users />
+        </ProtectedRoute>
+        <ProtectedRoute path='/create-user/:role' exact>
+          <CreateUser />
         </ProtectedRoute>
         <ProtectedRoute path='/user-settings/:id' exact>
           <UserSettings />
+        </ProtectedRoute>
+        <ProtectedRoute path='/settings' exact>
+          <Settings />
         </ProtectedRoute>
         <AuthRoute path='/login' exact>
           <Login />
