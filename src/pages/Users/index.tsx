@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { useState } from 'react';
-import { Redirect, useHistory } from 'react-router';
+import { useMutation, useLazyQuery, useReactiveVar } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { Redirect, useHistory, useLocation } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Add, Delete, Edit, Empty } from '../../assets';
 import {
@@ -25,29 +25,43 @@ import {
 import { GET_ALL_USERS } from '../../graphql/admin.api';
 import { DELETE_USER } from '../../graphql/auth.api';
 
-const Clients = () => {
+const Users = () => {
   const role = useReactiveVar(roleVar);
   const history = useHistory();
-  const [clients, setClients] = useState<Array<UserResponseModel>>();
+  const location = useLocation();
+  const [users, setUsers] = useState<Array<UserResponseModel>>();
   const [userToDelete, setUserToDelete] = useState<UserResponseModel>();
   const [error, setError] = useState<string>('');
   const [deleteAccountModal, setDeleteAccountModal] = useState<boolean>(false);
 
-  const { loading } = useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(
-    GET_ALL_USERS,
-    {
-      onCompleted({ getAllUsers }) {
-        setClients(getAllUsers.filter((user) => user.role === 'Client'));
-      },
-    }
-  );
+  const [getUsers, { loading }] = useLazyQuery<
+    GetAllUsersQuery,
+    GetAllUsersQueryVariables
+  >(GET_ALL_USERS, {
+    onCompleted({ getAllUsers }) {
+      const userRole =
+        location.pathname === '/clients'
+          ? 'Client'
+          : location.pathname === '/product-owners'
+          ? 'ProductOwner'
+          : 'Developer';
+      setUsers(getAllUsers.filter((user) => user.role === userRole));
+    },
+    fetchPolicy: 'network-only',
+  });
+
+  useEffect(() => {
+    getUsers();
+
+    // eslint-disable-next-line
+  }, [location.pathname]);
 
   const [deleteUser] = useMutation<
     DeleteUserMutation,
     DeleteUserMutationVariables
   >(DELETE_USER, {
     onCompleted() {
-      setClients(clients?.filter((client) => client.id !== userToDelete?.id));
+      setUsers(users?.filter((user) => user.id !== userToDelete?.id));
       setUserToDelete(undefined);
       setDeleteAccountModal(false);
     },
@@ -105,14 +119,9 @@ const Clients = () => {
               />
             </Modal>
           )}
-          {clients && clients.length > 0 ? (
+          {users && users.length > 0 ? (
             <Wrapper color={role} empty={false}>
-              <Box
-                width='100%'
-                height='100vh'
-                display='grid'
-                alignItems='center'
-              >
+              <Box width='100%' height='100vh' alignItems='center'>
                 <Box
                   display='flex'
                   flexDirection='row'
@@ -121,7 +130,11 @@ const Clients = () => {
                 >
                   <Box flexGrow={!error ? '1' : undefined}>
                     <Text variant='headline' weight='bold'>
-                      Clients
+                      {location.pathname === '/clients'
+                        ? 'Clients'
+                        : location.pathname === '/product-owners'
+                        ? 'Product Owners'
+                        : 'Developers'}
                     </Text>
                   </Box>
                   {error && (
@@ -132,8 +145,25 @@ const Clients = () => {
                   <Button
                     color={role || 'client'}
                     variant='primary-action'
-                    text='New Client'
+                    text={`New ${
+                      location.pathname === '/clients'
+                        ? 'Client'
+                        : location.pathname === '/product-owners'
+                        ? 'Product Owner'
+                        : 'Developer'
+                    }`}
                     iconLeft={<Add />}
+                    onClick={() =>
+                      history.push(
+                        `/create-user/${
+                          location.pathname === '/clients'
+                            ? 'Client'
+                            : location.pathname === '/product-owners'
+                            ? 'ProductOwner'
+                            : 'Developer'
+                        }`
+                      )
+                    }
                   />
                 </Box>
                 <Box
@@ -157,9 +187,9 @@ const Clients = () => {
                   </Box>
                 </Box>
                 <Box padding='10px 0px'>
-                  {clients.map((client) => (
+                  {users.map((user) => (
                     <Box
-                      key={client.id}
+                      key={user.id}
                       padding='15px 20px'
                       borderRadius='10px'
                       boxShadow='1px 1px 10px 0px rgba(50, 59, 105, 0.25)'
@@ -171,17 +201,17 @@ const Clients = () => {
                       columnGap='3rem'
                     >
                       <Text variant='headline' weight='bold'>
-                        {client.firstName}
+                        {user.firstName}
                       </Text>
                       <Text variant='headline' weight='bold'>
-                        {client.lastName}
+                        {user.lastName}
                       </Text>
                       <Text variant='headline' weight='bold'>
-                        {client.email}
+                        {user.email}
                       </Text>
                       <Text variant='headline' weight='bold'>
-                        +{client.phone.prefix}
-                        {client.phone.number}
+                        +{user.phone.prefix}
+                        {user.phone.number}
                       </Text>
                       <Box
                         display='flex'
@@ -191,7 +221,7 @@ const Clients = () => {
                       >
                         <Box
                           onClick={() =>
-                            history.push(`/user-settings/${client.id}`)
+                            history.push(`/user-settings/${user.id}`)
                           }
                           marginRight='15px'
                           cursor='pointer'
@@ -200,7 +230,7 @@ const Clients = () => {
                         </Box>
                         <Box
                           onClick={() => {
-                            setUserToDelete(client);
+                            setUserToDelete(user);
                             setDeleteAccountModal(true);
                           }}
                           cursor='pointer'
@@ -215,6 +245,46 @@ const Clients = () => {
             </Wrapper>
           ) : (
             <Wrapper color={role} empty>
+              <Box
+                display='flex'
+                flexDirection='row'
+                alignItems='center'
+                marginBottom='20px'
+                padding='35px 45px 0px 120px'
+              >
+                <Box flexGrow='1'>
+                  <Text variant='headline' weight='bold'>
+                    {location.pathname === '/clients'
+                      ? 'Clients'
+                      : location.pathname === '/product-owners'
+                      ? 'Product Owners'
+                      : 'Developers'}
+                  </Text>
+                </Box>
+                <Button
+                  color={role || 'client'}
+                  variant='primary-action'
+                  text={`New ${
+                    location.pathname === '/clients'
+                      ? 'Client'
+                      : location.pathname === '/product-owners'
+                      ? 'Product Owner'
+                      : 'Developer'
+                  }`}
+                  iconLeft={<Add />}
+                  onClick={() =>
+                    history.push(
+                      `/create-user/${
+                        location.pathname === '/clients'
+                          ? 'Client'
+                          : location.pathname === '/product-owners'
+                          ? 'ProductOwner'
+                          : 'Developer'
+                      }`
+                    )
+                  }
+                />
+              </Box>
               <Box
                 width='100%'
                 height='100vh'
@@ -238,4 +308,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Users;
