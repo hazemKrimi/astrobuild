@@ -5,6 +5,7 @@ import ForgotPassword from './Auth/ForgotPassword';
 import RecoverAccount from './Auth/RecoverAccount';
 import Project from './Project';
 import Users from './Users';
+import CreateUser from './CreateUser';
 import Settings from './Settings';
 import UserSettings from './UserSettings';
 
@@ -16,6 +17,7 @@ export {
   RecoverAccount,
   Project,
   Users,
+  CreateUser,
   Settings,
   UserSettings,
 };
