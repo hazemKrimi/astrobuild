@@ -21,6 +21,10 @@ import {
   Settings,
   UserSettings,
   CreateUser,
+  Template,
+  Feature,
+  Category,
+  Prototype,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -86,6 +90,18 @@ const App = () => {
         </ProtectedRoute>
         <ProtectedRoute path='/project' exact>
           <Project />
+        </ProtectedRoute>
+        <ProtectedRoute path='/template' exact>
+          <Template />
+        </ProtectedRoute>
+        <ProtectedRoute path='/feature' exact>
+          <Feature />
+        </ProtectedRoute>
+        <ProtectedRoute path='/category' exact>
+          <Category />
+        </ProtectedRoute>
+        <ProtectedRoute path='/prototype' exact>
+          <Prototype />
         </ProtectedRoute>
         <ProtectedRoute path='/clients' exact>
           <Users />
