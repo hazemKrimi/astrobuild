@@ -30,7 +30,7 @@ export const Wrapper = styled.div<WrapperProps>`
     flex-grow: 1;
     margin-left: 60px;
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, auto);
     column-gap: 20px;
     justify-content: flex-start;
   }

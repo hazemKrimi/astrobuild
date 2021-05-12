@@ -44,6 +44,60 @@ const Navbar = () => {
             </Link>
           </>
         )}
+        {role === 'developer' && (
+          <>
+            <Link
+              href='/project'
+              color={location.pathname === '/project' ? 'developer' : 'black'}
+              selected={location.pathname === '/project'}
+            >
+              Projects
+            </Link>
+            <Link
+              href='/template'
+              color={location.pathname === '/template' ? 'developer' : 'black'}
+              selected={location.pathname === '/template'}
+            >
+              Templates
+            </Link>
+            <Link
+              href='/feature'
+              color={location.pathname === '/feature' ? 'developer' : 'black'}
+              selected={location.pathname === '/feature'}
+            >
+              Features
+            </Link>
+            <Link
+              href='/category'
+              color={location.pathname === '/category' ? 'developer' : 'black'}
+              selected={location.pathname === '/category'}
+            >
+              Categories
+            </Link>
+          </>
+        )}
+        {role === 'productOwner' && (
+          <>
+            <Link
+              href='/project'
+              color={
+                location.pathname === '/project' ? 'productOwner' : 'black'
+              }
+              selected={location.pathname === '/project'}
+            >
+              Projects
+            </Link>
+            <Link
+              href='/template'
+              color={
+                location.pathname === '/template' ? 'productOwner' : 'black'
+              }
+              selected={location.pathname === '/template'}
+            >
+              Templates
+            </Link>
+          </>
+        )}
       </nav>
       <div className='menu'></div>
       <div className='user' id='user'>
