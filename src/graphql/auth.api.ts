@@ -95,22 +95,8 @@ export const CONFIRM_USER_RESET_PASSWORD = gql`
 `;
 
 export const UPDATE_USER_INFO = gql`
-  mutation UpdateUserInfo(
-    $id: String!
-    $email: String!
-    $firstName: String!
-    $lastName: String!
-    $phone: PhoneInputModel!
-    $address: AddressInputModel!
-  ) {
-    updateUserInfo(
-      id: $id
-      email: $email
-      firstName: $firstName
-      lastName: $lastName
-      phone: $phone
-      address: $address
-    ) {
+  mutation UpdateUserInfo($user: UpdateUserInput!) {
+    updateUserInfo(user: $user) {
       id
       email
       firstName
@@ -131,7 +117,7 @@ export const UPDATE_USER_INFO = gql`
 `;
 
 export const UPDATE_USER_PASSWORD = gql`
-  mutation UpdateUserPassword($id: String!, $password: PasswordInputModel!) {
+  mutation UpdateUserPassword($id: String!, $password: PasswordInput!) {
     updateUserPassword(id: $id, password: $password) {
       id
       email

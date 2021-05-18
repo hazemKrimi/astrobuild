@@ -108,12 +108,15 @@ const Settings = () => {
     }) =>
       updateUserInfo({
         variables: {
-          id: currentUser?.id!,
-          email: currentUser?.email!,
-          firstName,
-          lastName,
-          phone: { prefix, number },
-          address: { place, city, country, zip },
+          user: {
+            id: currentUser?.id!,
+            email: currentUser?.email!,
+            firstName,
+            lastName,
+            phone: { prefix, number },
+            address: { place, city, country, zip },
+            role: currentUser?.role!,
+          },
         },
       }),
   });

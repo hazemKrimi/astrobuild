@@ -45,24 +45,8 @@ export const GET_USER_BY_ID = gql`
 `;
 
 export const CREATE_USER = gql`
-  mutation CreateUser(
-    $email: String!
-    $password: String!
-    $firstName: String!
-    $lastName: String!
-    $phone: PhoneInputModel!
-    $address: AddressInputModel!
-    $role: Role!
-  ) {
-    createUser(
-      email: $email
-      password: $password
-      firstName: $firstName
-      lastName: $lastName
-      phone: $phone
-      address: $address
-      role: $role
-    ) {
+  mutation CreateUser($user: UserInput!) {
+    createUser(user: $user) {
       id
       email
       firstName

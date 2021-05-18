@@ -169,7 +169,7 @@ const CreateUser = () => {
     }),
     onSubmit: ({ password }) => {
       setNewUser({ ...newUser, password });
-      createUser({ variables: { ...newUser } });
+      createUser({ variables: { user: { ...newUser } } });
     },
   });
 

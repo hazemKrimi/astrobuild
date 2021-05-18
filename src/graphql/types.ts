@@ -12,33 +12,44 @@ export type Scalars = {
 };
 
 
-export type AddressInputModel = {
+export type AddressInput = {
   place: Scalars['String'];
   city: Scalars['String'];
   zip: Scalars['String'];
   country: Scalars['String'];
 };
 
-export type AddressModel = {
-  __typename?: 'AddressModel';
+export type AddressOutput = {
+  __typename?: 'AddressOutput';
   place: Scalars['String'];
   city: Scalars['String'];
   zip: Scalars['String'];
   country: Scalars['String'];
 };
 
-export type AuthResponseModel = {
-  __typename?: 'AuthResponseModel';
-  user: UserResponseModel;
-  token: Scalars['String'];
+export type CategoryInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image: InputFile;
 };
 
-export type CategoryResponseModel = {
-  __typename?: 'CategoryResponseModel';
+export type CategoryOutput = {
+  __typename?: 'CategoryOutput';
   id: Scalars['String'];
   name: Scalars['String'];
   description: Scalars['String'];
   image: File;
+};
+
+export type ConnectionsInput = {
+  to: Scalars['String'];
+  releations: RelationsInput;
+};
+
+export type ConnectionsOutput = {
+  __typename?: 'ConnectionsOutput';
+  to: Scalars['String'];
+  releations: RelationsOutput;
 };
 
 export type CountryPrefixModel = {
@@ -47,8 +58,46 @@ export type CountryPrefixModel = {
   prefix: Scalars['String'];
 };
 
-export type FeatureResponseModel = {
-  __typename?: 'FeatureResponseModel';
+export type DelivrableInput = {
+  specification: Scalars['Boolean'];
+  fullBuild: Scalars['Boolean'];
+  mvp: Scalars['Boolean'];
+  design: Scalars['Boolean'];
+};
+
+export type DelivrableOutput = {
+  __typename?: 'DelivrableOutput';
+  specification: File;
+  fullBuild: Scalars['String'];
+  mvp: File;
+  design: File;
+};
+
+export type DevtimeInput = {
+  months: Scalars['Int'];
+  days: Scalars['Int'];
+  hours: Scalars['Int'];
+};
+
+export type DevtimeOutput = {
+  __typename?: 'DevtimeOutput';
+  months: Scalars['Int'];
+  days: Scalars['Int'];
+  hours: Scalars['Int'];
+};
+
+export type FeatureInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  featureType: Scalars['String'];
+  image: InputFile;
+  wireframes?: Maybe<Array<InputFile>>;
+  price: Scalars['Float'];
+  repo: Scalars['String'];
+};
+
+export type FeatureOutput = {
+  __typename?: 'FeatureOutput';
   id: Scalars['String'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -72,12 +121,9 @@ export type FileWithOutOId = {
   src: Scalars['String'];
 };
 
-export type Introduction = {
-  __typename?: 'Introduction';
-  purpose: Scalars['String'];
-  documentConventions: Scalars['String'];
-  intendedAudience: Scalars['String'];
-  projectScope: Scalars['String'];
+export type InputFile = {
+  name: Scalars['String'];
+  src: Scalars['String'];
 };
 
 export type IntroductionInput = {
@@ -87,21 +133,43 @@ export type IntroductionInput = {
   projectScope: Scalars['String'];
 };
 
+export type IntroductionOutput = {
+  __typename?: 'IntroductionOutput';
+  purpose: Scalars['String'];
+  documentConventions: Scalars['String'];
+  intendedAudience: Scalars['String'];
+  projectScope: Scalars['String'];
+};
+
 export type MutationRoot = {
   __typename?: 'MutationRoot';
-  signup: AuthResponseModel;
-  createUser: UserResponseModel;
-  login: AuthResponseModel;
-  deleteUser: UserResponseModel;
-  updateUserInfo: UserResponseModel;
-  updateUserPassword: UserResponseModel;
-  resetUserPassword: UserResponseModel;
-  confirmUserResetPassword: UserResponseModel;
-  deleteCategory: CategoryResponseModel;
-  deleteFeature: FeatureResponseModel;
-  deleteTemplate: TemplateModel;
-  updateTemplateFeature: TemplateResponseModel;
-  addTemplateSpecification: TemplateResponseModel;
+  signup: UserAuthenticationOutput;
+  createUser: UserOutput;
+  login: UserAuthenticationOutput;
+  deleteUser: UserOutput;
+  updateUserInfo: UserOutput;
+  updateUserPassword: UserOutput;
+  resetUserPassword: UserOutput;
+  confirmUserResetPassword: UserOutput;
+  deleteCategory: CategoryOutput;
+  deleteFeature: FeatureOutput;
+  deleteTemplate: TemplateDefactoredOutput;
+  updateTemplateFeature: TemplateOutput;
+  addTemplateSpecification: TemplateOutput;
+  addCategory: CategoryOutput;
+  updateCategory: CategoryOutput;
+  addFeature: FeatureOutput;
+  updateFeature: FeatureOutput;
+  deleteFeatureWireframe: FeatureOutput;
+  addFeatureWireframes: FeatureOutput;
+  addTemplate: TemplateOutput;
+  updateTemplate: TemplateOutput;
+  addPrototype: TemplateProtoTypeOutput;
+  updatePrototype: TemplateProtoTypeOutput;
+  addProject: ProjectOutput;
+  changeProjectState: ProjectOutput;
+  updateProject: ProjectOutput;
+  addProjectProposal: ProjectOutput;
 };
 
 
@@ -112,13 +180,7 @@ export type MutationRootSignupArgs = {
 
 
 export type MutationRootCreateUserArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  phone: PhoneInputModel;
-  address: AddressInputModel;
-  role: Role;
+  user: UserInput;
 };
 
 
@@ -135,18 +197,13 @@ export type MutationRootDeleteUserArgs = {
 
 
 export type MutationRootUpdateUserInfoArgs = {
-  id: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  email: Scalars['String'];
-  phone: PhoneInputModel;
-  address: AddressInputModel;
+  user: UpdateUserInput;
 };
 
 
 export type MutationRootUpdateUserPasswordArgs = {
   id: Scalars['String'];
-  password: PasswordInputModel;
+  password: PasswordInput;
 };
 
 
@@ -187,12 +244,83 @@ export type MutationRootAddTemplateSpecificationArgs = {
   specification: SpecificationInput;
 };
 
-export type NonFunctionalRequirements = {
-  __typename?: 'NonFunctionalRequirements';
-  performanceRequirements: Scalars['String'];
-  safetyRequirements: Scalars['String'];
-  securityRequirements: Scalars['String'];
-  softwareQualityAttributes: Scalars['String'];
+
+export type MutationRootAddCategoryArgs = {
+  category: CategoryInput;
+};
+
+
+export type MutationRootUpdateCategoryArgs = {
+  id: Scalars['String'];
+  category: CategoryInput;
+};
+
+
+export type MutationRootAddFeatureArgs = {
+  feature: FeatureInput;
+};
+
+
+export type MutationRootUpdateFeatureArgs = {
+  id: Scalars['String'];
+  feature: FeatureInput;
+};
+
+
+export type MutationRootDeleteFeatureWireframeArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationRootAddFeatureWireframesArgs = {
+  id: Scalars['String'];
+  wireframes: Array<InputFile>;
+};
+
+
+export type MutationRootAddTemplateArgs = {
+  template: TemplateInput;
+};
+
+
+export type MutationRootUpdateTemplateArgs = {
+  id: Scalars['String'];
+  template: TemplateUpdateInput;
+  specification?: Maybe<SpecificationInput>;
+};
+
+
+export type MutationRootAddPrototypeArgs = {
+  prototype: TemplateProtoTypeInput;
+};
+
+
+export type MutationRootUpdatePrototypeArgs = {
+  prototype: TemplateProtoTypeInput;
+};
+
+
+export type MutationRootAddProjectArgs = {
+  project: ProjectInput;
+};
+
+
+export type MutationRootChangeProjectStateArgs = {
+  id: Scalars['String'];
+  state: State;
+};
+
+
+export type MutationRootUpdateProjectArgs = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+  image: InputFile;
+};
+
+
+export type MutationRootAddProjectProposalArgs = {
+  id: Scalars['String'];
+  proposal: ProposalInput;
 };
 
 export type NonFunctionalRequirementsInput = {
@@ -202,14 +330,12 @@ export type NonFunctionalRequirementsInput = {
   softwareQualityAttributes: Scalars['String'];
 };
 
-export type OverallDescription = {
-  __typename?: 'OverallDescription';
-  perspective: Scalars['String'];
-  userCharacteristics: Scalars['String'];
-  operatingEnvironment: Scalars['String'];
-  designImplementationConstraints: Scalars['String'];
-  userDocumentation: Scalars['String'];
-  assemptionsDependencies: Scalars['String'];
+export type NonFunctionalRequirementsOutput = {
+  __typename?: 'NonFunctionalRequirementsOutput';
+  performanceRequirements: Scalars['String'];
+  safetyRequirements: Scalars['String'];
+  securityRequirements: Scalars['String'];
+  softwareQualityAttributes: Scalars['String'];
 };
 
 export type OverallDescriptionInput = {
@@ -221,32 +347,113 @@ export type OverallDescriptionInput = {
   assemptionsDependencies: Scalars['String'];
 };
 
-export type PasswordInputModel = {
+export type OverallDescriptionOutput = {
+  __typename?: 'OverallDescriptionOutput';
+  perspective: Scalars['String'];
+  userCharacteristics: Scalars['String'];
+  operatingEnvironment: Scalars['String'];
+  designImplementationConstraints: Scalars['String'];
+  userDocumentation: Scalars['String'];
+  assemptionsDependencies: Scalars['String'];
+};
+
+export type PasswordInput = {
   oldPassword: Scalars['String'];
   newPassword: Scalars['String'];
 };
 
-export type PhoneInputModel = {
+export type PaymentOptionInput = {
+  optOne: Scalars['Int'];
+  optTwo: Scalars['Int'];
+  optThree: Scalars['Int'];
+};
+
+export type PaymentOptionOutput = {
+  __typename?: 'PaymentOptionOutput';
+  optOne: Scalars['Int'];
+  optTwo: Scalars['Int'];
+  optThree: Scalars['Int'];
+};
+
+export type PhoneInput = {
   prefix: Scalars['String'];
   number: Scalars['String'];
 };
 
-export type PhoneModel = {
-  __typename?: 'PhoneModel';
+export type PhoneOutput = {
+  __typename?: 'PhoneOutput';
   prefix: Scalars['String'];
   number: Scalars['String'];
+};
+
+export type ProjectInput = {
+  clientId: Scalars['String'];
+  name: Scalars['String'];
+  image: InputFile;
+  platforms: Array<Scalars['String']>;
+  template: Scalars['String'];
+  features: Array<Scalars['String']>;
+  paymentOption: PaymentOptionInput;
+  delivrable?: Maybe<DelivrableInput>;
+  totalPrice: Scalars['Float'];
+};
+
+export type ProjectOutput = {
+  __typename?: 'ProjectOutput';
+  id: Scalars['String'];
+  clientId: Scalars['String'];
+  name: Scalars['String'];
+  image: File;
+  platforms: Array<Scalars['String']>;
+  template: TemplateOutput;
+  features: Array<FeatureOutput>;
+  state: Scalars['String'];
+  proposal?: Maybe<ProposalOutput>;
+  paymentOption: PaymentOptionOutput;
+  delivrable?: Maybe<DelivrableOutput>;
+  totalPrice: Scalars['Float'];
+};
+
+export type ProposalInput = {
+  devtime: DevtimeInput;
+  summary: Scalars['String'];
+  purpose: Scalars['String'];
+  resources: Array<ResourceInput>;
+};
+
+export type ProposalOutput = {
+  __typename?: 'ProposalOutput';
+  devtime: DevtimeOutput;
+  summary: Scalars['String'];
+  purpose: Scalars['String'];
+  resources: Array<ResourceOutput>;
+};
+
+export type ProtoTypeInput = {
+  featureId: Scalars['String'];
+  connections: Array<ConnectionsInput>;
+};
+
+export type ProtoTypeOutput = {
+  __typename?: 'ProtoTypeOutput';
+  feature: FeatureOutput;
+  connections: Array<ConnectionsOutput>;
 };
 
 export type QueryRoot = {
   __typename?: 'QueryRoot';
-  getAllUsers: Array<UserResponseModel>;
-  getUserById: UserResponseModel;
-  getCategoryById: CategoryResponseModel;
-  getFeatureById: FeatureResponseModel;
-  getTemplateById: TemplateResponseModel;
-  getAllCategories: Array<CategoryResponseModel>;
-  getAllFeatures: Array<FeatureResponseModel>;
-  getAllTemplates: Array<TemplateResponseModel>;
+  getAllUsers: Array<UserOutput>;
+  getUserById: UserOutput;
+  getCategoryById: CategoryOutput;
+  getFeatureById: FeatureOutput;
+  getPrototypeById: TemplateProtoTypeOutput;
+  getTemplateById: TemplateOutput;
+  getProjectById: ProjectOutput;
+  getAllProjectsByClientId: Array<ProjectOutput>;
+  getAllCategories: Array<CategoryOutput>;
+  getAllFeatures: Array<FeatureOutput>;
+  getAllTemplates: Array<TemplateOutput>;
+  getAllTemplatesByCategoriesId: Array<TemplateOutput>;
   getCountryCode: Array<CountryPrefixModel>;
 };
 
@@ -266,25 +473,50 @@ export type QueryRootGetFeatureByIdArgs = {
 };
 
 
+export type QueryRootGetPrototypeByIdArgs = {
+  id: Scalars['String'];
+};
+
+
 export type QueryRootGetTemplateByIdArgs = {
   id: Scalars['String'];
 };
 
-export type Role =
-  | 'Admin'
-  | 'Client'
-  | 'ProductOwner'
-  | 'Developer';
 
-export type Specification = {
-  __typename?: 'Specification';
-  introduction: Introduction;
-  overallDescription: OverallDescription;
-  nonFunctionalRequirements: NonFunctionalRequirements;
-  otherRequirements: Scalars['String'];
-  glossary: Scalars['String'];
-  analysisModels: Scalars['String'];
-  issuesList: Scalars['String'];
+export type QueryRootGetProjectByIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryRootGetAllProjectsByClientIdArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryRootGetAllTemplatesByCategoriesIdArgs = {
+  categoires: Array<Scalars['String']>;
+};
+
+export type RelationsInput = {
+  back: Scalars['Boolean'];
+  forword: Scalars['Boolean'];
+};
+
+export type RelationsOutput = {
+  __typename?: 'RelationsOutput';
+  back: Scalars['Boolean'];
+  forword: Scalars['Boolean'];
+};
+
+export type ResourceInput = {
+  resourceType: Scalars['String'];
+  developers: Scalars['Int'];
+};
+
+export type ResourceOutput = {
+  __typename?: 'ResourceOutput';
+  resourceType: Scalars['String'];
+  developers: Scalars['Int'];
 };
 
 export type SpecificationInput = {
@@ -297,36 +529,107 @@ export type SpecificationInput = {
   issuesList: Scalars['String'];
 };
 
-export type TemplateModel = {
-  __typename?: 'TemplateModel';
+export type SpecificationOutput = {
+  __typename?: 'SpecificationOutput';
+  introduction: IntroductionOutput;
+  overallDescription: OverallDescriptionOutput;
+  nonFunctionalRequirements: NonFunctionalRequirementsOutput;
+  otherRequirements: Scalars['String'];
+  glossary: Scalars['String'];
+  analysisModels: Scalars['String'];
+  issuesList: Scalars['String'];
+};
+
+export type State =
+  | 'Approved'
+  | 'Declined'
+  | 'OnReview'
+  | 'Archived';
+
+export type TemplateDefactoredOutput = {
+  __typename?: 'TemplateDefactoredOutput';
   id: Scalars['String'];
   name: Scalars['String'];
   description: Scalars['String'];
   category: Scalars['String'];
   features?: Maybe<Array<Scalars['String']>>;
   image: File;
-  specification?: Maybe<Specification>;
+  specification?: Maybe<SpecificationOutput>;
 };
 
-export type TemplateResponseModel = {
-  __typename?: 'TemplateResponseModel';
+export type TemplateInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  category: Scalars['String'];
+  image: InputFile;
+};
+
+export type TemplateOutput = {
+  __typename?: 'TemplateOutput';
   id: Scalars['String'];
   name: Scalars['String'];
   description: Scalars['String'];
   category: Scalars['String'];
-  features?: Maybe<Array<FeatureResponseModel>>;
+  features?: Maybe<Array<FeatureOutput>>;
   image: File;
-  specification?: Maybe<Specification>;
+  specification?: Maybe<SpecificationOutput>;
 };
 
-export type UserResponseModel = {
-  __typename?: 'UserResponseModel';
+export type TemplateProtoTypeInput = {
+  templateId: Scalars['String'];
+  prototype: Array<ProtoTypeInput>;
+};
+
+export type TemplateProtoTypeOutput = {
+  __typename?: 'TemplateProtoTypeOutput';
+  id: Scalars['String'];
+  template: Scalars['String'];
+  prototype: Array<ProtoTypeOutput>;
+};
+
+export type TemplateUpdateInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  category: Scalars['String'];
+  features?: Maybe<Array<Scalars['String']>>;
+  image: InputFile;
+  specification?: Maybe<Scalars['String']>;
+};
+
+export type UpdateUserInput = {
   id: Scalars['String'];
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
-  phone: PhoneModel;
-  address: AddressModel;
+  phone: PhoneInput;
+  address: AddressInput;
+  role: Scalars['String'];
+};
+
+export type UserAuthenticationOutput = {
+  __typename?: 'UserAuthenticationOutput';
+  user: UserOutput;
+  token: Scalars['String'];
+};
+
+export type UserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  phone: PhoneInput;
+  address: AddressInput;
+  role: Scalars['String'];
+};
+
+export type UserOutput = {
+  __typename?: 'UserOutput';
+  id: Scalars['String'];
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  phone: PhoneOutput;
+  address: AddressOutput;
   role: Scalars['String'];
 };
 
@@ -336,14 +639,14 @@ export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetAllUsersQuery = (
   { __typename?: 'QueryRoot' }
   & { getAllUsers: Array<(
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   )> }
 );
@@ -356,40 +659,34 @@ export type GetUserByIdQueryVariables = Exact<{
 export type GetUserByIdQuery = (
   { __typename?: 'QueryRoot' }
   & { getUserById: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );
 
 export type CreateUserMutationVariables = Exact<{
-  email: Scalars['String'];
-  password: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  phone: PhoneInputModel;
-  address: AddressInputModel;
-  role: Role;
+  user: UserInput;
 }>;
 
 
 export type CreateUserMutation = (
   { __typename?: 'MutationRoot' }
   & { createUser: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );
@@ -403,17 +700,17 @@ export type SignupMutationVariables = Exact<{
 export type SignupMutation = (
   { __typename?: 'MutationRoot' }
   & { signup: (
-    { __typename?: 'AuthResponseModel' }
-    & Pick<AuthResponseModel, 'token'>
+    { __typename?: 'UserAuthenticationOutput' }
+    & Pick<UserAuthenticationOutput, 'token'>
     & { user: (
-      { __typename?: 'UserResponseModel' }
-      & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+      { __typename?: 'UserOutput' }
+      & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
       & { phone: (
-        { __typename?: 'PhoneModel' }
-        & Pick<PhoneModel, 'prefix' | 'number'>
+        { __typename?: 'PhoneOutput' }
+        & Pick<PhoneOutput, 'prefix' | 'number'>
       ), address: (
-        { __typename?: 'AddressModel' }
-        & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+        { __typename?: 'AddressOutput' }
+        & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
       ) }
     ) }
   ) }
@@ -428,17 +725,17 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = (
   { __typename?: 'MutationRoot' }
   & { login: (
-    { __typename?: 'AuthResponseModel' }
-    & Pick<AuthResponseModel, 'token'>
+    { __typename?: 'UserAuthenticationOutput' }
+    & Pick<UserAuthenticationOutput, 'token'>
     & { user: (
-      { __typename?: 'UserResponseModel' }
-      & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+      { __typename?: 'UserOutput' }
+      & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
       & { phone: (
-        { __typename?: 'PhoneModel' }
-        & Pick<PhoneModel, 'prefix' | 'number'>
+        { __typename?: 'PhoneOutput' }
+        & Pick<PhoneOutput, 'prefix' | 'number'>
       ), address: (
-        { __typename?: 'AddressModel' }
-        & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+        { __typename?: 'AddressOutput' }
+        & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
       ) }
     ) }
   ) }
@@ -452,14 +749,14 @@ export type ResetPasswordMutationVariables = Exact<{
 export type ResetPasswordMutation = (
   { __typename?: 'MutationRoot' }
   & { resetUserPassword: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );
@@ -473,60 +770,55 @@ export type ConfirmUserResetPasswordMutationVariables = Exact<{
 export type ConfirmUserResetPasswordMutation = (
   { __typename?: 'MutationRoot' }
   & { confirmUserResetPassword: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );
 
 export type UpdateUserInfoMutationVariables = Exact<{
-  id: Scalars['String'];
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  phone: PhoneInputModel;
-  address: AddressInputModel;
+  user: UpdateUserInput;
 }>;
 
 
 export type UpdateUserInfoMutation = (
   { __typename?: 'MutationRoot' }
   & { updateUserInfo: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );
 
 export type UpdateUserPasswordMutationVariables = Exact<{
   id: Scalars['String'];
-  password: PasswordInputModel;
+  password: PasswordInput;
 }>;
 
 
 export type UpdateUserPasswordMutation = (
   { __typename?: 'MutationRoot' }
   & { updateUserPassword: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );
@@ -540,14 +832,14 @@ export type DeleteUserMutationVariables = Exact<{
 export type DeleteUserMutation = (
   { __typename?: 'MutationRoot' }
   & { deleteUser: (
-    { __typename?: 'UserResponseModel' }
-    & Pick<UserResponseModel, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
+    { __typename?: 'UserOutput' }
+    & Pick<UserOutput, 'id' | 'email' | 'firstName' | 'lastName' | 'role'>
     & { phone: (
-      { __typename?: 'PhoneModel' }
-      & Pick<PhoneModel, 'prefix' | 'number'>
+      { __typename?: 'PhoneOutput' }
+      & Pick<PhoneOutput, 'prefix' | 'number'>
     ), address: (
-      { __typename?: 'AddressModel' }
-      & Pick<AddressModel, 'place' | 'city' | 'country' | 'zip'>
+      { __typename?: 'AddressOutput' }
+      & Pick<AddressOutput, 'place' | 'city' | 'country' | 'zip'>
     ) }
   ) }
 );

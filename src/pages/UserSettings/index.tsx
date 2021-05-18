@@ -25,7 +25,7 @@ import {
   GetCountryCodesQueryVariables,
   GetUserByIdQuery,
   GetUserByIdQueryVariables,
-  UserResponseModel,
+  UserOutput,
 } from '../../graphql/types';
 import {
   GET_COUNTRY_CODES,
@@ -37,7 +37,7 @@ import {
 const UserSettings = () => {
   const history = useHistory();
   const role = useReactiveVar(roleVar);
-  const [userToEdit, setUserToEdit] = useState<UserResponseModel>();
+  const [userToEdit, setUserToEdit] = useState<UserOutput>();
   const { id } = useParams<{ id: string }>();
   const { data: countryCodes, loading: countryCodesLoading } = useQuery<
     GetCountryCodesQuery,
@@ -119,12 +119,15 @@ const UserSettings = () => {
     }) =>
       updateUserInfo({
         variables: {
-          id: userToEdit?.id!,
-          email: userToEdit?.email!,
-          firstName,
-          lastName,
-          phone: { prefix, number },
-          address: { place, city, country, zip },
+          user: {
+            id: userToEdit?.id!,
+            email: userToEdit?.email!,
+            firstName,
+            lastName,
+            phone: { prefix, number },
+            address: { place, city, country, zip },
+            role: userToEdit?.role!,
+          },
         },
       }),
     enableReinitialize: true,

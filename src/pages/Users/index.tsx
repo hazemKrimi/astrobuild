@@ -20,7 +20,7 @@ import {
   DeleteUserMutationVariables,
   GetAllUsersQuery,
   GetAllUsersQueryVariables,
-  UserResponseModel,
+  UserOutput,
 } from '../../graphql/types';
 import { GET_ALL_USERS } from '../../graphql/admin.api';
 import { DELETE_USER } from '../../graphql/auth.api';
@@ -29,8 +29,8 @@ const Users = () => {
   const role = useReactiveVar(roleVar);
   const history = useHistory();
   const location = useLocation();
-  const [users, setUsers] = useState<Array<UserResponseModel>>();
-  const [userToDelete, setUserToDelete] = useState<UserResponseModel>();
+  const [users, setUsers] = useState<Array<UserOutput>>();
+  const [userToDelete, setUserToDelete] = useState<UserOutput>();
   const [error, setError] = useState<string>('');
   const [deleteAccountModal, setDeleteAccountModal] = useState<boolean>(false);
 
