@@ -138,7 +138,6 @@ const CreateUser = () => {
       });
       setSelectedSection('security');
     },
-    enableReinitialize: true,
   });
 
   const { data: countryCodes, loading: countryCodesLoading } = useQuery<
@@ -169,7 +168,7 @@ const CreateUser = () => {
     }),
     onSubmit: ({ password }) => {
       setNewUser({ ...newUser, password });
-      createUser({ variables: { user: { ...newUser } } });
+      createUser({ variables: { user: { ...newUser, password } } });
     },
   });
 
