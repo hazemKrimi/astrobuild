@@ -19,6 +19,7 @@ import ProtectedRoute from './ProtectedRoute';
 import AuthRoute from './AuthRoute';
 import SectionSelector from './SectionSelector';
 import Modal from './Modal';
+import SidebarItem from './SidebarItem';
 
 export {
   Button,
@@ -42,4 +43,5 @@ export {
   AuthRoute,
   SectionSelector,
   Modal,
+  SidebarItem,
 };
