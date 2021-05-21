@@ -12,6 +12,7 @@ import { ReactComponent as Profile } from './icons/profile.svg';
 import { ReactComponent as Security } from './icons/security.svg';
 import { ReactComponent as Edit } from './icons/edit.svg';
 import { ReactComponent as Delete } from './icons/delete.svg';
+import { ReactComponent as General } from './icons/general.svg';
 import { ReactComponent as Login } from './images/login.svg';
 import { ReactComponent as Signup } from './images/signup.svg';
 import { ReactComponent as Empty } from './images/empty.svg';
@@ -31,6 +32,7 @@ export {
   Security,
   Edit,
   Delete,
+  General,
   Login,
   Signup,
   Empty,
