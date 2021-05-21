@@ -14,7 +14,7 @@ export const Wrapper = styled.div<WrapperProps>`
   background: ${({ theme, color }) =>
     color ? theme.colors[color].light : theme.colors.client.light};
   display: grid;
+  grid-template-rows: 1fr auto;
   justify-content: center;
-  align-items: flex-end;
   padding: 55px 0px;
 `;
