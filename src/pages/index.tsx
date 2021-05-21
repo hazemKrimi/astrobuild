@@ -12,6 +12,8 @@ import Users from './Users';
 import CreateUser from './CreateUser';
 import Settings from './Settings';
 import UserSettings from './UserSettings';
+import AddCategory from './AddCategory';
+import CategorySettings from './CategorySettings';
 
 export {
   Login,
@@ -28,4 +30,6 @@ export {
   CreateUser,
   Settings,
   UserSettings,
+  AddCategory,
+  CategorySettings,
 };
