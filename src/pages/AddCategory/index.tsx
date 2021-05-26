@@ -167,6 +167,8 @@ const AddCategory = () => {
                 value={form.values.description}
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
+                error={form.touched.description && !!form.errors.description}
+                errorMessage={form.errors.description}
               />
               <Box marginTop='0.5rem' display='flex' justifyContent='flex-end'>
                 <Button
