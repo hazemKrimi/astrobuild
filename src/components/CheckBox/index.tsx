@@ -8,18 +8,18 @@ type CheckBoxProps = {
   label: string;
   name: string;
   checked: boolean;
-  onChange: () => void;
+  onClick: () => void;
 };
 
 const CheckBox = ({
   label,
   name,
   checked,
-  onChange,
+  onClick,
   ...props
 }: CheckBoxProps) => {
   return (
-    <Wrapper checked={checked} {...props} onClick={onChange}>
+    <Wrapper checked={checked} {...props} onClick={onClick}>
       <div className='checkbox'>
         <Check />
       </div>
