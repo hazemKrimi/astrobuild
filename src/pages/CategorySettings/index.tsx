@@ -13,17 +13,21 @@ import {
   Alert,
   TextArea,
   Spinner,
+  Modal,
 } from '../../components';
 import { Wrapper } from './styles';
 import { ArrowLeft, General } from '../../assets';
 import {
   CategoryOutput,
+  DeleteCategoryMutation,
+  DeleteCategoryMutationVariables,
   GetCategoryByIdQuery,
   GetCategoryByIdQueryVariables,
   UpdateCategoryMutation,
   UpdateCategoryMutationVariables,
 } from '../../graphql/types';
 import {
+  DELETE_CATEGORY,
   GET_CATEGORY_BY_ID,
   UPDATE_CATEGORY,
 } from '../../graphql/category.api';
@@ -36,6 +40,10 @@ const CategorySettings = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryOutput>();
+
+  const [deleteCategoryModal, setDeleteCategoryModal] = useState<boolean>(
+    false
+  );
 
   const [getCategory, { loading: categoryLoading }] = useLazyQuery<
     GetCategoryByIdQuery,
@@ -54,6 +62,19 @@ const CategorySettings = () => {
     onCompleted({ updateCategory: data }) {
       setCategory(data);
       setSuccess(true);
+    },
+    onError({ graphQLErrors }) {
+      setError(graphQLErrors[0]?.extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
+
+  const [deleteCategory] = useMutation<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >(DELETE_CATEGORY, {
+    onCompleted() {
+      history.push('/category');
     },
     onError({ graphQLErrors }) {
       setError(graphQLErrors[0]?.extensions?.info);
@@ -97,6 +118,16 @@ const CategorySettings = () => {
 
   return role === 'developer' ? (
     <Wrapper>
+      {deleteCategoryModal && (
+        <Modal
+          color={role || 'client'}
+          title='Delete Category'
+          description='
+      If you delete this category you cannot recover it.'
+          onClose={() => setDeleteCategoryModal(false)}
+          onConfirm={() => deleteCategory({ variables: { id } })}
+        ></Modal>
+      )}
       <Box>
         <Button
           text='Back'
@@ -207,8 +238,14 @@ const CategorySettings = () => {
                 <Box
                   marginTop='0.5rem'
                   display='flex'
-                  justifyContent='flex-end'
+                  justifyContent='space-between'
                 >
+                  <Button
+                    variant='text'
+                    color='error'
+                    text='Delete Category'
+                    onClick={() => setDeleteCategoryModal(true)}
+                  />
                   <Button
                     variant='primary-action'
                     color={role || 'client'}
