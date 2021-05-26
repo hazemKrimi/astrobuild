@@ -20,7 +20,6 @@ import {
   AddFeatureMutation,
   AddFeatureMutationVariables,
 } from '../../graphql/types';
-import { ADD_CATEGORY } from '../../graphql/category.api';
 import { ADD_FEATURE } from '../../graphql/feature.api';
 
 const AddFeature = () => {
