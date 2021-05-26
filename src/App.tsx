@@ -26,7 +26,9 @@ import {
   Category,
   Prototype,
   AddCategory,
+  AddFeature,
   CategorySettings,
+  FeatureSettings,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -107,6 +109,12 @@ const App = () => {
         </ProtectedRoute>
         <ProtectedRoute path='/feature/:id' exact>
           <Feature />
+        </ProtectedRoute>
+        <ProtectedRoute path='/add-feature' exact>
+          <AddFeature />
+        </ProtectedRoute>
+        <ProtectedRoute path='/feature-settings/:id' exact>
+          <FeatureSettings />
         </ProtectedRoute>
         <ProtectedRoute path='/category' exact>
           <Category />

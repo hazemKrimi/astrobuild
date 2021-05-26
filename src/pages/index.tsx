@@ -13,7 +13,9 @@ import CreateUser from './CreateUser';
 import Settings from './Settings';
 import UserSettings from './UserSettings';
 import AddCategory from './AddCategory';
+import AddFeature from './AddFeature';
 import CategorySettings from './CategorySettings';
+import FeatureSettings from './FeatureSettings';
 
 export {
   Login,
@@ -31,5 +33,7 @@ export {
   Settings,
   UserSettings,
   AddCategory,
+  AddFeature,
   CategorySettings,
+  FeatureSettings,
 };
