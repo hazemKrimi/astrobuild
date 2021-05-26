@@ -1,27 +1,108 @@
-import { useReactiveVar } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router';
 import { roleVar } from '../../graphql/state';
-import { Empty } from '../../assets';
-import { Box } from '../../components';
+import { Empty, Settings } from '../../assets';
+import { Box, Text, Button, Spinner } from '../../components';
 import { Wrapper } from './styles';
+import {
+  FeatureOutput,
+  GetAllFeaturesQuery,
+  GetAllFeaturesQueryVariables,
+  GetFeatureByIdQuery,
+  GetFeatureByIdQueryVariables,
+} from '../../graphql/types';
+import { GET_ALL_FEATURES, GET_FEATURE_BY_ID } from '../../graphql/feature.api';
 
 const Feature = () => {
   const role = useReactiveVar(roleVar);
+  const history = useHistory();
+  const { id } = useParams<{ id: string }>();
+  const [feature, setFeature] = useState<FeatureOutput>();
+
+  const [getFeatures, { loading: featuresLoading }] = useLazyQuery<
+    GetAllFeaturesQuery,
+    GetAllFeaturesQueryVariables
+  >(GET_ALL_FEATURES, {
+    onCompleted({ getAllFeatures }) {
+      setFeature(getAllFeatures[0]);
+    },
+    fetchPolicy: 'network-only',
+  });
+
+  const [getFeature, { loading: featureLoading }] = useLazyQuery<
+    GetFeatureByIdQuery,
+    GetFeatureByIdQueryVariables
+  >(GET_FEATURE_BY_ID, {
+    onCompleted({ getFeatureById }) {
+      setFeature(getFeatureById);
+    },
+    fetchPolicy: 'network-only',
+  });
+
+  useEffect(() => {
+    if (id) {
+      getFeature({ variables: { id } });
+    } else {
+      getFeatures();
+    }
+
+    // eslint-disable-next-line
+  }, [id]);
 
   return role === 'developer' ? (
-    <Wrapper color={role}>
-      <Box
-        width='100%'
-        height='100vh'
-        display='grid'
-        alignItems='center'
-        justifyContent='center'
-      >
-        <Box>
-          <Empty />
-        </Box>
-      </Box>
-    </Wrapper>
+    <>
+      {!featuresLoading && !featureLoading ? (
+        <>
+          {feature ? (
+            <Wrapper>
+              <Box padding='35px 45px 0px 120px'>
+                <Box
+                  display='flex'
+                  flexDirection='row'
+                  alignItems='center'
+                  marginBottom='20px'
+                >
+                  <Box flexGrow='1'>
+                    <Text variant='headline' weight='bold'>
+                      {feature.name}
+                    </Text>
+                  </Box>
+                  <Button
+                    color={role || 'client'}
+                    variant='primary-action'
+                    text='Settings'
+                    iconLeft={<Settings />}
+                    onClick={() => history.push(`/feature-settings/${id}`)}
+                  />
+                </Box>
+                <Box>
+                  <Text variant='headline'>Description</Text>
+                  <Text>{feature.description}</Text>
+                </Box>
+              </Box>
+            </Wrapper>
+          ) : (
+            <Wrapper color={role}>
+              <Box
+                width='100%'
+                height='100vh'
+                display='grid'
+                alignItems='center'
+                justifyContent='center'
+              >
+                <Box>
+                  <Empty />
+                </Box>
+              </Box>
+            </Wrapper>
+          )}
+        </>
+      ) : (
+        <Spinner fullScreen color={role || 'client'} />
+      )}
+    </>
   ) : (
     <>
       {role === 'admin' && <Redirect to='/clients' />}
