@@ -62,6 +62,7 @@ const CategorySettings = () => {
     onCompleted({ updateCategory: data }) {
       setCategory(data);
       setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
       setError(graphQLErrors[0]?.extensions?.info);
@@ -234,6 +235,8 @@ const CategorySettings = () => {
                   value={form.values.description}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
+                  error={form.touched.description && !!form.errors.description}
+                  errorMessage={form.errors.description}
                 />
                 <Box
                   marginTop='0.5rem'
