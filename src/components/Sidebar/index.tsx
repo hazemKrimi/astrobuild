@@ -109,7 +109,7 @@ const Sidebar = () => {
                 <SidebarItem
                   color={role}
                   text={project.name[0]}
-                  onClick={() => history.push(`/category/${project.id}`)}
+                  onClick={() => history.push(`/project/${project.id}`)}
                 />
               </div>
               <ContextMenu
@@ -141,7 +141,7 @@ const Sidebar = () => {
                 <SidebarItem
                   color={role}
                   text={feature.name[0]}
-                  onClick={() => history.push(`/category/${feature.id}`)}
+                  onClick={() => history.push(`/feature/${feature.id}`)}
                 />
               </div>
               <ContextMenu
