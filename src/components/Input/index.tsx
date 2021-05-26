@@ -16,7 +16,7 @@ type InputProps = {
     | 'white';
   error?: boolean;
   errorMessage?: string;
-  value?: string;
+  value?: string | number;
   label?: string;
   name?: string;
   type?: 'text' | 'email' | 'tel' | 'password' | 'file' | 'number';
