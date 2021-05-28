@@ -4,7 +4,14 @@ import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Empty, Settings } from '../../assets';
-import { Box, Text, Button, Spinner } from '../../components';
+import {
+  Box,
+  Text,
+  Button,
+  Spinner,
+  ImagePreview,
+  Link,
+} from '../../components';
 import { Wrapper } from './styles';
 import {
   FeatureOutput,
@@ -77,9 +84,69 @@ const Feature = () => {
                     onClick={() => history.push(`/feature-settings/${id}`)}
                   />
                 </Box>
-                <Box>
-                  <Text variant='headline'>Description</Text>
+                <Box marginBottom='30px'>
+                  <Text variant='headline' gutterBottom>
+                    Description
+                  </Text>
                   <Text>{feature.description}</Text>
+                </Box>
+                <Box
+                  display='flex'
+                  flexDirection='row'
+                  alignItems='center'
+                  marginBottom='30px'
+                >
+                  <Box marginRight='35px'>
+                    <Text variant='headline' gutterBottom>
+                      Price
+                    </Text>
+                  </Box>
+                  <Text variant='title' weight='bold'>
+                    ${feature.price}
+                  </Text>
+                </Box>
+                {feature.wireframes && (
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    marginBottom='30px'
+                  >
+                    <Text variant='headline' gutterBottom>
+                      Wireframes
+                    </Text>
+                    <Box
+                      background='white'
+                      boxShadow='1px 1px 10px 0px rgba(50, 59, 105, 0.25)'
+                      borderRadius='10px'
+                      width='100%'
+                      padding='30px'
+                      display='grid'
+                      gridTemplate='auto / repeat(auto-fit, 175px)'
+                      gap='30px'
+                      alignItems='stretch'
+                    >
+                      {feature.wireframes.map((image) => (
+                        <ImagePreview
+                          key={image.name}
+                          color={role}
+                          image={image}
+                        />
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+                <Box
+                  display='flex'
+                  flexDirection='row'
+                  alignItems='center'
+                  marginBottom='30px'
+                >
+                  <Box marginRight='35px'>
+                    <Text variant='headline' gutterBottom>
+                      Repo
+                    </Text>
+                  </Box>
+                  <Link href={feature.repo}>{feature.repo}</Link>
                 </Box>
               </Box>
             </Wrapper>
