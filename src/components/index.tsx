@@ -20,6 +20,7 @@ import AuthRoute from './AuthRoute';
 import SectionSelector from './SectionSelector';
 import Modal from './Modal';
 import SidebarItem from './SidebarItem';
+import ImagePreview from './ImagePreview';
 
 export {
   Button,
@@ -44,4 +45,5 @@ export {
   SectionSelector,
   Modal,
   SidebarItem,
+  ImagePreview,
 };
