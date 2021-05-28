@@ -15,6 +15,7 @@ import {
   Spinner,
   Modal,
   CheckBox,
+  ImagePreview,
 } from '../../components';
 import { Wrapper } from './styles';
 import { ArrowLeft, Design, General } from '../../assets';
@@ -43,7 +44,18 @@ const FeatureSettings = () => {
   >('general');
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
-  const [feature, setFeature] = useState<FeatureOutput>();
+  const [feature, setFeature] = useState<FeatureOutput>({
+    id,
+    name: '',
+    description: '',
+    featureType: '',
+    image: {
+      name: '',
+      src: '',
+    },
+    price: 0,
+    repo: '',
+  });
 
   const [deleteFeatureModal, setDeleteFeatureModal] = useState<boolean>(false);
 
@@ -137,6 +149,35 @@ const FeatureSettings = () => {
     enableReinitialize: true,
   });
 
+  const wireframesForm = useFormik<{
+    wireframes: Array<{ name: string; src: string }>;
+  }>({
+    initialValues: {
+      wireframes:
+        feature?.wireframes?.map((wireframe) => ({
+          name: wireframe.name,
+          src: wireframe.src,
+        })) || [],
+    },
+    onSubmit: ({ wireframes }) => {
+      updateFeature({
+        variables: {
+          id,
+          feature: {
+            name: feature.name,
+            description: feature.description,
+            price: feature.price,
+            repo: feature.repo,
+            featureType: feature.featureType,
+            image: { name: feature.image.name, src: feature.image.src },
+            wireframes,
+          },
+        },
+      });
+    },
+    enableReinitialize: true,
+  });
+
   return role === 'developer' ? (
     <Wrapper>
       <Box>
@@ -162,7 +203,8 @@ const FeatureSettings = () => {
             icon={<General />}
             color={role || 'client'}
             text='General'
-            selected
+            selected={selectedSection === 'general'}
+            onClick={() => setSelectedSection('general')}
           />
           <SectionSelector
             icon={<Design />}
@@ -187,11 +229,11 @@ const FeatureSettings = () => {
             marginBottom='50px'
           >
             <Text variant='subheader' weight='bold'>
-              General
+              {selectedSection === 'general' ? 'General' : 'Wireframes'}
             </Text>
             {error && <Alert color='error' text={error} />}
             {success && (
-              <Alert color='success' text='Account updated successfully' />
+              <Alert color='success' text='Feature updated successfully' />
             )}
           </Box>
           {selectedSection === 'general' && (
@@ -264,8 +306,9 @@ const FeatureSettings = () => {
                           }
                         }}
                         error={
-                          !!generalForm.errors.imageName ||
-                          !!generalForm.errors.imageSource
+                          generalForm.touched.imageName &&
+                          (!!generalForm.errors.imageName ||
+                            !!generalForm.errors.imageSource)
                         }
                         errorMessage={generalForm.errors.imageName}
                       />
@@ -450,6 +493,70 @@ const FeatureSettings = () => {
                 </Box>
               )}
             </>
+          )}
+          {selectedSection === 'wireframes' && (
+            <form onSubmit={wireframesForm.handleSubmit}>
+              <Box
+                display='grid'
+                gridTemplate='auto / repeat(auto-fit, 175px)'
+                gap='30px'
+                alignItems='stretch'
+              >
+                <ImagePreview
+                  color={role}
+                  image={undefined}
+                  onChange={async (
+                    event: React.ChangeEvent<HTMLInputElement>
+                  ) => {
+                    const formData = new FormData();
+
+                    if (event.target.files && event.target.files[0]) {
+                      formData.append('file', event.target.files[0]);
+                      formData.append('upload_preset', 'xofll5kc');
+
+                      const data = await (
+                        await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                          method: 'POST',
+                          body: formData,
+                        })
+                      ).json();
+
+                      const filename = data.original_filename;
+                      const filesource = data.secure_url;
+
+                      wireframesForm.setFieldValue('wireframes', [
+                        ...wireframesForm.values.wireframes,
+                        { name: filename, src: filesource },
+                      ]);
+                    }
+                  }}
+                />
+                {wireframesForm.values.wireframes.map((image) => (
+                  <ImagePreview
+                    key={image.name}
+                    color={role}
+                    image={image}
+                    onDelete={() => {
+                      wireframesForm.setFieldValue(
+                        'wireframes',
+                        wireframesForm.values.wireframes.filter(
+                          ({ name }) => name !== image.name
+                        )
+                      );
+                    }}
+                  />
+                ))}
+              </Box>
+              <Box marginTop='1rem' display='flex' justifyContent='flex-end'>
+                <Button
+                  variant='primary-action'
+                  color={role || 'client'}
+                  text='Save'
+                  type='submit'
+                  loading={loading}
+                />
+              </Box>
+            </form>
           )}
         </Box>
       </Box>
