@@ -174,7 +174,7 @@ const CategorySettings = () => {
             </Text>
             {error && <Alert color='error' text={error} />}
             {success && (
-              <Alert color='success' text='Account updated successfully' />
+              <Alert color='success' text='Category updated successfully' />
             )}
           </Box>
           {!categoryLoading ? (
@@ -225,7 +225,10 @@ const CategorySettings = () => {
                       form.setFieldValue('imageSource', filesource);
                     }
                   }}
-                  error={!!form.errors.imageName || !!form.errors.imageSource}
+                  error={
+                    form.touched.imageName &&
+                    (!!form.errors.imageName || !!form.errors.imageSource)
+                  }
                   errorMessage={form.errors.imageName}
                 />
                 <TextArea
