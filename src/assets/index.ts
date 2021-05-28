@@ -14,6 +14,7 @@ import { ReactComponent as Edit } from './icons/edit.svg';
 import { ReactComponent as Delete } from './icons/delete.svg';
 import { ReactComponent as General } from './icons/general.svg';
 import { ReactComponent as Design } from './icons/design.svg';
+import { ReactComponent as Close } from './icons/close.svg';
 import { ReactComponent as Login } from './images/login.svg';
 import { ReactComponent as Signup } from './images/signup.svg';
 import { ReactComponent as Empty } from './images/empty.svg';
@@ -35,6 +36,7 @@ export {
   Delete,
   General,
   Design,
+  Close,
   Login,
   Signup,
   Empty,
