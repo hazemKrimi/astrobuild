@@ -74,18 +74,18 @@ const Sidebar = () => {
   });
 
   useEffect(() => {
-    if (/project/.test(location.pathname)) {
+    if (/project/i.test(location.pathname)) {
       getProjects();
     }
 
-    if (/template/.test(location.pathname)) {
+    if (/template/i.test(location.pathname)) {
       getTemplates();
     }
 
-    if (/feature/.test(location.pathname)) {
+    if (/feature/i.test(location.pathname)) {
       getFeatures();
     }
-    if (/category/.test(location.pathname)) {
+    if (/category/i.test(location.pathname)) {
       getCategories();
     }
 
@@ -101,94 +101,108 @@ const Sidebar = () => {
 
   return (
     <Wrapper color={role}>
-      <Box display='flex' flexDirection='column'>
-        {projects &&
-          projects.map((project) => (
-            <Box marginBottom='20px' key={project.id}>
-              <div id={`project-${project.id}`}>
-                <SidebarItem
-                  color={role}
-                  text={project.name[0]}
-                  onClick={() => history.push(`/project/${project.id}`)}
-                />
-              </div>
-              <ContextMenu
-                component={`project-${project.id}`}
-                items={[{ action: () => {}, label: project.name }]}
-              />
-            </Box>
-          ))}
-        {templates &&
-          templates.map((template) => (
-            <Box marginBottom='20px' key={template.id}>
-              <div id={`template-${template.id}`}>
-                <SidebarItem
-                  color={role}
-                  text={template.name[0]}
-                  onClick={() => history.push(`/template/${template.id}`)}
-                />
-              </div>
-              <ContextMenu
-                component={`template-${template.id}`}
-                items={[{ action: () => {}, label: template.name }]}
-              />
-            </Box>
-          ))}
-        {features &&
-          features.map((feature) => (
-            <Box marginBottom='20px' key={feature.id}>
-              <div id={`feature-${feature.id}`}>
-                <SidebarItem
-                  color={role}
-                  text={feature.name[0]}
-                  onClick={() => history.push(`/feature/${feature.id}`)}
-                />
-              </div>
-              <ContextMenu
-                component={`feature-${feature.id}`}
-                items={[{ action: () => {}, label: feature.name }]}
-              />
-            </Box>
-          ))}
-        {categories &&
-          categories.map((category) => (
-            <Box marginBottom='20px' key={category.id}>
-              <div id={`category-${category.id}`}>
-                <SidebarItem
-                  color={role}
-                  text={category.name[0]}
-                  onClick={() => history.push(`/category/${category.id}`)}
-                />
-              </div>
-              <ContextMenu
-                component={`category-${category.id}`}
-                items={[{ action: () => {}, label: category.name }]}
-              />
-            </Box>
-          ))}
-      </Box>
-      <Box>
-        {role !== 'admin' && (
-          <IconButton
-            icon={<Add />}
-            color={role}
-            onClick={() => {
-              if (/project/.test(location.pathname)) {
-                history.push('/add-project');
-              }
-              if (/template/.test(location.pathname)) {
-                history.push('/add-template');
-              }
-              if (/feature/.test(location.pathname)) {
-                history.push('/add-feature');
-              }
-              if (/category/.test(location.pathname)) {
-                history.push('/add-category');
-              }
-            }}
-          />
-        )}
-      </Box>
+      {role !== 'admin' && (
+        <>
+          <Box display='flex' flexDirection='column'>
+            {projects &&
+              projects.map((project) => (
+                <Box marginBottom='20px' key={project.id}>
+                  <div id={`project-${project.id}`}>
+                    <SidebarItem
+                      color={role}
+                      selected={new RegExp(project.id, 'i').test(
+                        location.pathname
+                      )}
+                      text={project.name[0]}
+                      onClick={() => history.push(`/project/${project.id}`)}
+                    />
+                  </div>
+                  <ContextMenu
+                    component={`project-${project.id}`}
+                    items={[{ action: () => {}, label: project.name }]}
+                  />
+                </Box>
+              ))}
+            {templates &&
+              templates.map((template) => (
+                <Box marginBottom='20px' key={template.id}>
+                  <div id={`template-${template.id}`}>
+                    <SidebarItem
+                      color={role}
+                      selected={new RegExp(template.id, 'i').test(
+                        location.pathname
+                      )}
+                      text={template.name[0]}
+                      onClick={() => history.push(`/template/${template.id}`)}
+                    />
+                  </div>
+                  <ContextMenu
+                    component={`template-${template.id}`}
+                    items={[{ action: () => {}, label: template.name }]}
+                  />
+                </Box>
+              ))}
+            {features &&
+              features.map((feature) => (
+                <Box marginBottom='20px' key={feature.id}>
+                  <div id={`feature-${feature.id}`}>
+                    <SidebarItem
+                      color={role}
+                      selected={new RegExp(feature.id, 'i').test(
+                        location.pathname
+                      )}
+                      text={feature.name[0]}
+                      onClick={() => history.push(`/feature/${feature.id}`)}
+                    />
+                  </div>
+                  <ContextMenu
+                    component={`feature-${feature.id}`}
+                    items={[{ action: () => {}, label: feature.name }]}
+                  />
+                </Box>
+              ))}
+            {categories &&
+              categories.map((category) => (
+                <Box marginBottom='20px' key={category.id}>
+                  <div id={`category-${category.id}`}>
+                    <SidebarItem
+                      color={role}
+                      selected={new RegExp(category.id, 'i').test(
+                        location.pathname
+                      )}
+                      text={category.name[0]}
+                      onClick={() => history.push(`/category/${category.id}`)}
+                    />
+                  </div>
+                  <ContextMenu
+                    component={`category-${category.id}`}
+                    items={[{ action: () => {}, label: category.name }]}
+                  />
+                </Box>
+              ))}
+          </Box>
+          <Box>
+            <IconButton
+              icon={<Add />}
+              color={role}
+              onClick={() => {
+                if (/project/i.test(location.pathname)) {
+                  history.push('/add-project');
+                }
+                if (/template/i.test(location.pathname)) {
+                  history.push('/add-template');
+                }
+                if (/feature/i.test(location.pathname)) {
+                  history.push('/add-feature');
+                }
+                if (/category/i.test(location.pathname)) {
+                  history.push('/add-category');
+                }
+              }}
+            />
+          </Box>
+        </>
+      )}
     </Wrapper>
   );
 };
