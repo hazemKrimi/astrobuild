@@ -157,7 +157,10 @@ const AddCategory = () => {
                     form.setFieldValue('imageSource', filesource);
                   }
                 }}
-                error={!!form.errors.imageName || !!form.errors.imageSource}
+                error={
+                  form.touched.imageName &&
+                  (!!form.errors.imageName || !!form.errors.imageSource)
+                }
                 errorMessage={form.errors.imageName}
               />
               <TextArea
