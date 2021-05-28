@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 type WrapperProps = {
   color?: 'client' | 'productOwner' | 'developer' | 'admin';
   size?: 'small' | 'medium' | 'big';
+  selected?: boolean;
 };
 
 export const Wrapper = styled.button<WrapperProps>`
@@ -18,6 +19,12 @@ export const Wrapper = styled.button<WrapperProps>`
   display: grid;
   justify-content: center;
   align-items: center;
+
+  ${({ selected, theme }) =>
+    selected &&
+    css`
+      border: 2px solid ${theme.colors.white.main};
+    `}
 
   ${({ size }) => {
     switch (size) {
