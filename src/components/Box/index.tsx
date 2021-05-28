@@ -36,7 +36,7 @@ export type BoxProps = {
   rowGap?: string;
   columnGap?: string;
 
-  alignItems?: 'center' | 'flex-start' | 'flex-end';
+  alignItems?: 'center' | 'flex-start' | 'flex-end' | 'stretch';
   justifyContent?:
     | 'center'
     | 'flex-start'
