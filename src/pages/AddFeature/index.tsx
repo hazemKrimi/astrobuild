@@ -13,6 +13,7 @@ import {
   Alert,
   TextArea,
   CheckBox,
+  ImagePreview,
 } from '../../components';
 import { Wrapper } from './styles';
 import { ArrowLeft, General, Design } from '../../assets';
@@ -39,7 +40,17 @@ const AddFeature = () => {
     }>;
     price: number;
     repo: string;
-  }>();
+  }>({
+    name: '',
+    description: '',
+    featureType: '',
+    image: {
+      name: '',
+      src: '',
+    },
+    price: 0,
+    repo: '',
+  });
 
   const [selectedSection, setSelectedSection] = useState<
     'general' | 'wireframes'
@@ -100,6 +111,17 @@ const AddFeature = () => {
     },
   });
 
+  const wireframesForm = useFormik<{
+    wireframes: Array<{ name: string; src: string }>;
+  }>({
+    initialValues: {
+      wireframes: [],
+    },
+    onSubmit: ({ wireframes }) => {
+      addFeature({ variables: { feature: { ...newFeature, wireframes } } });
+    },
+  });
+
   return role === 'developer' ? (
     <Wrapper>
       <Box>
@@ -125,14 +147,13 @@ const AddFeature = () => {
             icon={<General />}
             color={role || 'client'}
             text='General'
-            selected
+            selected={selectedSection === 'general'}
           />
           <SectionSelector
             icon={<Design />}
             color={role || 'client'}
             text='Wireframes'
             selected={selectedSection === 'wireframes'}
-            onClick={() => setSelectedSection('wireframes')}
           />
         </Box>
         <Box
@@ -142,20 +163,20 @@ const AddFeature = () => {
           width='100%'
           padding='30px'
         >
-          <Box
-            display='grid'
-            gridTemplateColumns='auto 1fr'
-            columnGap='1rem'
-            alignItems='center'
-            marginBottom='50px'
-          >
-            <Text variant='subheader' weight='bold'>
-              General
-            </Text>
-            {error && <Alert color='error' text={error} />}
-          </Box>
           {selectedSection === 'general' && (
             <>
+              <Box
+                display='grid'
+                gridTemplateColumns='auto 1fr'
+                columnGap='1rem'
+                alignItems='center'
+                marginBottom='50px'
+              >
+                <Text variant='subheader' weight='bold'>
+                  {selectedSection === 'general' ? 'General' : 'Wireframes'}
+                </Text>
+                {error && <Alert color='error' text={error} />}
+              </Box>
               <form onSubmit={generalForm.handleSubmit}>
                 <Box
                   display='grid'
@@ -209,8 +230,9 @@ const AddFeature = () => {
                       }
                     }}
                     error={
-                      !!generalForm.errors.imageName ||
-                      !!generalForm.errors.imageSource
+                      generalForm.touched.imageName &&
+                      (!!generalForm.errors.imageName ||
+                        !!generalForm.errors.imageSource)
                     }
                     errorMessage={generalForm.errors.imageName}
                   />
@@ -230,13 +252,14 @@ const AddFeature = () => {
                           Type
                         </Text>
                       </Box>
-                      {!!generalForm.errors.featureType && (
-                        <Box justifySelf='flex-end'>
-                          <Text variant='body' color='error'>
-                            {generalForm.errors.featureType}
-                          </Text>
-                        </Box>
-                      )}
+                      {!!generalForm.touched.featureType &&
+                        generalForm.errors.featureType && (
+                          <Box justifySelf='flex-end'>
+                            <Text variant='body' color='error'>
+                              {generalForm.errors.featureType}
+                            </Text>
+                          </Box>
+                        )}
                     </Box>
                     <Box
                       display='flex'
@@ -366,6 +389,87 @@ const AddFeature = () => {
                       type='submit'
                     />
                   </Box>
+                </Box>
+              </form>
+            </>
+          )}
+          {selectedSection === 'wireframes' && (
+            <>
+              <Box
+                display='grid'
+                gridTemplateColumns='auto 1fr'
+                columnGap='1rem'
+                alignItems='center'
+                marginBottom='50px'
+              >
+                <Text variant='subheader' weight='bold'>
+                  Wireframes
+                </Text>
+                {error && <Alert color='error' text={error} />}
+              </Box>
+              <form onSubmit={wireframesForm.handleSubmit}>
+                <Box
+                  display='grid'
+                  gridTemplate='auto / repeat(auto-fit, 175px)'
+                  gap='30px'
+                  alignItems='stretch'
+                >
+                  <ImagePreview
+                    color={role}
+                    image={undefined}
+                    onChange={async (
+                      event: React.ChangeEvent<HTMLInputElement>
+                    ) => {
+                      const formData = new FormData();
+
+                      if (event.target.files && event.target.files[0]) {
+                        formData.append('file', event.target.files[0]);
+                        formData.append('upload_preset', 'xofll5kc');
+
+                        const data = await (
+                          await fetch(
+                            `${process.env.REACT_APP_CLOUDINARY_URL}`,
+                            {
+                              method: 'POST',
+                              body: formData,
+                            }
+                          )
+                        ).json();
+
+                        const filename = data.original_filename;
+                        const filesource = data.secure_url;
+
+                        wireframesForm.setFieldValue('wireframes', [
+                          ...wireframesForm.values.wireframes,
+                          { name: filename, src: filesource },
+                        ]);
+                      }
+                    }}
+                  />
+                  {wireframesForm.values.wireframes.map((image) => (
+                    <ImagePreview
+                      key={image.name}
+                      color={role}
+                      image={image}
+                      onDelete={() => {
+                        wireframesForm.setFieldValue(
+                          'wireframes',
+                          wireframesForm.values.wireframes.filter(
+                            ({ name }) => name !== image.name
+                          )
+                        );
+                      }}
+                    />
+                  ))}
+                </Box>
+                <Box marginTop='1rem' display='flex' justifyContent='flex-end'>
+                  <Button
+                    variant='primary-action'
+                    color={role || 'client'}
+                    text='Save'
+                    type='submit'
+                    loading={loading}
+                  />
                 </Box>
               </form>
             </>
