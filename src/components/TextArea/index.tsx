@@ -53,7 +53,7 @@ const TextArea = ({
       <div className='textarea'>
         <div>
           <textarea
-            rows={10}
+            rows={5}
             value={value}
             name={name}
             onChange={onChange}
