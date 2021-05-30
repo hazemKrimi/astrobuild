@@ -27,8 +27,10 @@ import {
   Prototype,
   AddCategory,
   AddFeature,
+  AddTemplate,
   CategorySettings,
   FeatureSettings,
+  TemplateSettings,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -103,6 +105,15 @@ const App = () => {
         </ProtectedRoute>
         <ProtectedRoute path='/template/:id' exact>
           <Template />
+        </ProtectedRoute>
+        <ProtectedRoute path='/add-template' exact>
+          <AddTemplate />
+        </ProtectedRoute>
+        <ProtectedRoute path='/template-settings/:id' exact>
+          <TemplateSettings />
+        </ProtectedRoute>
+        <ProtectedRoute path='/add-template' exact>
+          <AddTemplate />
         </ProtectedRoute>
         <ProtectedRoute path='/feature' exact>
           <Feature />
