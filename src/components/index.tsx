@@ -21,6 +21,7 @@ import SectionSelector from './SectionSelector';
 import Modal from './Modal';
 import SidebarItem from './SidebarItem';
 import ImagePreview from './ImagePreview';
+import FeatureCard from './FeatureCard';
 
 export {
   Button,
@@ -46,4 +47,5 @@ export {
   Modal,
   SidebarItem,
   ImagePreview,
+  FeatureCard,
 };
