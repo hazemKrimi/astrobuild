@@ -103,7 +103,7 @@ const Template = () => {
                       alignItems='stretch'
                     >
                       {template.features.map((feature) => (
-                        <FeatureCard feature={feature} />
+                        <FeatureCard feature={feature} key={feature.id} />
                       ))}
                     </Box>
                   </Box>
