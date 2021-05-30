@@ -14,6 +14,10 @@ import { ReactComponent as Edit } from './icons/edit.svg';
 import { ReactComponent as Delete } from './icons/delete.svg';
 import { ReactComponent as General } from './icons/general.svg';
 import { ReactComponent as Design } from './icons/design.svg';
+import { ReactComponent as Specification } from './icons/specification.svg';
+import { ReactComponent as Features } from './icons/features.svg';
+import { ReactComponent as Frontend } from './icons/frontend.svg';
+import { ReactComponent as Backend } from './icons/backend.svg';
 import { ReactComponent as Close } from './icons/close.svg';
 import { ReactComponent as Login } from './images/login.svg';
 import { ReactComponent as Signup } from './images/signup.svg';
@@ -36,6 +40,10 @@ export {
   Delete,
   General,
   Design,
+  Specification,
+  Features,
+  Frontend,
+  Backend,
   Close,
   Login,
   Signup,
