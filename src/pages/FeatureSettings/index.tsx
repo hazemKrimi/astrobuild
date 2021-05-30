@@ -536,6 +536,7 @@ const FeatureSettings = () => {
                     key={image.name}
                     color={role}
                     image={image}
+                    deletable
                     onDelete={() => {
                       wireframesForm.setFieldValue(
                         'wireframes',
