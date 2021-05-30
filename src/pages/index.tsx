@@ -14,8 +14,10 @@ import Settings from './Settings';
 import UserSettings from './UserSettings';
 import AddCategory from './AddCategory';
 import AddFeature from './AddFeature';
+import AddTemplate from './AddTemplate';
 import CategorySettings from './CategorySettings';
 import FeatureSettings from './FeatureSettings';
+import TemplateSettings from './TemplateSettings';
 
 export {
   Login,
@@ -34,6 +36,8 @@ export {
   UserSettings,
   AddCategory,
   AddFeature,
+  AddTemplate,
   CategorySettings,
   FeatureSettings,
+  TemplateSettings,
 };
