@@ -199,7 +199,6 @@ const TemplateSettings = () => {
               src: imageSource,
             },
             features: template.features?.map((feature) => feature.id),
-            specification: '',
           },
           specification: {
             introduction: {
@@ -386,7 +385,6 @@ const TemplateSettings = () => {
               src: template.image.src,
             },
             features: template.features?.map((feature) => feature.id),
-            specification: '',
           },
           specification: {
             introduction: {
@@ -438,7 +436,6 @@ const TemplateSettings = () => {
               src: template.image.src,
             },
             features,
-            specification: '',
           },
           specification: {
             introduction: {
@@ -1014,6 +1011,7 @@ const TemplateSettings = () => {
                         availableFeatures.map((feature) => (
                           <FeatureCard
                             feature={feature}
+                            key={feature.id}
                             selectable
                             selected={featuresForm.values.features.includes(
                               feature.id
