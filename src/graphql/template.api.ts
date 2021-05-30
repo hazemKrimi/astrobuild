@@ -174,7 +174,7 @@ export const GET_ALL_TEMPLATES_BY_CATEGORIES_ID = gql`
   }
 `;
 
-export const ADD_TEMPALTE = gql`
+export const ADD_TEMPLATE = gql`
   mutation AddTemplate($template: TemplateInput!) {
     addTemplate(template: $template) {
       id
@@ -232,11 +232,11 @@ export const ADD_TEMPALTE = gql`
   }
 `;
 
-export const UPDATE_TEMPALTE = gql`
+export const UPDATE_TEMPLATE = gql`
   mutation UpdateTemplate(
     $id: String!
     $template: TemplateUpdateInput!
-    $specification: SpecificationInput!
+    $specification: SpecificationInput
   ) {
     updateTemplate(
       id: $id
@@ -298,9 +298,9 @@ export const UPDATE_TEMPALTE = gql`
   }
 `;
 
-export const UPDATE_TEMPALTE_FEATURE = gql`
-  mutation UpdateTemplateFeature($id: String!, $featuresId: [String!]!) {
-    updateTemplateFeature(id: $id, featuresId: $featuresId) {
+export const UPDATE_TEMPLATE_FEATURES = gql`
+  mutation UpdateTemplateFeatures($id: String!, $featuresId: [String!]!) {
+    updateTemplateFeatures(id: $id, featuresId: $featuresId) {
       id
       name
       description

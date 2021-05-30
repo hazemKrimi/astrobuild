@@ -154,7 +154,7 @@ export type MutationRoot = {
   deleteCategory: CategoryOutput;
   deleteFeature: FeatureOutput;
   deleteTemplate: TemplateDefactoredOutput;
-  updateTemplateFeature: TemplateOutput;
+  updateTemplateFeatures: TemplateOutput;
   addTemplateSpecification: TemplateOutput;
   addCategory: CategoryOutput;
   updateCategory: CategoryOutput;
@@ -233,7 +233,7 @@ export type MutationRootDeleteTemplateArgs = {
 };
 
 
-export type MutationRootUpdateTemplateFeatureArgs = {
+export type MutationRootUpdateTemplateFeaturesArgs = {
   id: Scalars['String'];
   featuresId: Array<Scalars['String']>;
 };
@@ -562,7 +562,9 @@ export type TemplateInput = {
   name: Scalars['String'];
   description: Scalars['String'];
   category: Scalars['String'];
+  features?: Maybe<Array<Scalars['String']>>;
   image: InputFile;
+  specification?: Maybe<SpecificationInput>;
 };
 
 export type TemplateOutput = {
@@ -1926,7 +1928,7 @@ export type AddTemplateMutation = (
 export type UpdateTemplateMutationVariables = Exact<{
   id: Scalars['String'];
   template: TemplateUpdateInput;
-  specification: SpecificationInput;
+  specification?: Maybe<SpecificationInput>;
 }>;
 
 
@@ -1965,15 +1967,15 @@ export type UpdateTemplateMutation = (
   ) }
 );
 
-export type UpdateTemplateFeatureMutationVariables = Exact<{
+export type UpdateTemplateFeaturesMutationVariables = Exact<{
   id: Scalars['String'];
   featuresId: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
-export type UpdateTemplateFeatureMutation = (
+export type UpdateTemplateFeaturesMutation = (
   { __typename?: 'MutationRoot' }
-  & { updateTemplateFeature: (
+  & { updateTemplateFeatures: (
     { __typename?: 'TemplateOutput' }
     & Pick<TemplateOutput, 'id' | 'name' | 'description' | 'category'>
     & { features?: Maybe<Array<(
