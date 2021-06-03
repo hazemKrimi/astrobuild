@@ -22,6 +22,8 @@ import Modal from './Modal';
 import SidebarItem from './SidebarItem';
 import ImagePreview from './ImagePreview';
 import FeatureCard from './FeatureCard';
+import FrontendFeatureCard from './FrontendFeatureCard';
+import BackendFeatureCard from './BackendFeatureCard';
 
 export {
   Button,
@@ -48,4 +50,6 @@ export {
   SidebarItem,
   ImagePreview,
   FeatureCard,
+  FrontendFeatureCard,
+  BackendFeatureCard,
 };
