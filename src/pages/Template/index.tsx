@@ -3,8 +3,15 @@ import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router';
 import { useHistory, useParams } from 'react-router-dom';
 import { roleVar } from '../../graphql/state';
-import { Empty, Settings } from '../../assets';
-import { Box, Button, FeatureCard, Text, Spinner } from '../../components';
+import { Design, Empty, Settings, Specification } from '../../assets';
+import {
+  Box,
+  Button,
+  FeatureCard,
+  Text,
+  Spinner,
+  Link,
+} from '../../components';
 import { Wrapper } from './styles';
 import {
   GetAllTemplatesQuery,
@@ -72,13 +79,29 @@ const Template = () => {
                       {template.name}
                     </Text>
                   </Box>
-                  <Button
-                    color={role || 'client'}
-                    variant='primary-action'
-                    text='Settings'
-                    iconLeft={<Settings />}
-                    onClick={() => history.push(`/template-settings/${id}`)}
-                  />
+                  <Box
+                    marginRight={role === 'productOwner' ? '20px' : undefined}
+                  >
+                    <Button
+                      color={role || 'client'}
+                      variant='primary-action'
+                      text='Prototype'
+                      iconLeft={<Design />}
+                      disabled={role === 'productOwner'}
+                      onClick={() => history.push(`/prototype/${id}`)}
+                    />
+                  </Box>
+                  {role === 'productOwner' && (
+                    <Box>
+                      <Button
+                        color={role || 'client'}
+                        variant='primary-action'
+                        text='Settings'
+                        iconLeft={<Settings />}
+                        onClick={() => history.push(`/template-settings/${id}`)}
+                      />
+                    </Box>
+                  )}
                 </Box>
                 <Box marginBottom='30px'>
                   <Text variant='headline' gutterBottom>
@@ -92,9 +115,11 @@ const Template = () => {
                     flexDirection='column'
                     marginBottom='30px'
                   >
-                    <Text variant='headline' gutterBottom>
-                      Features
-                    </Text>
+                    <Box marginBottom='10px'>
+                      <Text variant='headline' gutterBottom>
+                        Features
+                      </Text>
+                    </Box>
                     <Box
                       display='grid'
                       gridTemplateColumns='repeat(3, 1fr)'
@@ -105,6 +130,42 @@ const Template = () => {
                       {template.features.map((feature) => (
                         <FeatureCard feature={feature} key={feature.id} />
                       ))}
+                    </Box>
+                  </Box>
+                )}
+                {template.specification && (
+                  <Box
+                    display='flex'
+                    flexDirection='column'
+                    marginBottom='30px'
+                  >
+                    <Box marginBottom='10px'>
+                      <Text variant='headline' gutterBottom>
+                        Deliverables
+                      </Text>
+                    </Box>
+                    <Box
+                      display='flex'
+                      flexDirection='row'
+                      alignItems='center'
+                      justifyContent='space-between'
+                      padding='35px 20px'
+                      boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
+                      borderRadius='10px'
+                    >
+                      <Box
+                        display='flex'
+                        flexDirection='row'
+                        alignItems='center'
+                      >
+                        <Box marginRight='10px'>
+                          <Specification />
+                        </Box>
+                        <Text variant='title'>Specification</Text>
+                      </Box>
+                      <Link href='#' color={role} onClick={() => {}}>
+                        Download
+                      </Link>
                     </Box>
                   </Box>
                 )}
