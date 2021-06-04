@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router';
 import { roleVar } from '../../graphql/state';
-import { Empty, ArrowLeft } from '../../assets';
+import { Empty, ArrowLeft, Edit, Check } from '../../assets';
 import {
   Box,
   Text,
@@ -19,12 +19,14 @@ import {
   TemplateOutput,
 } from '../../graphql/types';
 import { GET_TEMPLATE_BY_ID } from '../../graphql/template.api';
+import { theme } from '../../themes';
 
 const Prototype = () => {
   const role = useReactiveVar(roleVar);
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
   const [template, setTemplate] = useState<TemplateOutput>();
+  const [editing, setEditing] = useState<boolean>(false);
 
   const [getTemplate, { loading: templateLoading }] = useLazyQuery<
     GetTemplateByIdQuery,
@@ -49,7 +51,7 @@ const Prototype = () => {
       {!templateLoading ? (
         <>
           {template ? (
-            <Wrapper>
+            <Wrapper color={role}>
               <Box padding='35px 45px 0px 120px'>
                 <Box
                   display='flex'
@@ -85,23 +87,55 @@ const Prototype = () => {
                       <Box
                         display='grid'
                         gridTemplateColumns='repeat(2, auto)'
-                        rowGap='20px'
+                        rowGap='100px'
                         alignItems='stretch'
-                        justifyContent='center'
                         background='#F9FAFA'
                         boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
                         borderRadius='10px'
-                        padding='30px 60px'
+                        padding='30px 120px'
+                        position='relative'
                       >
-                        {template.features.map((feature) => {
+                        {template.features.map((feature, index) => {
                           if (
                             feature.featureType === 'frontend' ||
                             feature.featureType === 'fullstack'
                           ) {
-                            return <FrontendFeatureCard feature={feature} />;
+                            return (
+                              <FrontendFeatureCard
+                                feature={feature}
+                                key={feature.id}
+                                className={
+                                  index === 0 || index % 2 === 0
+                                    ? 'frontend-feature-even'
+                                    : 'frontend-feature-odd'
+                                }
+                              />
+                            );
                           }
                           return null;
                         })}
+                        <Box
+                          position='absolute'
+                          top='30px'
+                          right='30px'
+                          width='35px'
+                          height='35px'
+                          padding='10px'
+                          borderRadius='10px'
+                          background={
+                            !editing
+                              ? theme.colors.white.main
+                              : theme.colors[role].main
+                          }
+                          boxShadow='1px 1px 5px rgba(50, 59, 105, 0.25)'
+                          display='flex'
+                          alignItems='center'
+                          justifyContent='center'
+                          cursor='pointer'
+                          onClick={() => setEditing(!editing)}
+                        >
+                          {!editing ? <Edit /> : <Check />}
+                        </Box>
                       </Box>
                     </Box>
                     <Box
@@ -126,7 +160,12 @@ const Prototype = () => {
                             feature.featureType === 'backend' ||
                             feature.featureType === 'fullstack'
                           ) {
-                            return <BackendFeatureCard feature={feature} />;
+                            return (
+                              <BackendFeatureCard
+                                feature={feature}
+                                key={feature.id}
+                              />
+                            );
                           }
                           return null;
                         })}
