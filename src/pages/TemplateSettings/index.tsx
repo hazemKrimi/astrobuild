@@ -414,7 +414,6 @@ const TemplateSettings = () => {
           },
         },
       });
-      setSelectedSection('features');
     },
     enableReinitialize: true,
   });
