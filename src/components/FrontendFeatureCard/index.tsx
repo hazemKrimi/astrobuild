@@ -3,11 +3,16 @@ import { FeatureOutput } from '../../graphql/types';
 
 type FrontendFeatureCardProps = {
   feature: FeatureOutput;
+  className?: string;
 };
 
-const FrontendFeatureCard = ({ feature }: FrontendFeatureCardProps) => {
+const FrontendFeatureCard = ({
+  feature,
+  className,
+}: FrontendFeatureCardProps) => {
   return (
     <Box
+      className={className}
       padding='10px'
       background='white'
       boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
