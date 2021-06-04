@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { BoxProps } from '.';
 
 export const Wrapper = styled.div<BoxProps>`
-  ${({ cursor }) => cursor && `cursor: ${cursor}`}
+  ${({ cursor }) => cursor && `cursor: ${cursor}`};
 
   ${({ position }) => position && `position: ${position}`};
   ${({ zIndex }) => zIndex && `z-index: ${zIndex}`};
