@@ -90,7 +90,7 @@ const Template = () => {
     <>
       {!templatesLoading && !templateLoading && !categoryLoading ? (
         <>
-          {template && category ? (
+          {template ? (
             <Wrapper>
               <Box padding='35px 45px 0px 120px'>
                 <Box
@@ -108,9 +108,11 @@ const Template = () => {
                     <Text variant='headline' weight='bold'>
                       {template.name}
                     </Text>
-                    <Box marginLeft='20px'>
-                      <Chip text={category?.name} color={role} />
-                    </Box>
+                    {category && (
+                      <Box marginLeft='20px'>
+                        <Chip text={category.name} color={role} />
+                      </Box>
+                    )}
                   </Box>
                   <Box
                     marginRight={role === 'productOwner' ? '20px' : undefined}
