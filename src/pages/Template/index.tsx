@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import { useEffect, useState, useRef } from 'react';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router';
 import { useHistory, useParams } from 'react-router-dom';
@@ -11,11 +12,16 @@ import {
   Text,
   Spinner,
   Link,
+  Specification as SpecificationPrint,
+  Chip,
 } from '../../components';
 import { Wrapper } from './styles';
 import {
+  CategoryOutput,
   GetAllTemplatesQuery,
   GetAllTemplatesQueryVariables,
+  GetCategoryByIdQuery,
+  GetCategoryByIdQueryVariables,
   GetTemplateByIdQuery,
   GetTemplateByIdQueryVariables,
   TemplateOutput,
@@ -24,12 +30,25 @@ import {
   GET_ALL_TEMPLATES,
   GET_TEMPLATE_BY_ID,
 } from '../../graphql/template.api';
+import { GET_CATEGORY_BY_ID } from '../../graphql/category.api';
 
 const Template = () => {
   const role = useReactiveVar(roleVar);
   const history = useHistory();
+  const printRef = useRef<HTMLDivElement>(null);
   const { id } = useParams<{ id: string }>();
   const [template, setTemplate] = useState<TemplateOutput>();
+  const [category, setCategory] = useState<CategoryOutput>();
+
+  const [getCategory, { loading: categoryLoading }] = useLazyQuery<
+    GetCategoryByIdQuery,
+    GetCategoryByIdQueryVariables
+  >(GET_CATEGORY_BY_ID, {
+    onCompleted({ getCategoryById }) {
+      setCategory(getCategoryById);
+    },
+    fetchPolicy: 'network-only',
+  });
 
   const [getTemplates, { loading: templatesLoading }] = useLazyQuery<
     GetAllTemplatesQuery,
@@ -37,6 +56,7 @@ const Template = () => {
   >(GET_ALL_TEMPLATES, {
     onCompleted({ getAllTemplates }) {
       setTemplate(getAllTemplates[0]);
+      getCategory({ variables: { id: template?.category! } });
     },
     fetchPolicy: 'network-only',
   });
@@ -47,8 +67,13 @@ const Template = () => {
   >(GET_TEMPLATE_BY_ID, {
     onCompleted({ getTemplateById }) {
       setTemplate(getTemplateById);
+      getCategory({ variables: { id: template?.category! } });
     },
     fetchPolicy: 'network-only',
+  });
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
   });
 
   useEffect(() => {
@@ -63,9 +88,9 @@ const Template = () => {
 
   return role === 'productOwner' || role === 'developer' ? (
     <>
-      {!templatesLoading && !templateLoading ? (
+      {!templatesLoading && !templateLoading && !categoryLoading ? (
         <>
-          {template ? (
+          {template && category ? (
             <Wrapper>
               <Box padding='35px 45px 0px 120px'>
                 <Box
@@ -74,10 +99,18 @@ const Template = () => {
                   alignItems='center'
                   marginBottom='20px'
                 >
-                  <Box flexGrow='1'>
+                  <Box
+                    flexGrow='1'
+                    display='flex'
+                    flexDirection='row'
+                    alignItems='center'
+                  >
                     <Text variant='headline' weight='bold'>
                       {template.name}
                     </Text>
+                    <Box marginLeft='20px'>
+                      <Chip text={category?.name} color={role} />
+                    </Box>
                   </Box>
                   <Box
                     marginRight={role === 'productOwner' ? '20px' : undefined}
@@ -163,18 +196,21 @@ const Template = () => {
                         </Box>
                         <Text variant='title'>Specification</Text>
                       </Box>
-                      <Link href='#' color={role} onClick={() => {}}>
+                      <Link href='#' color={role} onClick={handlePrint}>
                         Download
                       </Link>
                     </Box>
                   </Box>
                 )}
-                <Box
-                  display='flex'
-                  flexDirection='row'
-                  alignItems='center'
-                  marginBottom='30px'
-                ></Box>
+                {template.specification && template.features && (
+                  <Box display='none'>
+                    <SpecificationPrint
+                      ref={printRef}
+                      specification={template.specification}
+                      features={template.features}
+                    />
+                  </Box>
+                )}
               </Box>
             </Wrapper>
           ) : (
