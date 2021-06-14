@@ -32,6 +32,7 @@ module.exports = {
       'warn',
       { allowShortCircuit: true, allowTernary: true },
     ],
+    '@typescript-eslint/ban-ts-comment': 0,
     'react-hooks/exhaustive-deps': 1,
     'import/no-cycle': 'off',
     'react/jsx-props-no-spreading': 'off',
