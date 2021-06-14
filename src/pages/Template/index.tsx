@@ -22,8 +22,11 @@ import {
   GetAllTemplatesQueryVariables,
   GetCategoryByIdQuery,
   GetCategoryByIdQueryVariables,
+  GetPrototypeByIdQuery,
+  GetPrototypeByIdQueryVariables,
   GetTemplateByIdQuery,
   GetTemplateByIdQueryVariables,
+  ProtoTypeOutput,
   TemplateOutput,
 } from '../../graphql/types';
 import {
@@ -31,6 +34,7 @@ import {
   GET_TEMPLATE_BY_ID,
 } from '../../graphql/template.api';
 import { GET_CATEGORY_BY_ID } from '../../graphql/category.api';
+import { GET_PROTOTYPE_BY_ID } from '../../graphql/prototype.api';
 
 const Template = () => {
   const role = useReactiveVar(roleVar);
@@ -39,6 +43,7 @@ const Template = () => {
   const { id } = useParams<{ id: string }>();
   const [template, setTemplate] = useState<TemplateOutput>();
   const [category, setCategory] = useState<CategoryOutput>();
+  const [prototype, setPrototype] = useState<Array<ProtoTypeOutput>>();
 
   const [getCategory, { loading: categoryLoading }] = useLazyQuery<
     GetCategoryByIdQuery,
@@ -72,6 +77,15 @@ const Template = () => {
     fetchPolicy: 'network-only',
   });
 
+  const [getPrototype, { loading: prototypeLoading }] = useLazyQuery<
+    GetPrototypeByIdQuery,
+    GetPrototypeByIdQueryVariables
+  >(GET_PROTOTYPE_BY_ID, {
+    onCompleted({ getPrototypeById }) {
+      setPrototype(getPrototypeById.prototype);
+    },
+  });
+
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
   });
@@ -79,6 +93,7 @@ const Template = () => {
   useEffect(() => {
     if (id) {
       getTemplate({ variables: { id } });
+      getPrototype({ variables: { id } });
     } else {
       getTemplates();
     }
@@ -88,7 +103,10 @@ const Template = () => {
 
   return role === 'productOwner' || role === 'developer' ? (
     <>
-      {!templatesLoading && !templateLoading && !categoryLoading ? (
+      {!templatesLoading &&
+      !templateLoading &&
+      !categoryLoading &&
+      !prototypeLoading ? (
         <>
           {template ? (
             <Wrapper>
@@ -122,7 +140,7 @@ const Template = () => {
                       variant='primary-action'
                       text='Prototype'
                       iconLeft={<Design />}
-                      disabled={role === 'productOwner'}
+                      disabled={!prototype && role === 'productOwner'}
                       onClick={() => history.push(`/prototype/${id}`)}
                     />
                   </Box>
