@@ -22,6 +22,7 @@ const FrontendFeatureCard = ({
       rowGap='10px'
       borderRadius='10px'
       cursor='pointer'
+      textAlign='left'
     >
       <Box display='flex' flexDirection='row' alignItems='center'>
         <Box flexGrow='1'>
