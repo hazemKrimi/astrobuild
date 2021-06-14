@@ -81,7 +81,9 @@ const Feature = () => {
                     variant='primary-action'
                     text='Settings'
                     iconLeft={<Settings />}
-                    onClick={() => history.push(`/feature-settings/${id}`)}
+                    onClick={() =>
+                      history.push(`/feature-settings/${id || feature.id}`)
+                    }
                   />
                 </Box>
                 <Box marginBottom='30px'>

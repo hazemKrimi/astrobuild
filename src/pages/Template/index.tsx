@@ -141,7 +141,9 @@ const Template = () => {
                       text='Prototype'
                       iconLeft={<Design />}
                       disabled={!prototype && role === 'productOwner'}
-                      onClick={() => history.push(`/prototype/${id}`)}
+                      onClick={() =>
+                        history.push(`/prototype/${id || template.id}`)
+                      }
                     />
                   </Box>
                   {role === 'productOwner' && (
@@ -151,7 +153,11 @@ const Template = () => {
                         variant='primary-action'
                         text='Settings'
                         iconLeft={<Settings />}
-                        onClick={() => history.push(`/template-settings/${id}`)}
+                        onClick={() =>
+                          history.push(
+                            `/template-settings/${id || template.id}`
+                          )
+                        }
                       />
                     </Box>
                   )}

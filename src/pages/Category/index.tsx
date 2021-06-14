@@ -76,7 +76,9 @@ const Category = () => {
                     variant='primary-action'
                     text='Settings'
                     iconLeft={<Settings />}
-                    onClick={() => history.push(`/category-settings/${id}`)}
+                    onClick={() =>
+                      history.push(`/category-settings/${id || category.id}`)
+                    }
                   />
                 </Box>
                 <Box>
