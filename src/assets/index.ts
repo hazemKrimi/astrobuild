@@ -4,6 +4,7 @@ import { ReactComponent as ChevronDown } from './icons/chevron-down.svg';
 import { ReactComponent as ArrowLeft } from './icons/arrow-left.svg';
 import { ReactComponent as Search } from './icons/search.svg';
 import { ReactComponent as Check } from './icons/check.svg';
+import { ReactComponent as CheckCircle } from './icons/check-circle.svg';
 import { ReactComponent as Google } from './icons/google.svg';
 import { ReactComponent as Settings } from './icons/settings.svg';
 import { ReactComponent as Logout } from './icons/logout.svg';
@@ -30,6 +31,7 @@ export {
   ArrowLeft,
   Search,
   Check,
+  CheckCircle,
   Google,
   Settings,
   Logout,
