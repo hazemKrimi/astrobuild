@@ -8,7 +8,7 @@ type MenuProps = {
     icon: React.SVGProps<SVGSVGElement>;
     avoid?: boolean;
     label: string;
-    action: () => void;
+    action?: () => void;
   }>;
   component: string;
 };
@@ -18,28 +18,26 @@ const Menu = ({ items, component, className }: MenuProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const openMenu = () => setOpen(true);
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
+    const wrapper = ref.current;
 
-    document.addEventListener('mousedown', handleClickOutside);
+    const openMenu = () => setOpen(true);
+    const closeMenu = () => setOpen(false);
+
     (document.querySelector(`#${component}`) as HTMLElement)?.addEventListener(
       'mouseenter',
       openMenu
     );
+    ref.current?.addEventListener('mouseleave', closeMenu);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
       (document.querySelector(
         `#${component}`
       ) as HTMLElement)?.removeEventListener('mouseenter', openMenu);
+      wrapper?.addEventListener('mouseleave', closeMenu);
     };
 
     // eslint-disable-next-line
-  }, [ref]);
+  }, [ref.current]);
 
   return (
     <Wrapper
@@ -58,8 +56,10 @@ const Menu = ({ items, component, className }: MenuProps) => {
             // eslint-disable-next-line
             <li
               onClick={() => {
-                setOpen(false);
-                action();
+                if (action) {
+                  setOpen(false);
+                  action();
+                }
               }}
               key={label}
             >
