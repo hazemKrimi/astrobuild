@@ -26,6 +26,8 @@ import FrontendFeatureCard from './FrontendFeatureCard';
 import BackendFeatureCard from './BackendFeatureCard';
 import Specification from './Specification';
 import Chip from './Chip';
+import CategoryCard from './CategoryCard';
+import TemplateCard from './TemplateCard';
 
 export {
   Button,
@@ -56,4 +58,6 @@ export {
   BackendFeatureCard,
   Specification,
   Chip,
+  CategoryCard,
+  TemplateCard,
 };
