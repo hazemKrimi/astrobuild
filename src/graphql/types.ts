@@ -170,6 +170,9 @@ export type MutationRoot = {
   changeProjectState: ProjectOutput;
   updateProject: ProjectOutput;
   addProjectProposal: ProjectOutput;
+  addProjectMvp: ProjectOutput;
+  addProjectFullBuild: ProjectOutput;
+  addProjectDesign: ProjectOutput;
 };
 
 
@@ -323,6 +326,21 @@ export type MutationRootAddProjectProposalArgs = {
   proposal: ProposalInput;
 };
 
+
+export type MutationRootAddProjectMvpArgs = {
+  mvp: ProjectFileInput;
+};
+
+
+export type MutationRootAddProjectFullBuildArgs = {
+  fullBuild: ProjectFullBuildInput;
+};
+
+
+export type MutationRootAddProjectDesignArgs = {
+  design: ProjectFileInput;
+};
+
 export type NonFunctionalRequirementsInput = {
   performanceRequirements: Scalars['String'];
   safetyRequirements: Scalars['String'];
@@ -384,6 +402,17 @@ export type PhoneOutput = {
   __typename?: 'PhoneOutput';
   prefix: Scalars['String'];
   number: Scalars['String'];
+};
+
+export type ProjectFileInput = {
+  id: Scalars['String'];
+  name: Scalars['String'];
+  src: Scalars['String'];
+};
+
+export type ProjectFullBuildInput = {
+  id: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type ProjectInput = {
@@ -596,7 +625,6 @@ export type TemplateUpdateInput = {
   category: Scalars['String'];
   features?: Maybe<Array<Scalars['String']>>;
   image: InputFile;
-  specification?: Maybe<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
@@ -1590,6 +1618,255 @@ export type AddProjectProposalMutationVariables = Exact<{
 export type AddProjectProposalMutation = (
   { __typename?: 'MutationRoot' }
   & { addProjectProposal: (
+    { __typename?: 'ProjectOutput' }
+    & Pick<ProjectOutput, 'id' | 'clientId' | 'name' | 'platforms' | 'state' | 'totalPrice'>
+    & { image: (
+      { __typename?: 'File' }
+      & Pick<File, 'name' | 'src'>
+    ), template: (
+      { __typename?: 'TemplateOutput' }
+      & Pick<TemplateOutput, 'id' | 'name' | 'description' | 'category'>
+      & { features?: Maybe<Array<(
+        { __typename?: 'FeatureOutput' }
+        & Pick<FeatureOutput, 'id' | 'name' | 'description' | 'featureType' | 'price' | 'repo'>
+        & { image: (
+          { __typename?: 'File' }
+          & Pick<File, 'name' | 'src'>
+        ), wireframes?: Maybe<Array<(
+          { __typename?: 'FileWithOutOId' }
+          & Pick<FileWithOutOId, 'id' | 'name' | 'src'>
+        )>> }
+      )>>, image: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), specification?: Maybe<(
+        { __typename?: 'SpecificationOutput' }
+        & Pick<SpecificationOutput, 'otherRequirements' | 'glossary' | 'analysisModels' | 'issuesList'>
+        & { introduction: (
+          { __typename?: 'IntroductionOutput' }
+          & Pick<IntroductionOutput, 'purpose' | 'documentConventions' | 'intendedAudience' | 'projectScope'>
+        ), overallDescription: (
+          { __typename?: 'OverallDescriptionOutput' }
+          & Pick<OverallDescriptionOutput, 'perspective' | 'userCharacteristics' | 'operatingEnvironment' | 'designImplementationConstraints' | 'userDocumentation' | 'assemptionsDependencies'>
+        ), nonFunctionalRequirements: (
+          { __typename?: 'NonFunctionalRequirementsOutput' }
+          & Pick<NonFunctionalRequirementsOutput, 'performanceRequirements' | 'safetyRequirements' | 'securityRequirements' | 'softwareQualityAttributes'>
+        ) }
+      )> }
+    ), features: Array<(
+      { __typename?: 'FeatureOutput' }
+      & Pick<FeatureOutput, 'id' | 'name' | 'description' | 'featureType' | 'price' | 'repo'>
+      & { image: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), wireframes?: Maybe<Array<(
+        { __typename?: 'FileWithOutOId' }
+        & Pick<FileWithOutOId, 'id' | 'name' | 'src'>
+      )>> }
+    )>, proposal?: Maybe<(
+      { __typename?: 'ProposalOutput' }
+      & Pick<ProposalOutput, 'summary' | 'purpose'>
+      & { devtime: (
+        { __typename?: 'DevtimeOutput' }
+        & Pick<DevtimeOutput, 'months' | 'days' | 'hours'>
+      ), resources: Array<(
+        { __typename?: 'ResourceOutput' }
+        & Pick<ResourceOutput, 'resourceType' | 'developers'>
+      )> }
+    )>, paymentOption: (
+      { __typename?: 'PaymentOptionOutput' }
+      & Pick<PaymentOptionOutput, 'optOne' | 'optTwo' | 'optThree'>
+    ), delivrable?: Maybe<(
+      { __typename?: 'DelivrableOutput' }
+      & Pick<DelivrableOutput, 'fullBuild'>
+      & { specification: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), mvp: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), design: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ) }
+    )> }
+  ) }
+);
+
+export type AddProjectDesignMutationVariables = Exact<{
+  design: ProjectFileInput;
+}>;
+
+
+export type AddProjectDesignMutation = (
+  { __typename?: 'MutationRoot' }
+  & { addProjectDesign: (
+    { __typename?: 'ProjectOutput' }
+    & Pick<ProjectOutput, 'id' | 'clientId' | 'name' | 'platforms' | 'state' | 'totalPrice'>
+    & { image: (
+      { __typename?: 'File' }
+      & Pick<File, 'name' | 'src'>
+    ), template: (
+      { __typename?: 'TemplateOutput' }
+      & Pick<TemplateOutput, 'id' | 'name' | 'description' | 'category'>
+      & { features?: Maybe<Array<(
+        { __typename?: 'FeatureOutput' }
+        & Pick<FeatureOutput, 'id' | 'name' | 'description' | 'featureType' | 'price' | 'repo'>
+        & { image: (
+          { __typename?: 'File' }
+          & Pick<File, 'name' | 'src'>
+        ), wireframes?: Maybe<Array<(
+          { __typename?: 'FileWithOutOId' }
+          & Pick<FileWithOutOId, 'id' | 'name' | 'src'>
+        )>> }
+      )>>, image: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), specification?: Maybe<(
+        { __typename?: 'SpecificationOutput' }
+        & Pick<SpecificationOutput, 'otherRequirements' | 'glossary' | 'analysisModels' | 'issuesList'>
+        & { introduction: (
+          { __typename?: 'IntroductionOutput' }
+          & Pick<IntroductionOutput, 'purpose' | 'documentConventions' | 'intendedAudience' | 'projectScope'>
+        ), overallDescription: (
+          { __typename?: 'OverallDescriptionOutput' }
+          & Pick<OverallDescriptionOutput, 'perspective' | 'userCharacteristics' | 'operatingEnvironment' | 'designImplementationConstraints' | 'userDocumentation' | 'assemptionsDependencies'>
+        ), nonFunctionalRequirements: (
+          { __typename?: 'NonFunctionalRequirementsOutput' }
+          & Pick<NonFunctionalRequirementsOutput, 'performanceRequirements' | 'safetyRequirements' | 'securityRequirements' | 'softwareQualityAttributes'>
+        ) }
+      )> }
+    ), features: Array<(
+      { __typename?: 'FeatureOutput' }
+      & Pick<FeatureOutput, 'id' | 'name' | 'description' | 'featureType' | 'price' | 'repo'>
+      & { image: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), wireframes?: Maybe<Array<(
+        { __typename?: 'FileWithOutOId' }
+        & Pick<FileWithOutOId, 'id' | 'name' | 'src'>
+      )>> }
+    )>, proposal?: Maybe<(
+      { __typename?: 'ProposalOutput' }
+      & Pick<ProposalOutput, 'summary' | 'purpose'>
+      & { devtime: (
+        { __typename?: 'DevtimeOutput' }
+        & Pick<DevtimeOutput, 'months' | 'days' | 'hours'>
+      ), resources: Array<(
+        { __typename?: 'ResourceOutput' }
+        & Pick<ResourceOutput, 'resourceType' | 'developers'>
+      )> }
+    )>, paymentOption: (
+      { __typename?: 'PaymentOptionOutput' }
+      & Pick<PaymentOptionOutput, 'optOne' | 'optTwo' | 'optThree'>
+    ), delivrable?: Maybe<(
+      { __typename?: 'DelivrableOutput' }
+      & Pick<DelivrableOutput, 'fullBuild'>
+      & { specification: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), mvp: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), design: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ) }
+    )> }
+  ) }
+);
+
+export type AddProjectMvpMutationVariables = Exact<{
+  mvp: ProjectFileInput;
+}>;
+
+
+export type AddProjectMvpMutation = (
+  { __typename?: 'MutationRoot' }
+  & { addProjectMvp: (
+    { __typename?: 'ProjectOutput' }
+    & Pick<ProjectOutput, 'id' | 'clientId' | 'name' | 'platforms' | 'state' | 'totalPrice'>
+    & { image: (
+      { __typename?: 'File' }
+      & Pick<File, 'name' | 'src'>
+    ), template: (
+      { __typename?: 'TemplateOutput' }
+      & Pick<TemplateOutput, 'id' | 'name' | 'description' | 'category'>
+      & { features?: Maybe<Array<(
+        { __typename?: 'FeatureOutput' }
+        & Pick<FeatureOutput, 'id' | 'name' | 'description' | 'featureType' | 'price' | 'repo'>
+        & { image: (
+          { __typename?: 'File' }
+          & Pick<File, 'name' | 'src'>
+        ), wireframes?: Maybe<Array<(
+          { __typename?: 'FileWithOutOId' }
+          & Pick<FileWithOutOId, 'id' | 'name' | 'src'>
+        )>> }
+      )>>, image: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), specification?: Maybe<(
+        { __typename?: 'SpecificationOutput' }
+        & Pick<SpecificationOutput, 'otherRequirements' | 'glossary' | 'analysisModels' | 'issuesList'>
+        & { introduction: (
+          { __typename?: 'IntroductionOutput' }
+          & Pick<IntroductionOutput, 'purpose' | 'documentConventions' | 'intendedAudience' | 'projectScope'>
+        ), overallDescription: (
+          { __typename?: 'OverallDescriptionOutput' }
+          & Pick<OverallDescriptionOutput, 'perspective' | 'userCharacteristics' | 'operatingEnvironment' | 'designImplementationConstraints' | 'userDocumentation' | 'assemptionsDependencies'>
+        ), nonFunctionalRequirements: (
+          { __typename?: 'NonFunctionalRequirementsOutput' }
+          & Pick<NonFunctionalRequirementsOutput, 'performanceRequirements' | 'safetyRequirements' | 'securityRequirements' | 'softwareQualityAttributes'>
+        ) }
+      )> }
+    ), features: Array<(
+      { __typename?: 'FeatureOutput' }
+      & Pick<FeatureOutput, 'id' | 'name' | 'description' | 'featureType' | 'price' | 'repo'>
+      & { image: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), wireframes?: Maybe<Array<(
+        { __typename?: 'FileWithOutOId' }
+        & Pick<FileWithOutOId, 'id' | 'name' | 'src'>
+      )>> }
+    )>, proposal?: Maybe<(
+      { __typename?: 'ProposalOutput' }
+      & Pick<ProposalOutput, 'summary' | 'purpose'>
+      & { devtime: (
+        { __typename?: 'DevtimeOutput' }
+        & Pick<DevtimeOutput, 'months' | 'days' | 'hours'>
+      ), resources: Array<(
+        { __typename?: 'ResourceOutput' }
+        & Pick<ResourceOutput, 'resourceType' | 'developers'>
+      )> }
+    )>, paymentOption: (
+      { __typename?: 'PaymentOptionOutput' }
+      & Pick<PaymentOptionOutput, 'optOne' | 'optTwo' | 'optThree'>
+    ), delivrable?: Maybe<(
+      { __typename?: 'DelivrableOutput' }
+      & Pick<DelivrableOutput, 'fullBuild'>
+      & { specification: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), mvp: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ), design: (
+        { __typename?: 'File' }
+        & Pick<File, 'name' | 'src'>
+      ) }
+    )> }
+  ) }
+);
+
+export type AddProjectFullBuildMutationVariables = Exact<{
+  fullBuild: ProjectFullBuildInput;
+}>;
+
+
+export type AddProjectFullBuildMutation = (
+  { __typename?: 'MutationRoot' }
+  & { addProjectFullBuild: (
     { __typename?: 'ProjectOutput' }
     & Pick<ProjectOutput, 'id' | 'clientId' | 'name' | 'platforms' | 'state' | 'totalPrice'>
     & { image: (
