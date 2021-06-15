@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
-import { roleVar } from '../../graphql/state';
+import { roleVar, userVar } from '../../graphql/state';
 import { Box, ContextMenu, IconButton, SidebarItem } from '..';
 import { Add } from '../../assets';
 import { Wrapper } from './styles';
@@ -26,6 +26,7 @@ import { GET_ALL_FEATURES } from '../../graphql/feature.api';
 
 const Sidebar = () => {
   const role = useReactiveVar(roleVar);
+  const currentUser = useReactiveVar(userVar);
   const location = useLocation();
   const history = useHistory();
   const [projects, setProjects] = useState<Array<ProjectOutput>>();
@@ -38,7 +39,13 @@ const Sidebar = () => {
     GetAllProjectsQueryVariables
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
-      setProjects(getAllProjects);
+      setProjects(
+        role === 'client'
+          ? getAllProjects.filter(
+              (project) => project.clientId === currentUser?.id
+            )
+          : getAllProjects
+      );
     },
     fetchPolicy: 'network-only',
   });
