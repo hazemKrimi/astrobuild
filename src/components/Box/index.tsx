@@ -89,7 +89,7 @@ export type BoxProps = {
 const Box = React.forwardRef<HTMLDivElement, BoxProps>(
   ({ children, ...props }, ref) => {
     return (
-      <Wrapper {...props} ref={ref}>
+      <Wrapper {...props} draggable='false' ref={ref}>
         {children}
       </Wrapper>
     );
