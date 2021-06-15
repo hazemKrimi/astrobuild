@@ -19,6 +19,7 @@ import CategorySettings from './CategorySettings';
 import FeatureSettings from './FeatureSettings';
 import TemplateSettings from './TemplateSettings';
 import AddProject from './AddProject';
+import UpdateProject from './UpdateProject';
 
 export {
   Login,
@@ -42,4 +43,5 @@ export {
   FeatureSettings,
   TemplateSettings,
   AddProject,
+  UpdateProject,
 };
