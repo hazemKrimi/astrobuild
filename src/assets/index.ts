@@ -18,6 +18,8 @@ import { ReactComponent as Edit } from './icons/edit.svg';
 import { ReactComponent as Delete } from './icons/delete.svg';
 import { ReactComponent as General } from './icons/general.svg';
 import { ReactComponent as Design } from './icons/design.svg';
+import { ReactComponent as FullBuild } from './icons/full-build.svg';
+import { ReactComponent as MVP } from './icons/mvp.svg';
 import { ReactComponent as Specification } from './icons/specification.svg';
 import { ReactComponent as Features } from './icons/features.svg';
 import { ReactComponent as Frontend } from './icons/frontend.svg';
@@ -48,6 +50,8 @@ export {
   Delete,
   General,
   Design,
+  FullBuild,
+  MVP,
   Specification,
   Features,
   Frontend,
