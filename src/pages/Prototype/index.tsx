@@ -215,7 +215,9 @@ const Prototype = () => {
     }
   };
 
-  return role === 'productOwner' || role === 'developer' ? (
+  return role === 'productOwner' ||
+    role === 'developer' ||
+    role === 'client' ? (
     <>
       {!templateLoading && !prototypeLoading ? (
         <>
@@ -362,10 +364,7 @@ const Prototype = () => {
       )}
     </>
   ) : (
-    <>
-      {role === 'admin' && <Redirect to='/clients' />}
-      {role === 'client' && <Redirect to='/project' />}
-    </>
+    <>{role === 'admin' && <Redirect to='/clients' />}</>
   );
 };
 
