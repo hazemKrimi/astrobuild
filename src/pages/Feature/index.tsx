@@ -148,7 +148,9 @@ const Feature = () => {
                       Repo
                     </Text>
                   </Box>
-                  <Link href={feature.repo}>{feature.repo}</Link>
+                  <Link url target='_blank' href={feature.repo}>
+                    {feature.repo}
+                  </Link>
                 </Box>
               </Box>
             </Wrapper>
