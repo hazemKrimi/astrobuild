@@ -1,10 +1,19 @@
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 import { useReactToPrint } from 'react-to-print';
 import { useHistory, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { useLazyQuery, useReactiveVar } from '@apollo/client';
+import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
 import { Redirect } from 'react-router';
-import { roleVar } from '../../graphql/state';
-import { Design, Empty, Settings, Specification } from '../../assets';
+import { roleVar, userVar } from '../../graphql/state';
+import {
+  Design,
+  Empty,
+  FullBuild,
+  MVP,
+  Settings,
+  Specification,
+} from '../../assets';
 import {
   Box,
   Button,
@@ -14,11 +23,24 @@ import {
   Link,
   Specification as SpecificationPrint,
   Chip,
+  Alert,
+  Modal,
+  Input,
 } from '../../components';
 import { Wrapper } from './styles';
 import {
+  AddProjectDesignMutation,
+  AddProjectDesignMutationVariables,
+  AddProjectFullBuildMutation,
+  AddProjectFullBuildMutationVariables,
+  AddProjectMvpMutation,
+  AddProjectMvpMutationVariables,
+  ChangeProjectStateMutation,
+  ChangeProjectStateMutationVariables,
+  GetAllProjectsByClientIdQuery,
+  GetAllProjectsByClientIdQueryVariables,
   GetAllProjectsQuery,
-  GetAllProjectsQueryVariables,
+  GetAllUsersQueryVariables,
   GetProjectByIdQuery,
   GetProjectByIdQueryVariables,
   GetPrototypeByIdQuery,
@@ -26,20 +48,49 @@ import {
   ProjectOutput,
   ProtoTypeOutput,
 } from '../../graphql/types';
-import { GET_ALL_PROJECTS, GET_PROJECT_BY_ID } from '../../graphql/project.api';
+import {
+  ADD_PROJECT_DESIGN,
+  ADD_PROJECT_FULL_BUILD,
+  ADD_PROJECT_MVP,
+  CHANGE_PROJECT_STATE,
+  GET_ALL_PROJECTS,
+  GET_ALL_PROJECTS_BY_CLIENT_ID,
+  GET_PROJECT_BY_ID,
+} from '../../graphql/project.api';
 import { GET_PROTOTYPE_BY_ID } from '../../graphql/prototype.api';
 
 const Project = () => {
   const role = useReactiveVar(roleVar);
+  const currentUser = useReactiveVar(userVar);
   const history = useHistory();
   const printRef = useRef<HTMLDivElement>(null);
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<ProjectOutput>();
   const [prototype, setPrototype] = useState<Array<ProtoTypeOutput>>();
+  const [error, setError] = useState<string>('');
+  const [designModal, setDesignModal] = useState<boolean>(false);
+  const [mvpModal, setMvpModal] = useState<boolean>(false);
+  const [fullBuildModal, setFullBuildModal] = useState<boolean>(false);
+
+  const [
+    getProjectsByClientId,
+    { loading: clientProjectsLoading },
+  ] = useLazyQuery<
+    GetAllProjectsByClientIdQuery,
+    GetAllProjectsByClientIdQueryVariables
+  >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
+    variables: {
+      id: currentUser?.id!,
+    },
+    onCompleted({ getAllProjectsByClientId }) {
+      setProject(getAllProjectsByClientId[0]);
+    },
+    fetchPolicy: 'network-only',
+  });
 
   const [getProjects, { loading: projectsLoading }] = useLazyQuery<
     GetAllProjectsQuery,
-    GetAllProjectsQueryVariables
+    GetAllUsersQueryVariables
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
       setProject(getAllProjects[0]);
@@ -66,6 +117,64 @@ const Project = () => {
     },
   });
 
+  const [changeProjectState] = useMutation<
+    ChangeProjectStateMutation,
+    ChangeProjectStateMutationVariables
+  >(CHANGE_PROJECT_STATE, {
+    onCompleted({ changeProjectState: changedStateProject }) {
+      setProject(changedStateProject);
+    },
+    onError({ graphQLErrors }) {
+      setError(graphQLErrors[0].extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
+
+  const [addProjectDesign] = useMutation<
+    AddProjectDesignMutation,
+    AddProjectDesignMutationVariables
+  >(ADD_PROJECT_DESIGN, {
+    onCompleted({ addProjectDesign: projectWithDesign }) {
+      setDesignModal(false);
+      setProject(projectWithDesign);
+    },
+    onError({ graphQLErrors }) {
+      setDesignModal(false);
+      setError(graphQLErrors[0].extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
+
+  const [addProjectMvp] = useMutation<
+    AddProjectMvpMutation,
+    AddProjectMvpMutationVariables
+  >(ADD_PROJECT_MVP, {
+    onCompleted({ addProjectMvp: projectWithMvp }) {
+      setMvpModal(false);
+      setProject(projectWithMvp);
+    },
+    onError({ graphQLErrors }) {
+      setMvpModal(false);
+      setError(graphQLErrors[0].extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
+
+  const [addProjectFullBuild] = useMutation<
+    AddProjectFullBuildMutation,
+    AddProjectFullBuildMutationVariables
+  >(ADD_PROJECT_FULL_BUILD, {
+    onCompleted({ addProjectFullBuild: projectWithFullBuild }) {
+      setFullBuildModal(false);
+      setProject(projectWithFullBuild);
+    },
+    onError({ graphQLErrors }) {
+      setFullBuildModal(false);
+      setError(graphQLErrors[0].extensions?.info);
+      setTimeout(() => setError(''), 3000);
+    },
+  });
+
   const handlePrint = useReactToPrint({
     content: () => printRef.current,
   });
@@ -73,12 +182,16 @@ const Project = () => {
   useEffect(() => {
     if (id) {
       getProject({ variables: { id } });
-    } else {
-      getProjects();
-    }
+    } else if (role === 'client') {
+      getProjectsByClientId({
+        variables: {
+          id: currentUser?.id!,
+        },
+      });
+    } else getProjects();
 
     // eslint-disable-next-line
-  }, [id]);
+  }, [id, role]);
 
   useEffect(() => {
     if (project) getPrototype({ variables: { id: project?.template?.id } });
@@ -86,10 +199,186 @@ const Project = () => {
     // eslint-disable-next-line
   }, [project]);
 
+  const addDesignForm = useFormik({
+    initialValues: {
+      fileName: '',
+      fileSource: '',
+    },
+    onSubmit: ({ fileName, fileSource }) => {
+      addProjectDesign({
+        variables: {
+          design: {
+            id: project?.id!,
+            name: fileName,
+            src: fileSource,
+          },
+        },
+      });
+    },
+  });
+
+  const addMvpForm = useFormik({
+    initialValues: {
+      fileName: '',
+      fileSource: '',
+    },
+    onSubmit: ({ fileName, fileSource }) => {
+      addProjectMvp({
+        variables: {
+          mvp: {
+            id: project?.id!,
+            name: fileName,
+            src: fileSource,
+          },
+        },
+      });
+    },
+  });
+
+  const addFullBuildForm = useFormik({
+    initialValues: {
+      url: '',
+    },
+    validationSchema: Yup.object().shape({
+      url: Yup.string().required('URL is required'),
+    }),
+    onSubmit: ({ url }) => {
+      addProjectFullBuild({
+        variables: {
+          fullBuild: {
+            id: project?.id!,
+            url,
+          },
+        },
+      });
+    },
+  });
+
   return role !== 'admin' ? (
     <>
-      {!projectsLoading && !projectLoading && !prototypeLoading ? (
+      {!projectsLoading &&
+      !clientProjectsLoading &&
+      !projectLoading &&
+      !prototypeLoading ? (
         <>
+          {designModal && (
+            <Modal
+              color={role || 'client'}
+              title='Upload Design'
+              description='Upload design file'
+              onClose={() => setDesignModal(false)}
+              onConfirm={addDesignForm.handleSubmit}
+            >
+              <Input
+                type='file'
+                label='File'
+                file
+                color={role || 'client'}
+                onChange={async (
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => {
+                  const formData = new FormData();
+
+                  if (event.target.files && event.target.files[0]) {
+                    formData.append('file', event.target.files[0]);
+                    formData.append('upload_preset', 'xofll5kc');
+
+                    addDesignForm.setFieldValue('fileName', '');
+                    addDesignForm.setFieldValue('fileSource', '');
+
+                    const data = await (
+                      await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                        method: 'POST',
+                        body: formData,
+                      })
+                    ).json();
+
+                    const filename = data.original_filename;
+                    const filesource = data.secure_url;
+
+                    addDesignForm.setFieldValue('fileName', filename);
+                    addDesignForm.setFieldValue('fileSource', filesource);
+                  }
+                }}
+                error={
+                  addDesignForm.touched.fileName &&
+                  (!!addDesignForm.errors.fileName ||
+                    !!addDesignForm.errors.fileSource)
+                }
+                errorMessage={addDesignForm.errors.fileName}
+              />
+            </Modal>
+          )}
+          {mvpModal && (
+            <Modal
+              color={role || 'client'}
+              title='Upload MVP'
+              description='Upload mvp file'
+              onClose={() => setMvpModal(false)}
+              onConfirm={addMvpForm.handleSubmit}
+            >
+              <Input
+                type='file'
+                label='File'
+                file
+                color={role || 'client'}
+                onChange={async (
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => {
+                  const formData = new FormData();
+
+                  if (event.target.files && event.target.files[0]) {
+                    formData.append('file', event.target.files[0]);
+                    formData.append('upload_preset', 'xofll5kc');
+
+                    addMvpForm.setFieldValue('fileName', '');
+                    addMvpForm.setFieldValue('fileSource', '');
+
+                    const data = await (
+                      await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                        method: 'POST',
+                        body: formData,
+                      })
+                    ).json();
+
+                    const filename = data.original_filename;
+                    const filesource = data.secure_url;
+
+                    addMvpForm.setFieldValue('fileName', filename);
+                    addMvpForm.setFieldValue('fileSource', filesource);
+                  }
+                }}
+                error={
+                  addMvpForm.touched.fileName &&
+                  (!!addMvpForm.errors.fileName ||
+                    !!addMvpForm.errors.fileSource)
+                }
+                errorMessage={addMvpForm.errors.fileName}
+              />
+            </Modal>
+          )}
+          {fullBuildModal && (
+            <Modal
+              color={role || 'client'}
+              title='Add full build'
+              description='Add full build url'
+              onClose={() => setMvpModal(false)}
+              onConfirm={addFullBuildForm.handleSubmit}
+            >
+              <Input
+                name='url'
+                label='URL'
+                color={role || 'client'}
+                value={addFullBuildForm.values.url}
+                onChange={addFullBuildForm.handleChange}
+                onBlur={addFullBuildForm.handleBlur}
+                error={
+                  addFullBuildForm.touched.url && !!addFullBuildForm.errors.url
+                }
+                errorMessage={addFullBuildForm.errors.url}
+              />
+            </Modal>
+          )}
           {project ? (
             <Wrapper>
               <Box padding='35px 45px 0px 120px'>
@@ -109,42 +398,83 @@ const Project = () => {
                       {project.name}
                     </Text>
                   </Box>
+                  {error && (
+                    <Box margin='0px 20px'>
+                      <Alert color='error' text={error} />
+                    </Box>
+                  )}
                   {project.state === 'Approved' ? (
                     <>
-                      <Box marginRight='20px'>
+                      <Box marginRight={role === 'client' ? '20px' : undefined}>
                         <Button
                           color={role || 'client'}
                           variant='primary-action'
                           text='Prototype'
                           iconLeft={<Design />}
-                          disabled={!prototype && role === 'productOwner'}
+                          disabled={!prototype}
                           onClick={() =>
-                            history.push(
-                              `/prototype/${id || project.template.id}`
-                            )
+                            history.push(`/prototype/${project.template.id}`)
                           }
                         />
                       </Box>
-                      <Box>
-                        <Button
-                          color={role || 'client'}
-                          variant='primary-action'
-                          text='Settings'
-                          iconLeft={<Settings />}
-                          onClick={() =>
-                            history.push(
-                              `/project-settings/${id || project.template.id}`
-                            )
-                          }
-                        />
-                      </Box>
+                      {role === 'client' && (
+                        <Box>
+                          <Button
+                            color={role || 'client'}
+                            variant='primary-action'
+                            text='Settings'
+                            iconLeft={<Settings />}
+                            onClick={() =>
+                              history.push(`/project-settings/${id}`)
+                            }
+                          />
+                        </Box>
+                      )}
                     </>
                   ) : (
-                    <Chip
-                      text={project.state}
-                      color={role || 'client'}
-                      variant='filled'
-                    />
+                    <>
+                      {project.state === 'OnReview' &&
+                      role === 'productOwner' ? (
+                        <>
+                          <Box marginRight='20px'>
+                            <Button
+                              color={role || 'client'}
+                              variant='primary-action'
+                              text='Approve'
+                              onClick={() =>
+                                changeProjectState({
+                                  variables: {
+                                    id: project.id,
+                                    state: 'Approved',
+                                  },
+                                })
+                              }
+                            />
+                          </Box>
+                          <Box>
+                            <Button
+                              color={role || 'client'}
+                              variant='outlined'
+                              text='Decline'
+                              onClick={() =>
+                                changeProjectState({
+                                  variables: {
+                                    id: project.id,
+                                    state: 'Declined',
+                                  },
+                                })
+                              }
+                            />
+                          </Box>
+                        </>
+                      ) : (
+                        <Chip
+                          text={project.state}
+                          color={role || 'client'}
+                          variant='filled'
+                        />
+                      )}
+                    </>
                   )}
                 </Box>
                 {project.template.features && (
@@ -176,6 +506,7 @@ const Project = () => {
                     display='flex'
                     flexDirection='column'
                     marginBottom='30px'
+                    className='deliverables'
                   >
                     <Box marginBottom='10px'>
                       <Text variant='headline' gutterBottom>
@@ -184,30 +515,182 @@ const Project = () => {
                     </Box>
                     <Box
                       display='flex'
-                      flexDirection='row'
-                      alignItems='center'
+                      flexDirection='column'
                       justifyContent='space-between'
                       padding='35px 20px'
                       boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
                       borderRadius='10px'
                     >
-                      {project.delivrable.specification && (
-                        <>
-                          <Box
-                            display='flex'
-                            flexDirection='row'
-                            alignItems='center'
-                          >
-                            <Box marginRight='10px'>
-                              <Specification />
-                            </Box>
-                            <Text variant='title'>Specification</Text>
+                      <Box
+                        display='flex'
+                        flexDirection='row'
+                        alignItems='center'
+                        justifyContent='space-between'
+                        marginBottom='10px'
+                      >
+                        <Box
+                          display='flex'
+                          flexDirection='row'
+                          alignItems='center'
+                        >
+                          <Box marginRight='10px'>
+                            <Specification />
                           </Box>
+                          <Text variant='title'>Specification</Text>
+                        </Box>
+
+                        {project.state === 'Approved' ? (
                           <Link href='#' color={role} onClick={handlePrint}>
                             Download
                           </Link>
-                        </>
-                      )}
+                        ) : (
+                          <Text variant='body' color={role || 'client'}>
+                            {project.state === 'OnReview' && 'On Review'}
+                            {project.state === 'Declined' && 'Declined'}
+                          </Text>
+                        )}
+                      </Box>
+                      <Box
+                        display='flex'
+                        flexDirection='row'
+                        alignItems='center'
+                        justifyContent='space-between'
+                        marginBottom='10px'
+                      >
+                        <Box
+                          display='flex'
+                          flexDirection='row'
+                          alignItems='center'
+                        >
+                          <Box marginRight='10px'>
+                            <Design />
+                          </Box>
+                          <Text variant='title'>Design</Text>
+                        </Box>
+                        {project.delivrable.design.src ? (
+                          <Link
+                            url
+                            href={
+                              /http/.test(project.delivrable.design.src)
+                                ? project.delivrable.design.src
+                                : `http://${project.delivrable.design.src}`
+                            }
+                            target='_blank'
+                            color={role}
+                          >
+                            Download
+                          </Link>
+                        ) : role !== 'productOwner' ? (
+                          <Text variant='body' color={role || 'client'}>
+                            {project.state === 'OnReview' && 'On Review'}
+                            {project.state === 'Approved' && 'In Progress'}
+                            {project.state === 'Declined' && 'Declined'}
+                          </Text>
+                        ) : (
+                          <Box
+                            cursor='pointer'
+                            onClick={() => setDesignModal(true)}
+                          >
+                            <Text variant='body' color={role || 'client'}>
+                              Upload
+                            </Text>
+                          </Box>
+                        )}
+                      </Box>
+                      <Box
+                        display='flex'
+                        flexDirection='row'
+                        alignItems='center'
+                        justifyContent='space-between'
+                        marginBottom='10px'
+                      >
+                        <Box
+                          display='flex'
+                          flexDirection='row'
+                          alignItems='center'
+                        >
+                          <Box marginRight='10px'>
+                            <MVP />
+                          </Box>
+                          <Text variant='title'>MVP</Text>
+                        </Box>
+                        {project.delivrable.mvp.src ? (
+                          <Link
+                            url
+                            href={
+                              /http/.test(project.delivrable.mvp.src)
+                                ? project.delivrable.mvp.src
+                                : `http://${project.delivrable.mvp.src}`
+                            }
+                            target='_blank'
+                            color={role}
+                          >
+                            Download
+                          </Link>
+                        ) : role !== 'productOwner' ? (
+                          <Text variant='body' color={role || 'client'}>
+                            {project.state === 'OnReview' && 'On Review'}
+                            {project.state === 'Approved' && 'In Progress'}
+                            {project.state === 'Declined' && 'Declined'}
+                          </Text>
+                        ) : (
+                          <Box
+                            cursor='pointer'
+                            onClick={() => setMvpModal(true)}
+                          >
+                            <Text variant='body' color={role || 'client'}>
+                              Upload
+                            </Text>
+                          </Box>
+                        )}
+                      </Box>
+                      <Box
+                        display='flex'
+                        flexDirection='row'
+                        alignItems='center'
+                        justifyContent='space-between'
+                        marginBottom='10px'
+                      >
+                        <Box
+                          display='flex'
+                          flexDirection='row'
+                          alignItems='center'
+                        >
+                          <Box marginRight='10px'>
+                            <FullBuild />
+                          </Box>
+                          <Text variant='title'>Full Build</Text>
+                        </Box>
+                        {project.delivrable.fullBuild !== '' ? (
+                          <Link
+                            url
+                            href={
+                              /http/.test(project?.delivrable?.fullBuild)
+                                ? project?.delivrable?.fullBuild
+                                : `http://${project?.delivrable?.fullBuild}`
+                            }
+                            target='_blank'
+                            color={role}
+                          >
+                            Get
+                          </Link>
+                        ) : role !== 'productOwner' ? (
+                          <Text variant='body' color={role || 'client'}>
+                            {project.state === 'OnReview' && 'On Review'}
+                            {project.state === 'Approved' && 'In Progress'}
+                            {project.state === 'Declined' && 'Declined'}
+                          </Text>
+                        ) : (
+                          <Box
+                            cursor='pointer'
+                            onClick={() => setFullBuildModal(true)}
+                          >
+                            <Text variant='body' color={role || 'client'}>
+                              Add
+                            </Text>
+                          </Box>
+                        )}
+                      </Box>
                     </Box>
                   </Box>
                 )}
