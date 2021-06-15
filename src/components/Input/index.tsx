@@ -20,6 +20,7 @@ type InputProps = {
   label?: string;
   name?: string;
   type?: 'text' | 'email' | 'tel' | 'password' | 'file' | 'number';
+  file?: boolean;
   placeholder?: string;
   fullWidth?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -28,6 +29,7 @@ type InputProps = {
 
 const Input = ({
   type = 'text',
+  file = false,
   color = 'client',
   label,
   name,
@@ -66,7 +68,7 @@ const Input = ({
             onChange={onChange}
             onBlur={onBlur}
             name={name}
-            accept={type === 'file' ? 'image/*' : undefined}
+            accept={type === 'file' && !file ? 'image/*' : undefined}
             placeholder={placeholder}
           />
         </div>
