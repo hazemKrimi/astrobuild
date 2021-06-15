@@ -68,10 +68,7 @@ const AddProject = () => {
     chosenDeliverables,
     setChosenDeliverables,
   ] = useState<DelivrableInput>();
-  const [
-    chosenPaymentOption,
-    setChosenPaymentOption,
-  ] = useState<PaymentOptionInput>();
+  const [, setChosenPaymentOption] = useState<PaymentOptionInput>();
   const [chosenPlatforms, setChosenPlatforms] = useState<Array<string>>([]);
   const [selectedFeature, setSelectedFeature] = useState<FeatureOutput>();
   const [categories, setCategories] = useState<Array<CategoryOutput>>([]);

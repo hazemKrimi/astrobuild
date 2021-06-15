@@ -88,7 +88,7 @@ const Project = () => {
 
   return role !== 'admin' ? (
     <>
-      {!projectLoading && !projectLoading && !prototypeLoading ? (
+      {!projectsLoading && !projectLoading && !prototypeLoading ? (
         <>
           {project ? (
             <Wrapper>
