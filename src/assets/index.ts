@@ -1,7 +1,10 @@
 import { ReactComponent as Add } from './icons/add.svg';
 import { ReactComponent as Upload } from './icons/upload.svg';
 import { ReactComponent as ChevronDown } from './icons/chevron-down.svg';
+import { ReactComponent as ChevronLeft } from './icons/chevron-left.svg';
+import { ReactComponent as ChevronRight } from './icons/chevron-right.svg';
 import { ReactComponent as ArrowLeft } from './icons/arrow-left.svg';
+import { ReactComponent as ArrowRight } from './icons/arrow-right.svg';
 import { ReactComponent as Search } from './icons/search.svg';
 import { ReactComponent as Check } from './icons/check.svg';
 import { ReactComponent as CheckCircle } from './icons/check-circle.svg';
@@ -28,7 +31,10 @@ export {
   Add,
   Upload,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ArrowLeft,
+  ArrowRight,
   Search,
   Check,
   CheckCircle,
