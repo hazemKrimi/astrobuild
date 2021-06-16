@@ -541,7 +541,7 @@ const Project = () => {
 
                         {project.state === 'Approved' ? (
                           <Link href='#' color={role} onClick={handlePrint}>
-                            Download
+                            Print
                           </Link>
                         ) : (
                           <Text variant='body' color={role || 'client'}>
@@ -587,14 +587,24 @@ const Project = () => {
                             {project.state === 'Declined' && 'Declined'}
                           </Text>
                         ) : (
-                          <Box
-                            cursor='pointer'
-                            onClick={() => setDesignModal(true)}
-                          >
-                            <Text variant='body' color={role || 'client'}>
-                              Upload
-                            </Text>
-                          </Box>
+                          <>
+                            {project.state === 'Approved' ? (
+                              <Box
+                                cursor='pointer'
+                                onClick={() => setDesignModal(true)}
+                              >
+                                <Text variant='body' color={role || 'client'}>
+                                  Upload
+                                </Text>
+                              </Box>
+                            ) : (
+                              <Text variant='body' color={role || 'client'}>
+                                {project.state === 'OnReview' && 'On Review'}
+                                {project.state === 'Approved' && 'In Progress'}
+                                {project.state === 'Declined' && 'Declined'}
+                              </Text>
+                            )}
+                          </>
                         )}
                       </Box>
                       <Box
@@ -634,14 +644,24 @@ const Project = () => {
                             {project.state === 'Declined' && 'Declined'}
                           </Text>
                         ) : (
-                          <Box
-                            cursor='pointer'
-                            onClick={() => setMvpModal(true)}
-                          >
-                            <Text variant='body' color={role || 'client'}>
-                              Upload
-                            </Text>
-                          </Box>
+                          <>
+                            {project.state === 'Approved' ? (
+                              <Box
+                                cursor='pointer'
+                                onClick={() => setDesignModal(true)}
+                              >
+                                <Text variant='body' color={role || 'client'}>
+                                  Upload
+                                </Text>
+                              </Box>
+                            ) : (
+                              <Text variant='body' color={role || 'client'}>
+                                {project.state === 'OnReview' && 'On Review'}
+                                {project.state === 'Approved' && 'In Progress'}
+                                {project.state === 'Declined' && 'Declined'}
+                              </Text>
+                            )}
+                          </>
                         )}
                       </Box>
                       <Box
@@ -681,14 +701,24 @@ const Project = () => {
                             {project.state === 'Declined' && 'Declined'}
                           </Text>
                         ) : (
-                          <Box
-                            cursor='pointer'
-                            onClick={() => setFullBuildModal(true)}
-                          >
-                            <Text variant='body' color={role || 'client'}>
-                              Add
-                            </Text>
-                          </Box>
+                          <>
+                            {project.state === 'Approved' ? (
+                              <Box
+                                cursor='pointer'
+                                onClick={() => setDesignModal(true)}
+                              >
+                                <Text variant='body' color={role || 'client'}>
+                                  Add
+                                </Text>
+                              </Box>
+                            ) : (
+                              <Text variant='body' color={role || 'client'}>
+                                {project.state === 'OnReview' && 'On Review'}
+                                {project.state === 'Approved' && 'In Progress'}
+                                {project.state === 'Declined' && 'Declined'}
+                              </Text>
+                            )}
+                          </>
                         )}
                       </Box>
                     </Box>
