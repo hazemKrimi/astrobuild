@@ -22,22 +22,22 @@ const Navbar = () => {
             <Link
               href='/clients'
               color={
-                new RegExp('/clients', 'i').test(location.pathname)
+                new RegExp('clients', 'i').test(location.pathname)
                   ? 'admin'
                   : 'black'
               }
-              selected={new RegExp('/clients', 'i').test(location.pathname)}
+              selected={new RegExp('clients', 'i').test(location.pathname)}
             >
               Clients
             </Link>
             <Link
               href='/product-owners'
               color={
-                new RegExp('/product-owners', 'i').test(location.pathname)
+                new RegExp('product-owners', 'i').test(location.pathname)
                   ? 'admin'
                   : 'black'
               }
-              selected={new RegExp('/product-owners', 'i').test(
+              selected={new RegExp('product-owners', 'i').test(
                 location.pathname
               )}
             >
@@ -46,11 +46,11 @@ const Navbar = () => {
             <Link
               href='/developers'
               color={
-                new RegExp('/developers', 'i').test(location.pathname)
+                new RegExp('developers', 'i').test(location.pathname)
                   ? 'admin'
                   : 'black'
               }
-              selected={new RegExp('/developers', 'i').test(location.pathname)}
+              selected={new RegExp('developers', 'i').test(location.pathname)}
             >
               Developers
             </Link>
@@ -61,44 +61,44 @@ const Navbar = () => {
             <Link
               href='/project'
               color={
-                new RegExp('/project', 'i').test(location.pathname)
+                new RegExp('project', 'i').test(location.pathname)
                   ? 'developer'
                   : 'black'
               }
-              selected={new RegExp('/project', 'i').test(location.pathname)}
+              selected={new RegExp('project', 'i').test(location.pathname)}
             >
               Projects
             </Link>
             <Link
               href='/template'
               color={
-                new RegExp('/template', 'i').test(location.pathname)
+                new RegExp('template', 'i').test(location.pathname)
                   ? 'developer'
                   : 'black'
               }
-              selected={new RegExp('/template', 'i').test(location.pathname)}
+              selected={new RegExp('template', 'i').test(location.pathname)}
             >
               Templates
             </Link>
             <Link
               href='/feature'
               color={
-                new RegExp('/feature', 'i').test(location.pathname)
+                new RegExp('feature', 'i').test(location.pathname)
                   ? 'developer'
                   : 'black'
               }
-              selected={new RegExp('/feature', 'i').test(location.pathname)}
+              selected={new RegExp('feature', 'i').test(location.pathname)}
             >
               Features
             </Link>
             <Link
               href='/category'
               color={
-                new RegExp('/category', 'i').test(location.pathname)
+                new RegExp('category', 'i').test(location.pathname)
                   ? 'developer'
                   : 'black'
               }
-              selected={new RegExp('/category', 'i').test(location.pathname)}
+              selected={new RegExp('category', 'i').test(location.pathname)}
             >
               Categories
             </Link>
@@ -109,22 +109,22 @@ const Navbar = () => {
             <Link
               href='/project'
               color={
-                new RegExp('/project', 'i').test(location.pathname)
+                new RegExp('project', 'i').test(location.pathname)
                   ? 'productOwner'
                   : 'black'
               }
-              selected={new RegExp('/project', 'i').test(location.pathname)}
+              selected={new RegExp('project', 'i').test(location.pathname)}
             >
               Projects
             </Link>
             <Link
               href='/template'
               color={
-                new RegExp('/template', 'i').test(location.pathname)
+                new RegExp('template', 'i').test(location.pathname)
                   ? 'productOwner'
                   : 'black'
               }
-              selected={new RegExp('/template', 'i').test(location.pathname)}
+              selected={new RegExp('template', 'i').test(location.pathname)}
             >
               Templates
             </Link>
