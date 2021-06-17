@@ -5,7 +5,10 @@ import {
   InMemoryCache,
   createHttpLink,
   ApolloProvider,
+  split,
 } from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { setContext } from '@apollo/client/link/context';
@@ -26,6 +29,25 @@ const httpLinkSupport = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_SUPPORT_API,
 });
 
+const wsLink = new WebSocketLink({
+  uri: `${process.env.REACT_APP_GRAPHQL_SUPPORT_SUBSCRIPTIONS_API}`,
+  options: {
+    reconnect: true,
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLinkSupport
+);
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
 
@@ -43,7 +65,7 @@ export const clientMain = new ApolloClient({
 });
 
 export const clientSupport = new ApolloClient({
-  link: authLink.concat(httpLinkSupport),
+  link: authLink.concat(splitLink),
   cache: new InMemoryCache(),
 });
 
