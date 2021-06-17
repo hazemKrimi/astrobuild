@@ -1,0 +1,14 @@
+overwrite: true
+schema: 'https://astrobuild-support-service.herokuapp.com'
+documents: 'src/graphql/*.api.support.ts'
+config:
+  withHOC: false
+  scalars:
+    Date: Date
+  enumsAsTypes: true
+  withHooks: true
+generates:
+  src/graphql/types.support.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'

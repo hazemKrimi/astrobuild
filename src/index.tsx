@@ -6,6 +6,8 @@ import {
   createHttpLink,
   ApolloProvider,
 } from '@apollo/client';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
@@ -14,8 +16,14 @@ import App from './App';
 import GlobalStyles from './GlobalStyles';
 import reportWebVitals from './reportWebVitals';
 
-const httpLink = createHttpLink({
+const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+
+const httpLinkMain = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_API,
+});
+
+const httpLinkSupport = createHttpLink({
+  uri: process.env.REACT_APP_GRAPHQL_SUPPORT_API,
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -29,21 +37,28 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+export const clientMain = new ApolloClient({
+  link: authLink.concat(httpLinkMain),
+  cache: new InMemoryCache(),
+});
+
+export const clientSupport = new ApolloClient({
+  link: authLink.concat(httpLinkSupport),
   cache: new InMemoryCache(),
 });
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-          <GlobalStyles />
-        </BrowserRouter>
-      </ThemeProvider>
-    </ApolloProvider>
+    <Elements stripe={stripePromise}>
+      <ApolloProvider client={clientMain}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <App />
+            <GlobalStyles />
+          </BrowserRouter>
+        </ThemeProvider>
+      </ApolloProvider>
+    </Elements>
   </React.StrictMode>,
   document.getElementById('root')
 );
