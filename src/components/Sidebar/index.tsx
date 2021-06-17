@@ -48,10 +48,7 @@ const Sidebar = () => {
     false
   );
 
-  const [
-    getProjectsByClientId,
-    { loading: clientProjectsLoading },
-  ] = useLazyQuery<
+  const [getProjectsByClientId] = useLazyQuery<
     GetAllProjectsByClientIdQuery,
     GetAllProjectsByClientIdQueryVariables
   >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
