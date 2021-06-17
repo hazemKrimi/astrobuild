@@ -11,6 +11,7 @@ import {
   Empty,
   FullBuild,
   MVP,
+  Payment,
   Settings,
   Specification,
 } from '../../assets';
@@ -83,7 +84,7 @@ const Project = () => {
       id: currentUser?.id!,
     },
     onCompleted({ getAllProjectsByClientId }) {
-      setProject(getAllProjectsByClientId[0]);
+      history.push(`/project/${getAllProjectsByClientId[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
@@ -93,7 +94,7 @@ const Project = () => {
     GetAllUsersQueryVariables
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
-      setProject(getAllProjects[0]);
+      history.push(`/project/${getAllProjects[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
@@ -417,6 +418,20 @@ const Project = () => {
                           }
                         />
                       </Box>
+                      {role === 'client' && (
+                        <Box marginRight='20px'>
+                          <Button
+                            color={role || 'client'}
+                            variant='primary-action'
+                            text='Payments'
+                            iconLeft={<Payment />}
+                            // disabled={project}
+                            onClick={() =>
+                              history.push(`/payments/${project.id}`)
+                            }
+                          />
+                        </Box>
+                      )}
                       {role === 'client' && (
                         <Box>
                           <Button
