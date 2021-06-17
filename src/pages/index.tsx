@@ -20,6 +20,8 @@ import FeatureSettings from './FeatureSettings';
 import TemplateSettings from './TemplateSettings';
 import AddProject from './AddProject';
 import UpdateProject from './UpdateProject';
+import Payments from './Payments';
+import SupportMessaging from './SupportMessaging';
 
 export {
   Login,
@@ -44,4 +46,6 @@ export {
   TemplateSettings,
   AddProject,
   UpdateProject,
+  Payments,
+  SupportMessaging,
 };
