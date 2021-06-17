@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import { useLazyQuery, useReactiveVar } from '@apollo/client';
+import { useReactiveVar } from '@apollo/client';
 import { roleVar } from '../../graphql/state';
 import { Box, Button, Text } from '..';
 import { Wrapper } from './styles';

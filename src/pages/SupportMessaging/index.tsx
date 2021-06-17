@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useLocation, useParams, useHistory } from 'react-router-dom';
-import { useReactiveVar, useSubscription } from '@apollo/client';
+import { useParams, useHistory } from 'react-router-dom';
+import { useReactiveVar } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { roleVar, userVar } from '../../graphql/state';
 import { Wrapper } from './styles';
@@ -12,21 +12,20 @@ import {
   CreateThreadMutationVariables,
   GetThreadByIdQuery,
   GetThreadByIdQueryVariables,
+  MessagesQuery,
+  MessagesQueryVariables,
   SendMsgMutation,
   SendMsgMutationVariables,
   ThreadObject,
+  UserMessageObject,
 } from '../../graphql/types.support';
-import { Box, Button, Input, TextArea, Text, Link } from '../../components';
-import {
-  Attachment,
-  Send,
-  ThreadClient,
-  ThreadProductOwner,
-} from '../../assets';
+import { Box, Button, Input, TextArea, Text } from '../../components';
+import { Send, ThreadClient, ThreadProductOwner } from '../../assets';
 import {
   CONNECT_STREAM,
   CREATE_THREAD,
   GET_THREAD_BY_ID,
+  MESSAGES,
   SEND_MSG,
 } from '../../graphql/chat.api.support';
 import { theme } from '../../themes';
@@ -36,23 +35,17 @@ const SupportMessaging = () => {
   const { project, id } = useParams<{ id: string; project: string }>();
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
-  const location = useLocation();
   const history = useHistory();
   const [thread, setThread] = useState<ThreadObject>();
-
-  // const { data: liveMessages } = useSubscription<
-  //   ConnectStreamSubscription,
-  //   ConnectStreamSubscriptionVariables
-  // >(CONNECT_STREAM, {
-  //   variables: {
-  //     mutationType: 'CREATED',
-  //   },
-  // });
+  const [messages, setMessages] = useState<Array<UserMessageObject>>([]);
+  const [addedMessages, setAddedMessages] = useState<Array<UserMessageObject>>(
+    []
+  );
 
   useEffect(() => {
     (async () => {
       if (id) {
-        const res = await clientSupport.query<
+        const threadResult = await clientSupport.query<
           GetThreadByIdQuery,
           GetThreadByIdQueryVariables
         >({
@@ -61,7 +54,46 @@ const SupportMessaging = () => {
             threadId: id!,
           },
         });
-        setThread(res?.data?.getThreadById);
+
+        setThread(threadResult?.data?.getThreadById);
+
+        const messagesResult = await clientSupport.query<
+          MessagesQuery,
+          MessagesQueryVariables
+        >({
+          query: MESSAGES,
+          variables: {
+            threadId: id!,
+          },
+        });
+        setMessages(
+          Array.from(messagesResult?.data?.messages).map((message, index) => ({
+            text: message.text,
+            username: message.username,
+            id: index.toString(),
+          }))
+        );
+
+        const messageSubscriber = clientSupport.subscribe<
+          ConnectStreamSubscription,
+          ConnectStreamSubscriptionVariables
+        >({
+          query: CONNECT_STREAM,
+          variables: {
+            mutationType: 'CREATED',
+          },
+        });
+
+        messageSubscriber.subscribe(({ data }) => {
+          setAddedMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              id: messages.length.toString(),
+              username: data?.connectStream?.userMessage?.username!,
+              text: data?.connectStream?.userMessage?.text!,
+            },
+          ]);
+        });
       }
     })();
 
@@ -96,25 +128,20 @@ const SupportMessaging = () => {
   const sendMsgForm = useFormik({
     initialValues: {
       msg: '',
-      fileName: '',
-      fileSource: '',
     },
     validationSchema: Yup.object().shape({
       msg: Yup.string().required('Message is required'),
     }),
-    onSubmit: async ({ msg, fileName, fileSource }) => {
+    onSubmit: async ({ msg }, { resetForm }) => {
       await clientSupport.mutate<SendMsgMutation, SendMsgMutationVariables>({
         mutation: SEND_MSG,
         variables: {
           threadId: id,
           username: `${currentUser?.firstName} ${currentUser?.lastName}`,
           msg,
-          file: {
-            name: fileName,
-            src: fileSource,
-          },
         },
       });
+      resetForm();
     },
   });
 
@@ -208,9 +235,11 @@ const SupportMessaging = () => {
               flexDirection='column'
               marginBottom='20px'
             >
-              {thread.userMessages.map((msg) => (
+              {messages.map((msg) => (
                 <Box
                   borderRadius='10px'
+                  boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
+                  marginBottom='15px'
                   padding='10px'
                   color={
                     msg.username ===
@@ -235,16 +264,37 @@ const SupportMessaging = () => {
                   <Box marginBottom='5px'>
                     <Text variant='body'>{msg.text}</Text>
                   </Box>
-                  {msg.attachment.src && (
-                    <Box display='flex' flexDirection='row' alignItems='center'>
-                      <Attachment fill='white' />
-                      <Box>
-                        <Link url href={msg.attachment.src} target='_blank'>
-                          {msg.attachment.name}
-                        </Link>
-                      </Box>
-                    </Box>
-                  )}
+                </Box>
+              ))}
+              {addedMessages.map((msg) => (
+                <Box
+                  borderRadius='10px'
+                  boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
+                  marginBottom='15px'
+                  padding='10px'
+                  color={
+                    msg.username ===
+                    `${currentUser?.firstName} ${currentUser?.lastName}`
+                      ? 'white'
+                      : 'initial'
+                  }
+                  key={msg.id}
+                  background={
+                    msg.username ===
+                    `${currentUser?.firstName} ${currentUser?.lastName}`
+                      ? theme.colors[role || 'client'].main
+                      : 'white'
+                  }
+                  alignSelf={
+                    msg.username ===
+                    `${currentUser?.firstName} ${currentUser?.lastName}`
+                      ? 'flex-end'
+                      : 'flex-start'
+                  }
+                >
+                  <Box marginBottom='5px'>
+                    <Text variant='body'>{msg.text}</Text>
+                  </Box>
                 </Box>
               ))}
             </Box>
