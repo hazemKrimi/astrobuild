@@ -2,8 +2,14 @@ import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { roleVar, userVar } from '../../graphql/state';
-import { Box, ContextMenu, IconButton, SidebarItem } from '..';
-import { Add } from '../../assets';
+import {
+  Box,
+  ContextMenu,
+  IconButton,
+  MessagingSidebar,
+  SidebarItem,
+} from '..';
+import { Add, Messaging } from '../../assets';
 import { Wrapper } from './styles';
 import {
   CategoryOutput,
@@ -12,6 +18,8 @@ import {
   GetAllCategoriesQueryVariables,
   GetAllFeaturesQuery,
   GetAllFeaturesQueryVariables,
+  GetAllProjectsByClientIdQuery,
+  GetAllProjectsByClientIdQueryVariables,
   GetAllProjectsQuery,
   GetAllProjectsQueryVariables,
   GetAllTemplatesQuery,
@@ -20,7 +28,10 @@ import {
   TemplateOutput,
 } from '../../graphql/types';
 import { GET_ALL_CATEGORIES } from '../../graphql/category.api';
-import { GET_ALL_PROJECTS } from '../../graphql/project.api';
+import {
+  GET_ALL_PROJECTS,
+  GET_ALL_PROJECTS_BY_CLIENT_ID,
+} from '../../graphql/project.api';
 import { GET_ALL_TEMPLATES } from '../../graphql/template.api';
 import { GET_ALL_FEATURES } from '../../graphql/feature.api';
 
@@ -33,19 +44,32 @@ const Sidebar = () => {
   const [templates, setTemplates] = useState<Array<TemplateOutput>>();
   const [features, setFeatures] = useState<Array<FeatureOutput>>();
   const [categories, setCategories] = useState<Array<CategoryOutput>>();
+  const [messagingSidebarOpen, setMessagingSidebarOpen] = useState<boolean>(
+    false
+  );
+
+  const [
+    getProjectsByClientId,
+    { loading: clientProjectsLoading },
+  ] = useLazyQuery<
+    GetAllProjectsByClientIdQuery,
+    GetAllProjectsByClientIdQueryVariables
+  >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
+    variables: {
+      id: currentUser?.id!,
+    },
+    onCompleted({ getAllProjectsByClientId }) {
+      setProjects(getAllProjectsByClientId);
+    },
+    fetchPolicy: 'network-only',
+  });
 
   const [getProjects] = useLazyQuery<
     GetAllProjectsQuery,
     GetAllProjectsQueryVariables
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
-      setProjects(
-        role === 'client'
-          ? getAllProjects.filter(
-              (project) => project.clientId === currentUser?.id
-            )
-          : getAllProjects
-      );
+      setProjects(getAllProjects);
     },
     fetchPolicy: 'network-only',
   });
@@ -82,7 +106,8 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (/project/i.test(location.pathname)) {
-      getProjects();
+      if (role !== 'client') getProjects();
+      else getProjectsByClientId({ variables: { id: currentUser?.id! } });
     }
 
     if (/template/i.test(location.pathname)) {
@@ -112,15 +137,14 @@ const Sidebar = () => {
         <>
           <Box display='flex' flexDirection='column'>
             {projects &&
-              projects.map((project, index) => (
+              projects.map((project) => (
                 <Box marginBottom='20px' key={project.id}>
                   <div id={`project-${project.id}`}>
                     <SidebarItem
                       color={role}
-                      selected={
-                        new RegExp(project.id, 'i').test(location.pathname) ||
-                        (index === 0 && location.pathname === '/project')
-                      }
+                      selected={new RegExp(project.id, 'i').test(
+                        location.pathname
+                      )}
                       text={project.name[0]}
                       onClick={() => history.push(`/project/${project.id}`)}
                     />
@@ -192,27 +216,41 @@ const Sidebar = () => {
                 </Box>
               ))}
           </Box>
-          <Box>
-            <IconButton
-              icon={<Add />}
-              color={role}
-              onClick={() => {
-                if (/project/i.test(location.pathname)) {
-                  history.push('/add-project');
-                }
-                if (/template/i.test(location.pathname)) {
-                  history.push('/add-template');
-                }
-                if (/feature/i.test(location.pathname)) {
-                  history.push('/add-feature');
-                }
-                if (/category/i.test(location.pathname)) {
-                  history.push('/add-category');
-                }
-              }}
-            />
+          <Box display='flex' flexDirection='column'>
+            <Box marginBottom='20px'>
+              <IconButton
+                icon={<Add />}
+                color={role}
+                onClick={() => {
+                  if (/project/i.test(location.pathname)) {
+                    history.push('/add-project');
+                  }
+                  if (/template/i.test(location.pathname)) {
+                    history.push('/add-template');
+                  }
+                  if (/feature/i.test(location.pathname)) {
+                    history.push('/add-feature');
+                  }
+                  if (/category/i.test(location.pathname)) {
+                    history.push('/add-category');
+                  }
+                }}
+              />
+            </Box>
+            {/\/project/i.test(location.pathname) && (
+              <Box>
+                <IconButton
+                  icon={<Messaging />}
+                  color={role}
+                  onClick={() => setMessagingSidebarOpen(!messagingSidebarOpen)}
+                />
+              </Box>
+            )}
           </Box>
         </>
+      )}
+      {messagingSidebarOpen && (
+        <MessagingSidebar onClose={() => setMessagingSidebarOpen(false)} />
       )}
     </Wrapper>
   );
