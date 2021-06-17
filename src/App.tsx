@@ -33,6 +33,8 @@ import {
   TemplateSettings,
   AddProject,
   UpdateProject,
+  Payments,
+  SupportMessaging,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -102,11 +104,20 @@ const App = () => {
         <ProtectedRoute path='/project/:id' exact>
           <Project />
         </ProtectedRoute>
+        <ProtectedRoute path='/payments/:id' exact>
+          <Payments />
+        </ProtectedRoute>
         <ProtectedRoute path='/add-project' exact>
           <AddProject />
         </ProtectedRoute>
         <ProtectedRoute path='/project-settings/:id' exact>
           <UpdateProject />
+        </ProtectedRoute>
+        <ProtectedRoute path='/support-messaging/:project' exact>
+          <SupportMessaging />
+        </ProtectedRoute>
+        <ProtectedRoute path='/support-messaging/:project/:id' exact>
+          <SupportMessaging />
         </ProtectedRoute>
         <ProtectedRoute path='/template' exact>
           <Template />
