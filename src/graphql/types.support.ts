@@ -12,17 +12,6 @@ export type Scalars = {
 };
 
 
-export type FileInput = {
-  name: Scalars['String'];
-  src: Scalars['String'];
-};
-
-export type FileOutput = {
-  __typename?: 'FileOutput';
-  name: Scalars['String'];
-  src: Scalars['String'];
-};
-
 export type MutationRoot = {
   __typename?: 'MutationRoot';
   createThread: Scalars['ID'];
@@ -46,8 +35,7 @@ export type MutationRootDeleteThreadArgs = {
 export type MutationRootSendMsgArgs = {
   threadId: Scalars['String'];
   username: Scalars['String'];
-  msg?: Maybe<Scalars['String']>;
-  file?: Maybe<FileInput>;
+  msg: Scalars['String'];
 };
 
 export type MutationType =
@@ -55,7 +43,7 @@ export type MutationType =
 
 export type QueryRoot = {
   __typename?: 'QueryRoot';
-  messages: Array<UserMessageObject>;
+  messages: Array<UserMessage>;
   getProjectThreads: Array<ThreadObject>;
   getThreadById: ThreadObject;
 };
@@ -97,7 +85,13 @@ export type ThreadObject = {
   id: Scalars['String'];
   title: Scalars['String'];
   threadDescription: Scalars['String'];
-  userMessages: Array<UserMessageObject>;
+  userMessages: Array<UserMessage>;
+};
+
+export type UserMessage = {
+  __typename?: 'UserMessage';
+  username: Scalars['String'];
+  text: Scalars['String'];
 };
 
 export type UserMessageObject = {
@@ -105,7 +99,6 @@ export type UserMessageObject = {
   id: Scalars['String'];
   username: Scalars['String'];
   text: Scalars['String'];
-  attachment: FileOutput;
 };
 
 export type GetProjectThreadsQueryVariables = Exact<{
@@ -119,12 +112,8 @@ export type GetProjectThreadsQuery = (
     { __typename?: 'ThreadObject' }
     & Pick<ThreadObject, 'id' | 'title' | 'threadDescription'>
     & { userMessages: Array<(
-      { __typename?: 'UserMessageObject' }
-      & Pick<UserMessageObject, 'id' | 'username' | 'text'>
-      & { attachment: (
-        { __typename?: 'FileOutput' }
-        & Pick<FileOutput, 'name' | 'src'>
-      ) }
+      { __typename?: 'UserMessage' }
+      & Pick<UserMessage, 'username' | 'text'>
     )> }
   )> }
 );
@@ -140,12 +129,8 @@ export type GetThreadByIdQuery = (
     { __typename?: 'ThreadObject' }
     & Pick<ThreadObject, 'id' | 'title' | 'threadDescription'>
     & { userMessages: Array<(
-      { __typename?: 'UserMessageObject' }
-      & Pick<UserMessageObject, 'id' | 'username' | 'text'>
-      & { attachment: (
-        { __typename?: 'FileOutput' }
-        & Pick<FileOutput, 'name' | 'src'>
-      ) }
+      { __typename?: 'UserMessage' }
+      & Pick<UserMessage, 'username' | 'text'>
     )> }
   ) }
 );
@@ -158,12 +143,8 @@ export type MessagesQueryVariables = Exact<{
 export type MessagesQuery = (
   { __typename?: 'QueryRoot' }
   & { messages: Array<(
-    { __typename?: 'UserMessageObject' }
-    & Pick<UserMessageObject, 'id' | 'username' | 'text'>
-    & { attachment: (
-      { __typename?: 'FileOutput' }
-      & Pick<FileOutput, 'name' | 'src'>
-    ) }
+    { __typename?: 'UserMessage' }
+    & Pick<UserMessage, 'username' | 'text'>
   )> }
 );
 
@@ -182,8 +163,7 @@ export type CreateThreadMutation = (
 export type SendMsgMutationVariables = Exact<{
   threadId: Scalars['String'];
   username: Scalars['String'];
-  msg?: Maybe<Scalars['String']>;
-  file?: Maybe<FileInput>;
+  msg: Scalars['String'];
 }>;
 
 
@@ -205,10 +185,6 @@ export type ConnectStreamSubscription = (
     & { userMessage?: Maybe<(
       { __typename?: 'UserMessageObject' }
       & Pick<UserMessageObject, 'id' | 'username' | 'text'>
-      & { attachment: (
-        { __typename?: 'FileOutput' }
-        & Pick<FileOutput, 'name' | 'src'>
-      ) }
     )> }
   ) }
 );

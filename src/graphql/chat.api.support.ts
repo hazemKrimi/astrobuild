@@ -7,13 +7,8 @@ export const GET_PROJECT_THREADS = gql`
       title
       threadDescription
       userMessages {
-        id
         username
         text
-        attachment {
-          name
-          src
-        }
       }
     }
   }
@@ -26,13 +21,8 @@ export const GET_THREAD_BY_ID = gql`
       title
       threadDescription
       userMessages {
-        id
         username
         text
-        attachment {
-          name
-          src
-        }
       }
     }
   }
@@ -41,13 +31,8 @@ export const GET_THREAD_BY_ID = gql`
 export const MESSAGES = gql`
   query Messages($threadId: String!) {
     messages(threadId: $threadId) {
-      id
       username
       text
-      attachment {
-        name
-        src
-      }
     }
   }
 `;
@@ -67,13 +52,8 @@ export const CREATE_THREAD = gql`
 `;
 
 export const SEND_MSG = gql`
-  mutation SendMsg(
-    $threadId: String!
-    $username: String!
-    $msg: String
-    $file: FileInput
-  ) {
-    sendMsg(threadId: $threadId, username: $username, msg: $msg, file: $file)
+  mutation SendMsg($threadId: String!, $username: String!, $msg: String!) {
+    sendMsg(threadId: $threadId, username: $username, msg: $msg)
   }
 `;
 
@@ -86,10 +66,6 @@ export const CONNECT_STREAM = gql`
         id
         username
         text
-        attachment {
-          name
-          src
-        }
       }
     }
   }
