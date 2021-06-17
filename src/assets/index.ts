@@ -25,9 +25,15 @@ import { ReactComponent as Features } from './icons/features.svg';
 import { ReactComponent as Frontend } from './icons/frontend.svg';
 import { ReactComponent as Backend } from './icons/backend.svg';
 import { ReactComponent as Close } from './icons/close.svg';
+import { ReactComponent as Payment } from './icons/payment.svg';
+import { ReactComponent as Messaging } from './icons/messaging.svg';
+import { ReactComponent as Send } from './icons/send.svg';
+import { ReactComponent as Attachment } from './icons/attachment.svg';
 import { ReactComponent as Login } from './images/login.svg';
 import { ReactComponent as Signup } from './images/signup.svg';
 import { ReactComponent as Empty } from './images/empty.svg';
+import { ReactComponent as ThreadClient } from './images/thread-client.svg';
+import { ReactComponent as ThreadProductOwner } from './images/thread-po.svg';
 
 export {
   Add,
@@ -57,7 +63,13 @@ export {
   Frontend,
   Backend,
   Close,
+  Payment,
+  Messaging,
+  Send,
+  Attachment,
   Login,
   Signup,
   Empty,
+  ThreadClient,
+  ThreadProductOwner,
 };
