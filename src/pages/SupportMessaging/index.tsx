@@ -121,7 +121,9 @@ const SupportMessaging = () => {
           threadDescription: description,
         },
       });
-      history.push(`/support-messaging/${project}/${createdThread}`);
+      history.push(
+        `/support-messaging/${project}/${createdThread.data?.createThread}`
+      );
     },
   });
 
