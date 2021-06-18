@@ -60,6 +60,23 @@ import {
 } from '../../graphql/project.api';
 import { GET_PROTOTYPE_BY_ID } from '../../graphql/prototype.api';
 
+type Transaction = {
+  amount: number;
+  created: boolean;
+  selectedOption: number;
+  _id: string;
+};
+
+type TransactionData = {
+  transactions: Array<Transaction>;
+  remaining_amount: number;
+  amount: number;
+  project_id: string;
+  status: boolean;
+  total_amount: number;
+  _id: string;
+};
+
 const Project = () => {
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
@@ -72,6 +89,7 @@ const Project = () => {
   const [designModal, setDesignModal] = useState<boolean>(false);
   const [mvpModal, setMvpModal] = useState<boolean>(false);
   const [fullBuildModal, setFullBuildModal] = useState<boolean>(false);
+  const [transactionsData, setTransactionsData] = useState<TransactionData>();
 
   const [
     getProjectsByClientId,
@@ -195,7 +213,26 @@ const Project = () => {
   }, [id, role]);
 
   useEffect(() => {
-    if (project) getPrototype({ variables: { id: project?.template?.id } });
+    (async () => {
+      if (project) {
+        getPrototype({ variables: { id: project?.template?.id } });
+
+        try {
+          const transactionsResult = await (
+            await fetch(`${process.env.REACT_APP_PAYMENT_API}/transactions`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ project_id: project.id }),
+            })
+          ).json();
+          if (transactionsResult) setTransactionsData(transactionsResult);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    })();
 
     // eslint-disable-next-line
   }, [project]);
@@ -425,7 +462,7 @@ const Project = () => {
                             variant='primary-action'
                             text='Payments'
                             iconLeft={<Payment />}
-                            // disabled={project}
+                            disabled={transactionsData?.status}
                             onClick={() =>
                               history.push(`/payments/${project.id}`)
                             }
