@@ -26,6 +26,7 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    'no-console': 0,
     'no-nested-ternary': 'off',
     'no-unused-expressions': 'off',
     '@typescript-eslint/no-unused-expressions': [
