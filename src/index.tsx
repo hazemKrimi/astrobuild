@@ -9,8 +9,6 @@ import {
 } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
@@ -18,8 +16,6 @@ import { theme } from './themes';
 import App from './App';
 import GlobalStyles from './GlobalStyles';
 import reportWebVitals from './reportWebVitals';
-
-const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 const httpLinkMain = createHttpLink({
   uri: process.env.REACT_APP_GRAPHQL_API,
@@ -71,16 +67,14 @@ export const clientSupport = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Elements stripe={stripePromise}>
-      <ApolloProvider client={clientMain}>
-        <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <App />
-            <GlobalStyles />
-          </BrowserRouter>
-        </ThemeProvider>
-      </ApolloProvider>
-    </Elements>
+    <ApolloProvider client={clientMain}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <App />
+          <GlobalStyles />
+        </BrowserRouter>
+      </ThemeProvider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
