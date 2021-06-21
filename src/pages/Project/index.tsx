@@ -211,6 +211,10 @@ const Project = () => {
       });
     } else getProjects();
 
+    return () => {
+      setProject(undefined);
+    };
+
     // eslint-disable-next-line
   }, [id, role]);
 
@@ -235,6 +239,11 @@ const Project = () => {
         }
       }
     })();
+
+    return () => {
+      setPrototype(undefined);
+      setTransactionsData(undefined);
+    };
 
     // eslint-disable-next-line
   }, [project]);

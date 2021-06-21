@@ -60,8 +60,8 @@ const Template = () => {
     GetAllTemplatesQueryVariables
   >(GET_ALL_TEMPLATES, {
     onCompleted({ getAllTemplates }) {
-      setTemplate(getAllTemplates[0]);
-      getCategory({ variables: { id: template?.category! } });
+      if (getAllTemplates.length > 0)
+        history.push(`/template/${getAllTemplates[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
@@ -82,8 +82,9 @@ const Template = () => {
     GetPrototypeByIdQueryVariables
   >(GET_PROTOTYPE_BY_ID, {
     onCompleted({ getPrototypeById }) {
-      setPrototype(getPrototypeById.prototype);
+      if (getPrototypeById) setPrototype(getPrototypeById.prototype);
     },
+    fetchPolicy: 'network-only',
   });
 
   const handlePrint = useReactToPrint({
@@ -97,6 +98,11 @@ const Template = () => {
     } else {
       getTemplates();
     }
+
+    return () => {
+      setTemplate(undefined);
+      setPrototype(undefined);
+    };
 
     // eslint-disable-next-line
   }, [id]);
@@ -140,7 +146,9 @@ const Template = () => {
                       variant='primary-action'
                       text='Prototype'
                       iconLeft={<Design />}
-                      disabled={!prototype && role === 'productOwner'}
+                      disabled={
+                        prototype === undefined && role === 'productOwner'
+                      }
                       onClick={() =>
                         history.push(`/prototype/${id || template.id}`)
                       }
