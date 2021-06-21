@@ -788,18 +788,33 @@ const AddProject = () => {
               boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
               borderRadius='10px'
             >
-              <Box
-                className='project-image'
-                background={
-                  (basicInfoForm.values.imageSource &&
-                    `url(${basicInfoForm.values.imageSource})`) ||
-                  theme.colors.client.light
-                }
-                width='150px'
-                height='150px'
-                borderRadius='50%'
-                marginBottom='20px'
-              ></Box>
+              {basicInfoForm.values.imageSource ? (
+                <Box
+                  height='0'
+                  width='150px'
+                  borderRadius='50%'
+                  marginBottom='20px'
+                  overflow='hidden'
+                  paddingTop='calc(591.44 / 1127.34 * 100%)'
+                  position='relative'
+                  className='wireframe'
+                >
+                  <img src={basicInfoForm.values.imageSource} alt='Wireframe' />
+                </Box>
+              ) : (
+                <Box
+                  className='project-image'
+                  background={
+                    (basicInfoForm.values.imageSource &&
+                      `url(${basicInfoForm.values.imageSource})`) ||
+                    theme.colors.client.light
+                  }
+                  width='150px'
+                  height='150px'
+                  borderRadius='50%'
+                  marginBottom='20px'
+                ></Box>
+              )}
               <Box>
                 <Text variant='headline' weight='bold'>
                   {basicInfoForm.values.name || 'Project Name'}
@@ -1916,6 +1931,7 @@ const AddProject = () => {
                     <TextArea
                       name='purpose'
                       label='Purpose'
+                      color={role || 'client'}
                       value={projectMetadataForm.values.purpose}
                       onChange={projectMetadataForm.handleChange}
                       onBlur={projectMetadataForm.handleBlur}
@@ -1928,6 +1944,7 @@ const AddProject = () => {
                     <TextArea
                       name='summary'
                       label='Summary'
+                      color={role || 'client'}
                       value={projectMetadataForm.values.summary}
                       onChange={projectMetadataForm.handleChange}
                       onBlur={projectMetadataForm.handleBlur}
@@ -1940,6 +1957,7 @@ const AddProject = () => {
                     <Input
                       name='months'
                       label='Months'
+                      color={role || 'client'}
                       value={projectMetadataForm.values.months}
                       onChange={projectMetadataForm.handleChange}
                       onBlur={projectMetadataForm.handleBlur}

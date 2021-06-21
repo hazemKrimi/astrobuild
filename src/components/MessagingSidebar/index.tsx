@@ -34,6 +34,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
           variables: {
             projectId: location.pathname.split('/')[2]!,
           },
+          fetchPolicy: 'network-only',
         });
         setProjectThreads(threads?.data?.getProjectThreads!);
       }
