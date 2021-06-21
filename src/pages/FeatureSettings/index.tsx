@@ -110,7 +110,7 @@ const FeatureSettings = () => {
       imageName: feature?.image.name || '',
       imageSource: feature?.image.src || '',
       featureType: feature?.featureType || '',
-      price: feature?.price || 0,
+      price: feature?.price.toString() || '',
       repo: feature?.repo || '',
     },
     validationSchema: Yup.object().shape({
@@ -140,7 +140,7 @@ const FeatureSettings = () => {
             description,
             featureType,
             image: { name: imageName, src: imageSource },
-            price,
+            price: parseFloat(price),
             repo,
           },
         },
