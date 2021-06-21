@@ -942,7 +942,8 @@ const AddProject = () => {
                               feature
                             )}
                             toggleSelect={() => {
-                              setSelectedFeature(feature);
+                              if (feature.featureType !== 'backend')
+                                setSelectedFeature(feature);
                               if (
                                 featuresForm.values.selectedFeatures &&
                                 !featuresForm.values.selectedFeatures.includes(
@@ -994,10 +995,15 @@ const AddProject = () => {
                       <Carousel {...carouselSettings}>
                         {selectedFeature?.wireframes?.map((wireframe) => (
                           <Box
+                            height='0'
                             width='150px'
-                            height='300px'
-                            background={`url(${wireframe.src})`}
-                          ></Box>
+                            overflow='hidden'
+                            paddingTop='calc(591.44 / 1127.34 * 100%)'
+                            position='relative'
+                            className='wireframe'
+                          >
+                            <img src={wireframe.src} alt='Wireframe' />
+                          </Box>
                         ))}
                       </Carousel>
                     </>

@@ -135,13 +135,6 @@ const Login = () => {
                   loading={loading}
                   disabled={loading}
                 />
-                {/* <Button
-                  variant='secondary-action'
-                  fullWidth
-                  color='client'
-                  text='Login with Google'
-                  iconLeft={<Google />}
-                /> */}
               </Box>
               <Box display='flex' flexDirection='row'>
                 <Box flexGrow='1'>
@@ -150,9 +143,6 @@ const Login = () => {
                   </Text>
                   <Link href='/signup'>Signup</Link>
                 </Box>
-                <Link href='/' color='gray'>
-                  Build a Project
-                </Link>
               </Box>
             </Box>
           </form>

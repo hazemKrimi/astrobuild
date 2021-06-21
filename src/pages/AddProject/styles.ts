@@ -15,4 +15,14 @@ export const Wrapper = styled.div<WrapperProps>`
       stroke: ${({ theme, color }) => theme.colors[color || 'client'].main};
     }
   }
+
+  .wireframe {
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
 `;

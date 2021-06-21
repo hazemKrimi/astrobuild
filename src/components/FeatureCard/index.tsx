@@ -34,7 +34,7 @@ const FeatureCard = ({
       alignItems='center'
       rowGap='10px'
       borderRadius='10px'
-      cursor='pointer'
+      cursor={selectable ? 'pointer' : undefined}
     >
       <Box display='flex' flexDirection='row' alignItems='center'>
         <Box flexGrow='1'>
