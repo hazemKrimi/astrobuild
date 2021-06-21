@@ -102,7 +102,8 @@ const Project = () => {
       id: currentUser?.id!,
     },
     onCompleted({ getAllProjectsByClientId }) {
-      history.push(`/project/${getAllProjectsByClientId[0].id}`);
+      if (getAllProjectsByClientId.length > 0)
+        history.push(`/project/${getAllProjectsByClientId[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
@@ -112,7 +113,8 @@ const Project = () => {
     GetAllUsersQueryVariables
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
-      history.push(`/project/${getAllProjects[0].id}`);
+      if (getAllProjects.length > 0)
+        history.push(`/project/${getAllProjects[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
