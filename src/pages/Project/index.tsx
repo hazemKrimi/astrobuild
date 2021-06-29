@@ -531,11 +531,22 @@ const Project = () => {
                           </Box>
                         </>
                       ) : (
-                        <Chip
-                          text={project.state}
-                          color={role || 'client'}
-                          variant='filled'
-                        />
+                        <>
+                          {project.state === 'OnReview' && (
+                            <Chip
+                              text={project.state}
+                              color='warning'
+                              variant='filled'
+                            />
+                          )}
+                          {project.state === 'Declined' && (
+                            <Chip
+                              text={project.state}
+                              color='error'
+                              variant='filled'
+                            />
+                          )}
+                        </>
                       )}
                     </>
                   )}
@@ -607,10 +618,18 @@ const Project = () => {
                             Print
                           </Link>
                         ) : (
-                          <Text variant='body' color={role || 'client'}>
-                            {project.state === 'OnReview' && 'On Review'}
-                            {project.state === 'Declined' && 'Declined'}
-                          </Text>
+                          <>
+                            {project.state === 'OnReview' && (
+                              <Text variant='body' color='warning'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Declined' && (
+                              <Text variant='body' color='error'>
+                                {project.state}
+                              </Text>
+                            )}
+                          </>
                         )}
                       </Box>
                       <Box
@@ -644,11 +663,23 @@ const Project = () => {
                             Download
                           </Link>
                         ) : role !== 'productOwner' ? (
-                          <Text variant='body' color={role || 'client'}>
-                            {project.state === 'OnReview' && 'On Review'}
-                            {project.state === 'Approved' && 'In Progress'}
-                            {project.state === 'Declined' && 'Declined'}
-                          </Text>
+                          <>
+                            {project.state === 'OnReview' && (
+                              <Text variant='body' color='warning'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Declined' && (
+                              <Text variant='body' color='error'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Approved' && (
+                              <Text variant='body' color={role || 'client'}>
+                                In Progress
+                              </Text>
+                            )}
+                          </>
                         ) : (
                           <>
                             {project.state === 'Approved' ? (
@@ -663,7 +694,6 @@ const Project = () => {
                             ) : (
                               <Text variant='body' color={role || 'client'}>
                                 {project.state === 'OnReview' && 'On Review'}
-                                {project.state === 'Approved' && 'In Progress'}
                                 {project.state === 'Declined' && 'Declined'}
                               </Text>
                             )}
@@ -701,11 +731,23 @@ const Project = () => {
                             Download
                           </Link>
                         ) : role !== 'productOwner' ? (
-                          <Text variant='body' color={role || 'client'}>
-                            {project.state === 'OnReview' && 'On Review'}
-                            {project.state === 'Approved' && 'In Progress'}
-                            {project.state === 'Declined' && 'Declined'}
-                          </Text>
+                          <>
+                            {project.state === 'OnReview' && (
+                              <Text variant='body' color='warning'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Declined' && (
+                              <Text variant='body' color='error'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Approved' && (
+                              <Text variant='body' color={role || 'client'}>
+                                In Progress
+                              </Text>
+                            )}
+                          </>
                         ) : (
                           <>
                             {project.state === 'Approved' ? (
@@ -758,11 +800,23 @@ const Project = () => {
                             Get
                           </Link>
                         ) : role !== 'productOwner' ? (
-                          <Text variant='body' color={role || 'client'}>
-                            {project.state === 'OnReview' && 'On Review'}
-                            {project.state === 'Approved' && 'In Progress'}
-                            {project.state === 'Declined' && 'Declined'}
-                          </Text>
+                          <>
+                            {project.state === 'OnReview' && (
+                              <Text variant='body' color='warning'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Declined' && (
+                              <Text variant='body' color='error'>
+                                {project.state}
+                              </Text>
+                            )}
+                            {project.state === 'Approved' && (
+                              <Text variant='body' color={role || 'client'}>
+                                In Progress
+                              </Text>
+                            )}
+                          </>
                         ) : (
                           <>
                             {project.state === 'Approved' ? (
