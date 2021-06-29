@@ -102,7 +102,7 @@ const Payments = () => {
         .typeError('CVC must be a number')
         .required('CVC is required'),
     }),
-    onSubmit: async ({ number, expMonth, expYear, cvc }) => {
+    onSubmit: async ({ number, expMonth, expYear, cvc }, { resetForm }) => {
       try {
         setPaymentLoading(true);
         let amount = 0;
@@ -152,11 +152,15 @@ const Payments = () => {
           setPaymentLoading(false);
           setTransactionsData(transactionsResult);
           setSuccess(true);
+          setSelectedChunk(undefined);
+          resetForm();
           setTimeout(() => setSuccess(false), 3000);
         }
       } catch (err) {
         setPaymentLoading(false);
         setError(err);
+        setSelectedChunk(undefined);
+        resetForm();
         setTimeout(() => setError(''), 3000);
       }
     },
@@ -235,7 +239,16 @@ const Payments = () => {
                       </Text>
                       <Box>
                         <Button
-                          text='Select'
+                          text={
+                            transactionsData &&
+                            transactionsData.transactions &&
+                            !!Array.from(transactionsData.transactions).find(
+                              (transaction: any) =>
+                                transaction.selectedOption === 0
+                            )
+                              ? 'Paid'
+                              : 'Select'
+                          }
                           color={role || 'client'}
                           disabled={
                             selectedChunk === 0 ||
@@ -266,14 +279,23 @@ const Payments = () => {
                       }}
                     >
                       <Text variant='headline' weight='bold'>
-                        #1
+                        #2
                       </Text>
                       <Text variant='headline' weight='bold'>
                         {project?.paymentOption.optTwo}%
                       </Text>
                       <Box>
                         <Button
-                          text='Select'
+                          text={
+                            transactionsData &&
+                            transactionsData.transactions &&
+                            !!Array.from(transactionsData.transactions).find(
+                              (transaction: any) =>
+                                transaction.selectedOption === 1
+                            )
+                              ? 'Paid'
+                              : 'Select'
+                          }
                           color={role || 'client'}
                           disabled={
                             selectedChunk === 1 ||
@@ -304,14 +326,23 @@ const Payments = () => {
                       }}
                     >
                       <Text variant='headline' weight='bold'>
-                        #1
+                        #3
                       </Text>
                       <Text variant='headline' weight='bold'>
                         {project?.paymentOption.optThree}%
                       </Text>
                       <Box>
                         <Button
-                          text='Select'
+                          text={
+                            transactionsData &&
+                            transactionsData.transactions &&
+                            !!Array.from(transactionsData.transactions).find(
+                              (transaction: any) =>
+                                transaction.selectedOption === 2
+                            )
+                              ? 'Paid'
+                              : 'Select'
+                          }
                           color={role || 'client'}
                           disabled={
                             selectedChunk === 2 ||
@@ -345,8 +376,12 @@ const Payments = () => {
                   >
                     <Text variant='subheader'>Paid Costs</Text>
                     <Text variant='subheader' weight='bold'>
-                      {project && transactionsData
-                        ? project.totalPrice - transactionsData.remaining_amount
+                      {transactionsData?.remaining_amount && project?.totalPrice
+                        ? project.totalPrice ===
+                          transactionsData.remaining_amount
+                          ? project.totalPrice
+                          : project.totalPrice -
+                            transactionsData.remaining_amount
                         : 0}
                       $
                     </Text>
@@ -366,87 +401,89 @@ const Payments = () => {
                     </Text>
                   </Box>
                 </Box>
-                <Box
-                  background='#FFFFFF'
-                  padding='15px 20px'
-                  borderRadius='10px'
-                  boxShadow='1px 1px 10px 0px rgba(50, 59, 105, 0.25)'
-                >
-                  <Box marginBottom='10px'>
-                    <Text variant='headline' weight='bold'>
-                      Pay with Credit Card
-                    </Text>
+                {selectedChunk !== undefined && (
+                  <Box
+                    background='#FFFFFF'
+                    padding='15px 20px'
+                    borderRadius='10px'
+                    boxShadow='1px 1px 10px 0px rgba(50, 59, 105, 0.25)'
+                  >
+                    <Box marginBottom='10px'>
+                      <Text variant='headline' weight='bold'>
+                        Pay with Credit Card
+                      </Text>
+                    </Box>
+                    <form onSubmit={paymentForm.handleSubmit}>
+                      <Box marginBottom='25px'>
+                        <Input
+                          name='number'
+                          label='Card Number'
+                          value={paymentForm.values.number}
+                          onChange={paymentForm.handleChange}
+                          onBlur={paymentForm.handleBlur}
+                          error={
+                            paymentForm.touched.number &&
+                            !!paymentForm.errors.number
+                          }
+                          errorMessage={paymentForm.errors.number}
+                        />
+                      </Box>
+                      <Box
+                        display='grid'
+                        gridTemplateColumns='repeat(2, 1fr)'
+                        columnGap='20px'
+                        alignItems='center'
+                        marginBottom='25px'
+                      >
+                        <Input
+                          name='expMonth'
+                          label='Expiary Month'
+                          value={paymentForm.values.expMonth}
+                          onChange={paymentForm.handleChange}
+                          onBlur={paymentForm.handleBlur}
+                          error={
+                            paymentForm.touched.expMonth &&
+                            !!paymentForm.errors.expMonth
+                          }
+                          errorMessage={paymentForm.errors.expMonth}
+                        />
+                        <Input
+                          name='expYear'
+                          label='Expiary Year'
+                          value={paymentForm.values.expYear}
+                          onChange={paymentForm.handleChange}
+                          onBlur={paymentForm.handleBlur}
+                          error={
+                            paymentForm.touched.expYear &&
+                            !!paymentForm.errors.expYear
+                          }
+                          errorMessage={paymentForm.errors.expYear}
+                        />
+                      </Box>
+                      <Box marginBottom='25px'>
+                        <Input
+                          name='cvc'
+                          label='CVC'
+                          value={paymentForm.values.cvc}
+                          onChange={paymentForm.handleChange}
+                          onBlur={paymentForm.handleBlur}
+                          error={
+                            paymentForm.touched.cvc && !!paymentForm.errors.cvc
+                          }
+                          errorMessage={paymentForm.errors.cvc}
+                        />
+                      </Box>
+                      <Button
+                        fullWidth
+                        color={role || 'client'}
+                        text='Pay'
+                        variant='primary-action'
+                        type='submit'
+                        loading={paymentLoading}
+                      />
+                    </form>
                   </Box>
-                  <form onSubmit={paymentForm.handleSubmit}>
-                    <Box marginBottom='25px'>
-                      <Input
-                        name='number'
-                        label='Card Number'
-                        value={paymentForm.values.number}
-                        onChange={paymentForm.handleChange}
-                        onBlur={paymentForm.handleBlur}
-                        error={
-                          paymentForm.touched.number &&
-                          !!paymentForm.errors.number
-                        }
-                        errorMessage={paymentForm.errors.number}
-                      />
-                    </Box>
-                    <Box
-                      display='grid'
-                      gridTemplateColumns='repeat(2, 1fr)'
-                      columnGap='20px'
-                      alignItems='center'
-                      marginBottom='25px'
-                    >
-                      <Input
-                        name='expMonth'
-                        label='Expiary Month'
-                        value={paymentForm.values.expMonth}
-                        onChange={paymentForm.handleChange}
-                        onBlur={paymentForm.handleBlur}
-                        error={
-                          paymentForm.touched.expMonth &&
-                          !!paymentForm.errors.expMonth
-                        }
-                        errorMessage={paymentForm.errors.expMonth}
-                      />
-                      <Input
-                        name='expYear'
-                        label='Expiary Year'
-                        value={paymentForm.values.expYear}
-                        onChange={paymentForm.handleChange}
-                        onBlur={paymentForm.handleBlur}
-                        error={
-                          paymentForm.touched.expYear &&
-                          !!paymentForm.errors.expYear
-                        }
-                        errorMessage={paymentForm.errors.expYear}
-                      />
-                    </Box>
-                    <Box marginBottom='25px'>
-                      <Input
-                        name='cvc'
-                        label='CVC'
-                        value={paymentForm.values.cvc}
-                        onChange={paymentForm.handleChange}
-                        onBlur={paymentForm.handleBlur}
-                        error={
-                          paymentForm.touched.cvc && !!paymentForm.errors.cvc
-                        }
-                        errorMessage={paymentForm.errors.cvc}
-                      />
-                    </Box>
-                    <Button
-                      fullWidth
-                      color={role || 'client'}
-                      text='Pay'
-                      variant='primary-action'
-                      type='submit'
-                      loading={paymentLoading}
-                    />
-                  </form>
-                </Box>
+                )}
               </Box>
             </Box>
           </Box>
