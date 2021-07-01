@@ -692,10 +692,18 @@ const Project = () => {
                                 </Text>
                               </Box>
                             ) : (
-                              <Text variant='body' color={role || 'client'}>
-                                {project.state === 'OnReview' && 'On Review'}
-                                {project.state === 'Declined' && 'Declined'}
-                              </Text>
+                              <>
+                                {project.state === 'OnReview' && (
+                                  <Text variant='body' color='warning'>
+                                    {project.state}
+                                  </Text>
+                                )}
+                                {project.state === 'Declined' && (
+                                  <Text variant='body' color='error'>
+                                    {project.state}
+                                  </Text>
+                                )}
+                              </>
                             )}
                           </>
                         )}
@@ -760,11 +768,23 @@ const Project = () => {
                                 </Text>
                               </Box>
                             ) : (
-                              <Text variant='body' color={role || 'client'}>
-                                {project.state === 'OnReview' && 'On Review'}
-                                {project.state === 'Approved' && 'In Progress'}
-                                {project.state === 'Declined' && 'Declined'}
-                              </Text>
+                              <>
+                                {project.state === 'OnReview' && (
+                                  <Text variant='body' color='warning'>
+                                    {project.state}
+                                  </Text>
+                                )}
+                                {project.state === 'Declined' && (
+                                  <Text variant='body' color='error'>
+                                    {project.state}
+                                  </Text>
+                                )}
+                                {project.state === 'Approved' && (
+                                  <Text variant='body' color={role || 'client'}>
+                                    In Progress
+                                  </Text>
+                                )}
+                              </>
                             )}
                           </>
                         )}
@@ -829,11 +849,23 @@ const Project = () => {
                                 </Text>
                               </Box>
                             ) : (
-                              <Text variant='body' color={role || 'client'}>
-                                {project.state === 'OnReview' && 'On Review'}
-                                {project.state === 'Approved' && 'In Progress'}
-                                {project.state === 'Declined' && 'Declined'}
-                              </Text>
+                              <>
+                                {project.state === 'OnReview' && (
+                                  <Text variant='body' color='warning'>
+                                    {project.state}
+                                  </Text>
+                                )}
+                                {project.state === 'Declined' && (
+                                  <Text variant='body' color='error'>
+                                    {project.state}
+                                  </Text>
+                                )}
+                                {project.state === 'Approved' && (
+                                  <Text variant='body' color={role || 'client'}>
+                                    In Progress
+                                  </Text>
+                                )}
+                              </>
                             )}
                           </>
                         )}
