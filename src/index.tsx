@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import * as ReactDOMClient from 'react-dom/client';
 import {
   ApolloClient,
   InMemoryCache,
@@ -18,15 +18,15 @@ import GlobalStyles from './GlobalStyles';
 import reportWebVitals from './reportWebVitals';
 
 const httpLinkMain = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_API,
+  uri: import.meta.env.VITE_GRAPHQL_API,
 });
 
 const httpLinkSupport = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_SUPPORT_API,
+  uri: import.meta.env.VITE_GRAPHQL_SUPPORT_API,
 });
 
 const wsLink = new WebSocketLink({
-  uri: `${process.env.REACT_APP_GRAPHQL_SUPPORT_SUBSCRIPTIONS_API}`,
+  uri: `${import.meta.env.VITE_GRAPHQL_SUPPORT_SUBSCRIPTIONS_API}`,
   options: {
     reconnect: true,
   },
@@ -65,7 +65,10 @@ export const clientSupport = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-ReactDOM.render(
+const container = document.getElementById('app');
+const root = ReactDOMClient.createRoot(container as HTMLElement);
+
+root.render(
   <React.StrictMode>
     <ApolloProvider client={clientMain}>
       <ThemeProvider theme={theme}>
@@ -75,8 +78,7 @@ ReactDOM.render(
         </BrowserRouter>
       </ThemeProvider>
     </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

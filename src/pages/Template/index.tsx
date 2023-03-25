@@ -1,8 +1,8 @@
 import { useReactToPrint } from 'react-to-print';
 import { useEffect, useState, useRef } from 'react';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
-import { Redirect } from 'react-router';
-import { useHistory, useParams } from 'react-router-dom';
+import { Navigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import { roleVar } from '../../graphql/state';
 import { Design, Empty, Settings, Specification } from '../../assets';
 import {
@@ -38,7 +38,7 @@ import { GET_PROTOTYPE_BY_ID } from '../../graphql/prototype.api';
 
 const Template = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
   const { id } = useParams<{ id: string }>();
   const [template, setTemplate] = useState<TemplateOutput>();
@@ -61,7 +61,7 @@ const Template = () => {
   >(GET_ALL_TEMPLATES, {
     onCompleted({ getAllTemplates }) {
       if (getAllTemplates.length > 0)
-        history.push(`/template/${getAllTemplates[0].id}`);
+        navigate(`/template/${getAllTemplates[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
@@ -150,7 +150,7 @@ const Template = () => {
                         prototype === undefined && role === 'productOwner'
                       }
                       onClick={() =>
-                        history.push(`/prototype/${id || template.id}`)
+                        navigate(`/prototype/${id || template.id}`)
                       }
                     />
                   </Box>
@@ -162,9 +162,7 @@ const Template = () => {
                         text='Settings'
                         iconLeft={<Settings />}
                         onClick={() =>
-                          history.push(
-                            `/template-settings/${id || template.id}`
-                          )
+                          navigate(`/template-settings/${id || template.id}`)
                         }
                       />
                     </Box>
@@ -269,8 +267,8 @@ const Template = () => {
     </>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
-      {role === 'client' && <Redirect to='/project' />}
+      {role === 'admin' && <Navigate to='/clients' />}
+      {role === 'client' && <Navigate to='/project' />}
     </>
   );
 };

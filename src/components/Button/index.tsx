@@ -6,8 +6,8 @@ type ButtonProps = {
   size?: 'small' | 'big';
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
   type?: 'submit' | 'button' | 'reset';
-  iconLeft?: React.SVGProps<SVGSVGElement>;
-  iconRight?: React.SVGProps<SVGSVGElement>;
+  iconLeft?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
+  iconRight?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
   fullWidth?: boolean;
   loading?: boolean;
   disabled?: boolean;

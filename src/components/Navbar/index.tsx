@@ -1,5 +1,5 @@
 import { useReactiveVar } from '@apollo/client';
-import { useHistory, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { roleVar, tokenVar, userVar } from '../../graphql/state';
 import { Wrapper } from './styles';
 import { Avatar, Link, Menu, Text } from '..';
@@ -8,7 +8,7 @@ import { Settings, Logout, Logo } from '../../assets';
 const Navbar = () => {
   const user = useReactiveVar(userVar);
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   return (
@@ -151,7 +151,7 @@ const Navbar = () => {
           {
             icon: <Settings />,
             label: 'Settings',
-            action: () => history.push('/settings'),
+            action: () => navigate('/settings'),
           },
           {
             icon: <Logout />,
@@ -159,7 +159,7 @@ const Navbar = () => {
             action: () => {
               tokenVar(undefined);
               localStorage.removeItem('token');
-              history.push('/login');
+              navigate('/login');
             },
             avoid: true,
           },

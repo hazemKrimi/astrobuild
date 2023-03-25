@@ -18,7 +18,7 @@ type LinkProps = {
     | string;
   selected?: boolean;
   className?: string;
-  iconLeft?: React.SVGProps<SVGSVGElement>;
+  iconLeft?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
   onClick?: () => void;
   target?: '_self' | '_blank';
 };

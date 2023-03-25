@@ -25,9 +25,9 @@ const ContextMenu = ({ items, component, className }: ContextMenuProps) => {
     ref.current?.addEventListener('mouseleave', closeMenu);
 
     return () => {
-      (document.querySelector(
-        `#${component}`
-      ) as HTMLElement)?.removeEventListener('mouseenter', openMenu);
+      (
+        document.querySelector(`#${component}`) as HTMLElement
+      )?.removeEventListener('mouseenter', openMenu);
       wrapper?.removeEventListener('mouseleave', closeMenu);
     };
 

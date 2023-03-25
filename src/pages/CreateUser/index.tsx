@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useState } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -26,7 +26,7 @@ import { GET_COUNTRY_CODES } from '../../graphql/auth.api';
 import { CREATE_USER, GET_ALL_USERS } from '../../graphql/admin.api';
 
 const CreateUser = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { role: newUserRole } = useParams<{
     role: 'Client' | 'ProductOwner' | 'Developer';
   }>();
@@ -62,7 +62,7 @@ const CreateUser = () => {
       country: '',
       zip: '',
     },
-    role: newUserRole,
+    role: newUserRole!,
   });
 
   const [selectedSection, setSelectedSection] = useState<
@@ -81,10 +81,10 @@ const CreateUser = () => {
           : newUserRole === 'ProductOwner'
           ? '/product-owners'
           : '/developers';
-      history.push(location);
+      navigate(location);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
     refetchQueries: [{ query: GET_ALL_USERS }],
@@ -179,7 +179,7 @@ const CreateUser = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -471,7 +471,7 @@ const CreateUser = () => {
       </Box>
     </Wrapper>
   ) : (
-    <Redirect to='/' />
+    <Navigate to='/' />
   );
 };
 

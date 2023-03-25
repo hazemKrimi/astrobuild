@@ -1,10 +1,10 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useReactToPrint } from 'react-to-print';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { roleVar, userVar } from '../../graphql/state';
 import {
   Design,
@@ -80,7 +80,7 @@ type TransactionData = {
 const Project = () => {
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const printRef = useRef<HTMLDivElement>(null);
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<ProjectOutput>();
@@ -91,22 +91,20 @@ const Project = () => {
   const [fullBuildModal, setFullBuildModal] = useState<boolean>(false);
   const [transactionsData, setTransactionsData] = useState<TransactionData>();
 
-  const [
-    getProjectsByClientId,
-    { loading: clientProjectsLoading },
-  ] = useLazyQuery<
-    GetAllProjectsByClientIdQuery,
-    GetAllProjectsByClientIdQueryVariables
-  >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
-    variables: {
-      id: currentUser?.id!,
-    },
-    onCompleted({ getAllProjectsByClientId }) {
-      if (getAllProjectsByClientId.length > 0)
-        history.push(`/project/${getAllProjectsByClientId[0].id}`);
-    },
-    fetchPolicy: 'network-only',
-  });
+  const [getProjectsByClientId, { loading: clientProjectsLoading }] =
+    useLazyQuery<
+      GetAllProjectsByClientIdQuery,
+      GetAllProjectsByClientIdQueryVariables
+    >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
+      variables: {
+        id: currentUser?.id!,
+      },
+      onCompleted({ getAllProjectsByClientId }) {
+        if (getAllProjectsByClientId.length > 0)
+          navigate(`/project/${getAllProjectsByClientId[0].id}`);
+      },
+      fetchPolicy: 'network-only',
+    });
 
   const [getProjects, { loading: projectsLoading }] = useLazyQuery<
     GetAllProjectsQuery,
@@ -114,7 +112,7 @@ const Project = () => {
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
       if (getAllProjects.length > 0)
-        history.push(`/project/${getAllProjects[0].id}`);
+        navigate(`/project/${getAllProjects[0].id}`);
     },
     fetchPolicy: 'network-only',
   });
@@ -146,7 +144,7 @@ const Project = () => {
       setProject(changedStateProject);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0].extensions?.info);
+      setError(graphQLErrors[0].extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -161,7 +159,7 @@ const Project = () => {
     },
     onError({ graphQLErrors }) {
       setDesignModal(false);
-      setError(graphQLErrors[0].extensions?.info);
+      setError(graphQLErrors[0].extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -176,7 +174,7 @@ const Project = () => {
     },
     onError({ graphQLErrors }) {
       setMvpModal(false);
-      setError(graphQLErrors[0].extensions?.info);
+      setError(graphQLErrors[0].extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -191,7 +189,7 @@ const Project = () => {
     },
     onError({ graphQLErrors }) {
       setFullBuildModal(false);
-      setError(graphQLErrors[0].extensions?.info);
+      setError(graphQLErrors[0].extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -225,7 +223,7 @@ const Project = () => {
 
         try {
           const transactionsResult = await (
-            await fetch(`${process.env.REACT_APP_PAYMENT_API}/transactions`, {
+            await fetch(`${import.meta.env.VITE_PAYMENT_API}/transactions`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -336,7 +334,7 @@ const Project = () => {
                     addDesignForm.setFieldValue('fileSource', '');
 
                     const data = await (
-                      await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                      await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                         method: 'POST',
                         body: formData,
                       })
@@ -384,7 +382,7 @@ const Project = () => {
                     addMvpForm.setFieldValue('fileSource', '');
 
                     const data = await (
-                      await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                      await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                         method: 'POST',
                         body: formData,
                       })
@@ -462,7 +460,7 @@ const Project = () => {
                           iconLeft={<Design />}
                           disabled={!prototype}
                           onClick={() =>
-                            history.push(`/prototype/${project.template.id}`)
+                            navigate(`/prototype/${project.template.id}`)
                           }
                         />
                       </Box>
@@ -474,9 +472,7 @@ const Project = () => {
                             text='Payments'
                             iconLeft={<Payment />}
                             disabled={transactionsData?.status}
-                            onClick={() =>
-                              history.push(`/payments/${project.id}`)
-                            }
+                            onClick={() => navigate(`/payments/${project.id}`)}
                           />
                         </Box>
                       )}
@@ -487,9 +483,7 @@ const Project = () => {
                             variant='primary-action'
                             text='Settings'
                             iconLeft={<Settings />}
-                            onClick={() =>
-                              history.push(`/project-settings/${id}`)
-                            }
+                            onClick={() => navigate(`/project-settings/${id}`)}
                           />
                         </Box>
                       )}
@@ -873,15 +867,16 @@ const Project = () => {
                     </Box>
                   </Box>
                 )}
-                {project.template.specification && project.template.features && (
-                  <Box display='none'>
-                    <SpecificationPrint
-                      ref={printRef}
-                      specification={project.template.specification}
-                      features={project.template.features}
-                    />
-                  </Box>
-                )}
+                {project.template.specification &&
+                  project.template.features && (
+                    <Box display='none'>
+                      <SpecificationPrint
+                        ref={printRef}
+                        specification={project.template.specification}
+                        features={project.template.features}
+                      />
+                    </Box>
+                  )}
               </Box>
             </Wrapper>
           ) : (
@@ -905,7 +900,7 @@ const Project = () => {
       )}
     </>
   ) : (
-    <Redirect to='/clients' />
+    <Navigate to='/clients' />
   );
 };
 

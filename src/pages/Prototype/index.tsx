@@ -11,9 +11,9 @@ import ReactFlow, {
   ArrowHeadType,
 } from 'react-flow-renderer';
 import { useEffect, useState, useRef } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Empty, ArrowLeft, Edit, CheckCircle } from '../../assets';
 import {
@@ -47,7 +47,7 @@ import {
 
 const Prototype = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [template, setTemplate] = useState<TemplateOutput>();
   const [prototype, setPrototype] = useState<Array<ProtoTypeOutput>>();
@@ -86,7 +86,7 @@ const Prototype = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -190,7 +190,7 @@ const Prototype = () => {
           updatePrototype({
             variables: {
               prototype: {
-                templateId: id,
+                templateId: id as string,
                 // @ts-ignore
                 prototype: prototypeInput,
               },
@@ -200,7 +200,7 @@ const Prototype = () => {
           addPrototype({
             variables: {
               prototype: {
-                templateId: id,
+                templateId: id as string,
                 // @ts-ignore
                 prototype: prototypeInput,
               },
@@ -235,7 +235,7 @@ const Prototype = () => {
                       text='Back'
                       color={role || 'client'}
                       size='small'
-                      onClick={() => history.goBack()}
+                      onClick={() => navigate(-1)}
                       iconLeft={<ArrowLeft />}
                     />
                     <Text variant='headline' weight='bold'>
@@ -364,7 +364,7 @@ const Prototype = () => {
       )}
     </>
   ) : (
-    <>{role === 'admin' && <Redirect to='/clients' />}</>
+    <>{role === 'admin' && <Navigate to='/clients' />}</>
   );
 };
 

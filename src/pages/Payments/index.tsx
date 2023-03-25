@@ -1,9 +1,9 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Wrapper } from './styles';
 import { Alert, Box, Button, Input, Spinner, Text } from '../../components';
@@ -34,7 +34,7 @@ type TransactionData = {
 
 const Payments = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<ProjectOutput>();
   const [success, setSuccess] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const Payments = () => {
 
         try {
           const transactionsResult = await (
-            await fetch(`${process.env.REACT_APP_PAYMENT_API}/transactions`, {
+            await fetch(`${import.meta.env.VITE_PAYMENT_API}/transactions`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const Payments = () => {
         }
 
         const transactionsResult = await (
-          await fetch(`${process.env.REACT_APP_PAYMENT_API}/charge`, {
+          await fetch(`${import.meta.env.VITE_PAYMENT_API}/charge`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ const Payments = () => {
         }
       } catch (err) {
         setPaymentLoading(false);
-        setError(err);
+        setError(err as string);
         setSelectedChunk(undefined);
         resetForm();
         setTimeout(() => setError(''), 3000);
@@ -182,7 +182,7 @@ const Payments = () => {
                   text='Back'
                   color={role || 'client'}
                   size='small'
-                  onClick={() => history.goBack()}
+                  onClick={() => navigate(-1)}
                   iconLeft={<ArrowLeft />}
                 />
                 <Text variant='headline' weight='bold'>
@@ -494,9 +494,9 @@ const Payments = () => {
     </>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'developer' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };

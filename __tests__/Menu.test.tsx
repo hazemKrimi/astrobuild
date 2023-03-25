@@ -1,1 +1,0 @@
-describe('Modal test suite', () => {});

@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useReactiveVar } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { roleVar, userVar } from '../../graphql/state';
@@ -35,7 +35,7 @@ const SupportMessaging = () => {
   const { project, id } = useParams<{ id: string; project: string }>();
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [thread, setThread] = useState<ThreadObject>();
   const [messages, setMessages] = useState<Array<UserMessageObject>>([]);
   const [addedMessages, setAddedMessages] = useState<Array<UserMessageObject>>(
@@ -117,12 +117,12 @@ const SupportMessaging = () => {
       >({
         mutation: CREATE_THREAD,
         variables: {
-          projectId: project,
+          projectId: project as string,
           title,
           threadDescription: description,
         },
       });
-      history.push(
+      navigate(
         `/support-messaging/${project}/${createdThread.data?.createThread}`
       );
     },
@@ -139,7 +139,7 @@ const SupportMessaging = () => {
       await clientSupport.mutate<SendMsgMutation, SendMsgMutationVariables>({
         mutation: SEND_MSG,
         variables: {
-          threadId: id,
+          threadId: id as string,
           username: `${currentUser?.firstName} ${currentUser?.lastName}`,
           msg,
         },

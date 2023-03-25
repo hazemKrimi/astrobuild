@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -35,7 +35,7 @@ import {
 } from '../../graphql/feature.api';
 
 const FeatureSettings = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const role = useReactiveVar(roleVar);
 
@@ -45,7 +45,7 @@ const FeatureSettings = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
   const [feature, setFeature] = useState<FeatureOutput>({
-    id,
+    id: id as string,
     name: '',
     description: '',
     featureType: '',
@@ -79,7 +79,7 @@ const FeatureSettings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -89,16 +89,16 @@ const FeatureSettings = () => {
     DeleteFeatureMutationVariables
   >(DELETE_FEATURE, {
     onCompleted() {
-      history.push('/feature');
+      navigate('/feature');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
 
   useEffect(() => {
-    getFeature({ variables: { id } });
+    getFeature({ variables: { id: id as string } });
 
     // eslint-disable-next-line
   }, [id]);
@@ -134,7 +134,7 @@ const FeatureSettings = () => {
     }) => {
       updateFeature({
         variables: {
-          id,
+          id: id as string,
           feature: {
             name,
             description,
@@ -162,7 +162,7 @@ const FeatureSettings = () => {
     onSubmit: ({ wireframes }) => {
       updateFeature({
         variables: {
-          id,
+          id: id as string,
           feature: {
             name: feature.name,
             description: feature.description,
@@ -185,7 +185,7 @@ const FeatureSettings = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -247,7 +247,9 @@ const FeatureSettings = () => {
                       description='
               If you delete this feature you cannot recover it.'
                       onClose={() => setDeleteFeatureModal(false)}
-                      onConfirm={() => deleteFeature({ variables: { id } })}
+                      onConfirm={() =>
+                        deleteFeature({ variables: { id: id as string } })
+                      }
                     ></Modal>
                   )}
                   <form onSubmit={generalForm.handleSubmit}>
@@ -287,7 +289,7 @@ const FeatureSettings = () => {
 
                             const data = await (
                               await fetch(
-                                `${process.env.REACT_APP_CLOUDINARY_URL}`,
+                                `${import.meta.env.VITE_CLOUDINARY_URL}`,
                                 {
                                   method: 'POST',
                                   body: formData,
@@ -515,7 +517,7 @@ const FeatureSettings = () => {
                       formData.append('upload_preset', 'xofll5kc');
 
                       const data = await (
-                        await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                        await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                           method: 'POST',
                           body: formData,
                         })
@@ -564,9 +566,9 @@ const FeatureSettings = () => {
     </Wrapper>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };

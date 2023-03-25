@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Login as LoginIllustration, Logo } from '../../../assets';
 import { Box, Button, Input, Text, Alert } from '../../../components';
 import { CONFIRM_USER_RESET_PASSWORD } from '../../../graphql/auth.api';
@@ -15,7 +15,7 @@ import { Wrapper } from './styles';
 
 const RecoverAccount = () => {
   const params = new URLSearchParams(window.location.search);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [error, setError] = useState<string>('');
 
   const [confirmResetPassword, { loading }] = useMutation<
@@ -23,10 +23,10 @@ const RecoverAccount = () => {
     ConfirmUserResetPasswordMutationVariables
   >(CONFIRM_USER_RESET_PASSWORD, {
     onCompleted() {
-      history.push('/login');
+      navigate('/login');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });

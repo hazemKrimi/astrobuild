@@ -25,7 +25,7 @@ const ForgotPassword = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });

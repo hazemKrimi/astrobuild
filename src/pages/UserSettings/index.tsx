@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useState } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -35,7 +35,7 @@ import {
 } from '../../graphql/auth.api';
 
 const UserSettings = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
   const [userToEdit, setUserToEdit] = useState<UserOutput>();
   const { id } = useParams<{ id: string }>();
@@ -48,7 +48,7 @@ const UserSettings = () => {
     GetUserByIdQueryVariables
   >(GET_USER_BY_ID, {
     variables: {
-      id,
+      id: id as string,
     },
     onCompleted({ getUserById }) {
       setUserToEdit(getUserById);
@@ -79,7 +79,7 @@ const UserSettings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -143,7 +143,7 @@ const UserSettings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -189,7 +189,7 @@ const UserSettings = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -481,7 +481,7 @@ const UserSettings = () => {
       </Box>
     </Wrapper>
   ) : (
-    <Redirect to='/' />
+    <Navigate to='/' />
   );
 };
 

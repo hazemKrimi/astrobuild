@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -33,7 +33,7 @@ import {
 } from '../../graphql/category.api';
 
 const CategorySettings = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const role = useReactiveVar(roleVar);
 
@@ -41,9 +41,8 @@ const CategorySettings = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [category, setCategory] = useState<CategoryOutput>();
 
-  const [deleteCategoryModal, setDeleteCategoryModal] = useState<boolean>(
-    false
-  );
+  const [deleteCategoryModal, setDeleteCategoryModal] =
+    useState<boolean>(false);
 
   const [getCategory, { loading: categoryLoading }] = useLazyQuery<
     GetCategoryByIdQuery,
@@ -65,7 +64,7 @@ const CategorySettings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -75,16 +74,16 @@ const CategorySettings = () => {
     DeleteCategoryMutationVariables
   >(DELETE_CATEGORY, {
     onCompleted() {
-      history.push('/category');
+      navigate('/category');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
 
   useEffect(() => {
-    getCategory({ variables: { id } });
+    getCategory({ variables: { id: id as string } });
 
     // eslint-disable-next-line
   }, [id]);
@@ -105,7 +104,7 @@ const CategorySettings = () => {
     onSubmit: ({ name, description, imageName, imageSource }) => {
       updateCategory({
         variables: {
-          id,
+          id: id as string,
           category: {
             name,
             description,
@@ -126,7 +125,7 @@ const CategorySettings = () => {
           description='
       If you delete this category you cannot recover it.'
           onClose={() => setDeleteCategoryModal(false)}
-          onConfirm={() => deleteCategory({ variables: { id } })}
+          onConfirm={() => deleteCategory({ variables: { id: id as string } })}
         ></Modal>
       )}
       <Box>
@@ -134,7 +133,7 @@ const CategorySettings = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -212,7 +211,7 @@ const CategorySettings = () => {
                       form.setFieldValue('imageSource', '');
 
                       const data = await (
-                        await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                        await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                           method: 'POST',
                           body: formData,
                         })
@@ -273,9 +272,9 @@ const CategorySettings = () => {
     </Wrapper>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Empty, Settings } from '../../assets';
 import {
@@ -24,7 +24,7 @@ import { GET_ALL_FEATURES, GET_FEATURE_BY_ID } from '../../graphql/feature.api';
 
 const Feature = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [feature, setFeature] = useState<FeatureOutput>();
 
@@ -82,7 +82,7 @@ const Feature = () => {
                     text='Settings'
                     iconLeft={<Settings />}
                     onClick={() =>
-                      history.push(`/feature-settings/${id || feature.id}`)
+                      navigate(`/feature-settings/${id || feature.id}`)
                     }
                   />
                 </Box>
@@ -176,9 +176,9 @@ const Feature = () => {
     </>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };

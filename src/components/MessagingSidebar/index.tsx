@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useReactiveVar } from '@apollo/client';
 import { roleVar } from '../../graphql/state';
 import { Box, Button, Text } from '..';
@@ -20,7 +20,7 @@ type MessagingSidebarProps = {
 const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
   const role = useReactiveVar(roleVar);
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [projectThreads, setProjectThreads] = useState<Array<ThreadObject>>();
 
   useEffect(() => {
@@ -65,9 +65,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
             iconLeft={<Add />}
             onClick={() => {
               onClose();
-              history.push(
-                `/support-messaging/${location.pathname.split('/')[2]}`
-              );
+              navigate(`/support-messaging/${location.pathname.split('/')[2]}`);
             }}
           />
         </Box>
@@ -87,7 +85,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
                 borderRadius='10px'
                 onClick={() => {
                   onClose();
-                  history.push(
+                  navigate(
                     `/support-messaging/${location.pathname.split('/')[2]}/${
                       thread.id
                     }`

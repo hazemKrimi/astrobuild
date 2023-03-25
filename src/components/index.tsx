@@ -16,7 +16,7 @@ import Menu from './Menu';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import ProtectedRoute from './ProtectedRoute';
-import AuthRoute from './AuthRoute';
+import PublicRoute from './PublicRoute';
 import SectionSelector from './SectionSelector';
 import Modal from './Modal';
 import SidebarItem from './SidebarItem';
@@ -49,7 +49,7 @@ export {
   Navbar,
   Sidebar,
   ProtectedRoute,
-  AuthRoute,
+  PublicRoute,
   SectionSelector,
   Modal,
   SidebarItem,

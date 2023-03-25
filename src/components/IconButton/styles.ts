@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 type WrapperProps = {
   color?: 'client' | 'productOwner' | 'developer' | 'admin';
   size?: 'small' | 'medium' | 'big';
-  icon?: React.SVGProps<SVGSVGElement>;
+  icon?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
 };
 
 export const Wrapper = styled.button<WrapperProps>`

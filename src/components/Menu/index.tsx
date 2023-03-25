@@ -5,7 +5,7 @@ import { Text } from '..';
 type MenuProps = {
   className?: string;
   items: Array<{
-    icon: React.SVGProps<SVGSVGElement>;
+    icon: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
     avoid?: boolean;
     label: string;
     action?: () => void;
@@ -30,9 +30,9 @@ const Menu = ({ items, component, className }: MenuProps) => {
     ref.current?.addEventListener('mouseleave', closeMenu);
 
     return () => {
-      (document.querySelector(
-        `#${component}`
-      ) as HTMLElement)?.removeEventListener('mouseenter', openMenu);
+      (
+        document.querySelector(`#${component}`) as HTMLElement
+      )?.removeEventListener('mouseenter', openMenu);
       wrapper?.addEventListener('mouseleave', closeMenu);
     };
 
