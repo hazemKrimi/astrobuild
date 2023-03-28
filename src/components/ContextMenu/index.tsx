@@ -22,7 +22,10 @@ const ContextMenu = ({ items, component, className }: ContextMenuProps) => {
       'mouseenter',
       openMenu
     );
-    ref.current?.addEventListener('mouseleave', closeMenu);
+    (document.querySelector(`#${component}`) as HTMLElement)?.addEventListener(
+      'mouseleave',
+      closeMenu
+    );
 
     return () => {
       (

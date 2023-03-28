@@ -65,10 +65,7 @@ export const clientSupport = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const container = document.getElementById('app');
-const root = ReactDOMClient.createRoot(container as HTMLElement);
-
-root.render(
+ReactDOMClient.createRoot(document.querySelector('#app') as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={clientMain}>
       <ThemeProvider theme={theme}>
