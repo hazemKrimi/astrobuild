@@ -15,45 +15,38 @@ type MenuProps = {
 
 const Menu = ({ items, component, className }: MenuProps) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const parentComponentRef = useRef<HTMLDivElement>();
+
+  const openMenu = () => setOpen(true);
+  const closeMenu = () => setOpen(false);
 
   useEffect(() => {
-    const wrapper = ref.current;
+    parentComponentRef.current = document.querySelector(`#${component}`) as HTMLDivElement;
 
-    const openMenu = () => setOpen(true);
-    const closeMenu = () => setOpen(false);
-
-    (document.querySelector(`#${component}`) as HTMLElement)?.addEventListener(
-      'mouseenter',
-      openMenu
-    );
-    ref.current?.addEventListener('mouseleave', closeMenu);
+    parentComponentRef.current?.addEventListener('mouseenter', openMenu);
+    componentRef.current?.addEventListener('mouseleave', closeMenu);
 
     return () => {
-      (
-        document.querySelector(`#${component}`) as HTMLElement
-      )?.removeEventListener('mouseenter', openMenu);
-      wrapper?.addEventListener('mouseleave', closeMenu);
+      parentComponentRef.current?.removeEventListener('mouseenter', openMenu);
+      componentRef.current?.removeEventListener('mouseleave', closeMenu);
     };
-
-    // eslint-disable-next-line
-  }, [ref.current]);
+  }, []);
 
   return (
     <Wrapper
-      ref={ref}
+      ref={componentRef}
       className={className}
       top={
-        (document.querySelector(`#${component}`) as HTMLElement)?.offsetTop + 30
+        (parentComponentRef.current as HTMLDivElement)?.getBoundingClientRect().top + 30
       }
       left={
-        (document.querySelector(`#${component}`) as HTMLElement)?.offsetLeft
+        (parentComponentRef.current as HTMLDivElement)?.getBoundingClientRect()?.left
       }
     >
       {open && (
         <ul>
           {items.map(({ icon, label, avoid, action }) => (
-            // eslint-disable-next-line
             <li
               onClick={() => {
                 if (action) {
