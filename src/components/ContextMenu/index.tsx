@@ -10,49 +10,38 @@ type ContextMenuProps = {
 
 const ContextMenu = ({ items, component, className }: ContextMenuProps) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const parentComponentRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
-    const wrapper = ref.current;
+    parentComponentRef.current = document.querySelector(`#${component}`) as HTMLDivElement;
 
     const openMenu = () => setOpen(true);
     const closeMenu = () => setOpen(false);
 
-    (document.querySelector(`#${component}`) as HTMLElement)?.addEventListener(
+    parentComponentRef.current?.addEventListener(
       'mouseenter',
       openMenu
     );
-    (document.querySelector(`#${component}`) as HTMLElement)?.addEventListener(
+    parentComponentRef.current?.addEventListener(
       'mouseleave',
       closeMenu
     );
 
     return () => {
-      (
-        document.querySelector(`#${component}`) as HTMLElement
-      )?.removeEventListener('mouseenter', openMenu);
-      wrapper?.removeEventListener('mouseleave', closeMenu);
+      parentComponentRef.current?.removeEventListener('mouseenter', openMenu);
+      parentComponentRef.current?.removeEventListener('mouseleave', closeMenu);
     };
-
-    // eslint-disable-next-line
-  }, [ref.current]);
+  }, []);
 
   return (
     <Wrapper
-      ref={ref}
       className={className}
-      top={
-        (document.querySelector(`#${component}`) as HTMLElement)?.offsetTop + 30
-      }
-      left={
-        (document.querySelector(`#${component}`) as HTMLElement)?.offsetLeft +
-        10
-      }
+      top={(parentComponentRef.current as HTMLDivElement)?.getBoundingClientRect().top + 30}
+      left={(parentComponentRef.current as HTMLDivElement)?.getBoundingClientRect().left + 10}
     >
       {open && (
         <ul>
           {items.map(({ label, action }) => (
-            // eslint-disable-next-line
             <li
               onClick={() => {
                 if (action) {

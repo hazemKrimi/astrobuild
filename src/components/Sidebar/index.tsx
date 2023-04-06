@@ -153,7 +153,7 @@ const Sidebar = () => {
               ))}
             {templates &&
               templates.map((template, index) => (
-                <Box marginBottom='20px' key={template.id} position='relative'>
+                <Box marginBottom='20px' key={template.id}>
                   <div id={`template-${template.id}`}>
                     <SidebarItem
                       color={role}
