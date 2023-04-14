@@ -265,6 +265,7 @@ const Prototype = () => {
                           height='auto'
                         >
                           <ReactFlow
+                            fitView
                             nodes={nodes}
                             edges={edges}
                             nodeTypes={nodeTypes}
