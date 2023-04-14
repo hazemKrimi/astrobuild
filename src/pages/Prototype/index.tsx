@@ -118,7 +118,7 @@ const Prototype = () => {
   }, [id]);
 
   useEffect(() => {
-    // if (template && template.features) {
+    if (template && template.features) {
       const initialNodes = template?.features?.map((feature, index) => ({
         id: feature.id,
         type: 'featureCard',
@@ -131,7 +131,7 @@ const Prototype = () => {
       }));
 
       if (initialNodes) setNodes(initialNodes);
-    // }
+    }
 
     if (prototype) {
       const initialEdges: Array<Edge> = [];
@@ -159,12 +159,12 @@ const Prototype = () => {
 
   const handleEditPrototype = () => {
     if (editing) {
-      const prototypeInput = nodes
-        .map((node) => ({
-          featureId: node.id,
+      const prototypeInput = edges
+        .map((edge) => ({
+          featureId: edge.source,
           connections: [
             {
-              to: node.id,
+              to: edge.target,
               releations: { back: false, forword: true },
             },
           ],
