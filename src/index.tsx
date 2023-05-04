@@ -65,18 +65,26 @@ export const clientSupport = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-ReactDOMClient.createRoot(document.querySelector('#app') as HTMLElement).render(
-  <React.StrictMode>
-    <ApolloProvider client={clientMain}>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-          <GlobalStyles />
-        </BrowserRouter>
-      </ThemeProvider>
-    </ApolloProvider>
-  </React.StrictMode>
-);
+let root: ReactDOMClient.Root | null = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!root) {
+    root = ReactDOMClient.createRoot(document.querySelector('#app') as HTMLElement);
+
+    root.render(
+      <React.StrictMode>
+        <ApolloProvider client={clientMain}>
+          <ThemeProvider theme={theme}>
+            <BrowserRouter>
+              <App />
+              <GlobalStyles />
+            </BrowserRouter>
+          </ThemeProvider>
+        </ApolloProvider>
+      </React.StrictMode>
+    )
+  }
+});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
