@@ -78,8 +78,6 @@ const App = () => {
       getUserById({ variables: { id } });
       tokenVar(localStorageToken);
     }
-
-    // eslint-disable-next-line
   }, []);
 
   return !loading ? (
