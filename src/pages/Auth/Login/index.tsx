@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useMutation } from '@apollo/client';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { tokenVar, roleVar, userVar } from '../../../graphql/state';
 import { Login as LoginIllustration, Logo } from '../../../assets';
@@ -12,7 +12,7 @@ import { LOGIN } from '../../../graphql/auth.api';
 import { LoginMutation, LoginMutationVariables } from '../../../graphql/types';
 
 const Login = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [error, setError] = useState<string>('');
 
   const [login, { loading }] = useMutation<
@@ -39,10 +39,10 @@ const Login = () => {
       tokenVar(token);
       userVar(user);
       localStorage.setItem('token', token);
-      history.push('/');
+      navigate('/');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });

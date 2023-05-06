@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useMutation, useLazyQuery, useReactiveVar } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { Redirect, useHistory, useLocation } from 'react-router';
+import { Navigate, useNavigate, useLocation } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Add, Delete, Edit, Empty } from '../../assets';
 import {
@@ -27,7 +27,7 @@ import { DELETE_USER } from '../../graphql/auth.api';
 
 const Users = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const [users, setUsers] = useState<Array<UserOutput>>();
   const [userToDelete, setUserToDelete] = useState<UserOutput>();
@@ -67,7 +67,7 @@ const Users = () => {
     },
     onError({ graphQLErrors }) {
       setDeleteAccountModal(false);
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -154,7 +154,7 @@ const Users = () => {
                     }`}
                     iconLeft={<Add />}
                     onClick={() =>
-                      history.push(
+                      navigate(
                         `/create-user/${
                           location.pathname === '/clients'
                             ? 'Client'
@@ -220,9 +220,7 @@ const Users = () => {
                         justifySelf='flex-end'
                       >
                         <Box
-                          onClick={() =>
-                            history.push(`/user-settings/${user.id}`)
-                          }
+                          onClick={() => navigate(`/user-settings/${user.id}`)}
                           marginRight='15px'
                           cursor='pointer'
                         >
@@ -273,7 +271,7 @@ const Users = () => {
                   }`}
                   iconLeft={<Add />}
                   onClick={() =>
-                    history.push(
+                    navigate(
                       `/create-user/${
                         location.pathname === '/clients'
                           ? 'Client'
@@ -304,7 +302,7 @@ const Users = () => {
       )}
     </>
   ) : (
-    <Redirect to='/clients' />
+    <Navigate to='/clients' />
   );
 };
 

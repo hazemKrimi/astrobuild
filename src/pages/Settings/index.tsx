@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useState } from 'react';
 import { roleVar, tokenVar, userVar } from '../../graphql/state';
@@ -35,7 +35,7 @@ import {
 } from '../../graphql/auth.api';
 
 const Settings = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
   const { data: countryCodes, loading: countryCodesLoading } = useQuery<
@@ -68,7 +68,7 @@ const Settings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -131,7 +131,7 @@ const Settings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -180,11 +180,11 @@ const Settings = () => {
       userVar(undefined);
       roleVar(undefined);
       setDeleteAccountModal(false);
-      history.push('/signup');
+      navigate('/signup');
     },
     onError({ graphQLErrors }) {
       setDeleteAccountModal(false);
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -214,7 +214,7 @@ const Settings = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>

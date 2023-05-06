@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import React, { useState } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -24,7 +24,7 @@ import {
 import { ADD_FEATURE } from '../../graphql/feature.api';
 
 const AddFeature = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
   const [newFeature, setNewFeature] = useState<{
     name: string;
@@ -62,10 +62,10 @@ const AddFeature = () => {
     AddFeatureMutationVariables
   >(ADD_FEATURE, {
     onCompleted({ addFeature: { id } }) {
-      history.push(`/feature/${id}`);
+      navigate(`/feature/${id}`);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -129,7 +129,7 @@ const AddFeature = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -214,7 +214,7 @@ const AddFeature = () => {
 
                         const data = await (
                           await fetch(
-                            `${process.env.REACT_APP_CLOUDINARY_URL}`,
+                            `${import.meta.env.VITE_CLOUDINARY_URL}`,
                             {
                               method: 'POST',
                               body: formData,
@@ -428,7 +428,7 @@ const AddFeature = () => {
 
                         const data = await (
                           await fetch(
-                            `${process.env.REACT_APP_CLOUDINARY_URL}`,
+                            `${import.meta.env.VITE_CLOUDINARY_URL}`,
                             {
                               method: 'POST',
                               body: formData,
@@ -479,9 +479,9 @@ const AddFeature = () => {
     </Wrapper>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };

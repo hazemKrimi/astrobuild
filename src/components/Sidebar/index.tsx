@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import { roleVar, userVar } from '../../graphql/state';
 import {
@@ -39,14 +39,13 @@ const Sidebar = () => {
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Array<ProjectOutput>>();
   const [templates, setTemplates] = useState<Array<TemplateOutput>>();
   const [features, setFeatures] = useState<Array<FeatureOutput>>();
   const [categories, setCategories] = useState<Array<CategoryOutput>>();
-  const [messagingSidebarOpen, setMessagingSidebarOpen] = useState<boolean>(
-    false
-  );
+  const [messagingSidebarOpen, setMessagingSidebarOpen] =
+    useState<boolean>(false);
 
   const [getProjectsByClientId] = useLazyQuery<
     GetAllProjectsByClientIdQuery,
@@ -143,7 +142,7 @@ const Sidebar = () => {
                         location.pathname
                       )}
                       text={project.name[0]}
-                      onClick={() => history.push(`/project/${project.id}`)}
+                      onClick={() => navigate(`/project/${project.id}`)}
                     />
                   </div>
                   <ContextMenu
@@ -163,7 +162,7 @@ const Sidebar = () => {
                         (index === 0 && location.pathname === '/template')
                       }
                       text={template.name[0]}
-                      onClick={() => history.push(`/template/${template.id}`)}
+                      onClick={() => navigate(`/template/${template.id}`)}
                     />
                   </div>
                   <ContextMenu
@@ -183,7 +182,7 @@ const Sidebar = () => {
                         (index === 0 && location.pathname === '/feature')
                       }
                       text={feature.name[0]}
-                      onClick={() => history.push(`/feature/${feature.id}`)}
+                      onClick={() => navigate(`/feature/${feature.id}`)}
                     />
                   </div>
                   <ContextMenu
@@ -203,7 +202,7 @@ const Sidebar = () => {
                         (index === 0 && location.pathname === '/category')
                       }
                       text={category.name[0]}
-                      onClick={() => history.push(`/category/${category.id}`)}
+                      onClick={() => navigate(`/category/${category.id}`)}
                     />
                   </div>
                   <ContextMenu
@@ -220,16 +219,16 @@ const Sidebar = () => {
                 color={role}
                 onClick={() => {
                   if (/project/i.test(location.pathname)) {
-                    history.push('/add-project');
+                    navigate('/add-project');
                   }
                   if (/template/i.test(location.pathname)) {
-                    history.push('/add-template');
+                    navigate('/add-template');
                   }
                   if (/feature/i.test(location.pathname)) {
-                    history.push('/add-feature');
+                    navigate('/add-feature');
                   }
                   if (/category/i.test(location.pathname)) {
-                    history.push('/add-category');
+                    navigate('/add-category');
                   }
                 }}
               />

@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import {
   Box,
@@ -24,7 +24,7 @@ import { GET_COUNTRY_CODES, UPDATE_USER_INFO } from '../../../graphql/auth.api';
 import { userVar } from '../../../graphql/state';
 
 const AdditionalInfo = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const currentUser = useReactiveVar(userVar);
   const { data: countryCodes, loading: countryCodesLoading } = useQuery<
@@ -38,10 +38,10 @@ const AdditionalInfo = () => {
   >(UPDATE_USER_INFO, {
     onCompleted({ updateUserInfo: user }) {
       userVar(user);
-      history.push('/');
+      navigate('/');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });

@@ -1,10 +1,10 @@
 import jwtDecode from 'jwt-decode';
 import { useEffect } from 'react';
-import { Redirect, Switch } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
 import {
-  ProtectedRoute,
-  AuthRoute,
+  Protected,
+  Public,
   Navbar,
   Sidebar,
   Spinner,
@@ -78,8 +78,6 @@ const App = () => {
       getUserById({ variables: { id } });
       tokenVar(localStorageToken);
     }
-
-    // eslint-disable-next-line
   }, []);
 
   return !loading ? (
@@ -90,111 +88,273 @@ const App = () => {
           <Sidebar />
         </>
       )}
-      <Switch>
-        <ProtectedRoute path='/' exact>
+      <Routes>
+        <Route path='/' element={
+          <Protected>
           {role !== 'admin' ? (
-            <Redirect to='/project' />
+            <Navigate to='/project' />
           ) : (
-            <Redirect to='/clients' />
+            <Navigate to='/clients' />
           )}
-        </ProtectedRoute>
-        <ProtectedRoute path='/project' exact>
-          <Project />
-        </ProtectedRoute>
-        <ProtectedRoute path='/project/:id' exact>
-          <Project />
-        </ProtectedRoute>
-        <ProtectedRoute path='/payments/:id' exact>
-          <Payments />
-        </ProtectedRoute>
-        <ProtectedRoute path='/add-project' exact>
-          <AddProject />
-        </ProtectedRoute>
-        <ProtectedRoute path='/project-settings/:id' exact>
-          <UpdateProject />
-        </ProtectedRoute>
-        <ProtectedRoute path='/support-messaging/:project' exact>
-          <SupportMessaging />
-        </ProtectedRoute>
-        <ProtectedRoute path='/support-messaging/:project/:id' exact>
-          <SupportMessaging />
-        </ProtectedRoute>
-        <ProtectedRoute path='/template' exact>
-          <Template />
-        </ProtectedRoute>
-        <ProtectedRoute path='/template/:id' exact>
-          <Template />
-        </ProtectedRoute>
-        <ProtectedRoute path='/add-template' exact>
-          <AddTemplate />
-        </ProtectedRoute>
-        <ProtectedRoute path='/template-settings/:id' exact>
-          <TemplateSettings />
-        </ProtectedRoute>
-        <ProtectedRoute path='/add-template' exact>
-          <AddTemplate />
-        </ProtectedRoute>
-        <ProtectedRoute path='/feature' exact>
-          <Feature />
-        </ProtectedRoute>
-        <ProtectedRoute path='/feature/:id' exact>
-          <Feature />
-        </ProtectedRoute>
-        <ProtectedRoute path='/add-feature' exact>
-          <AddFeature />
-        </ProtectedRoute>
-        <ProtectedRoute path='/feature-settings/:id' exact>
-          <FeatureSettings />
-        </ProtectedRoute>
-        <ProtectedRoute path='/category' exact>
-          <Category />
-        </ProtectedRoute>
-        <ProtectedRoute path='/category/:id' exact>
-          <Category />
-        </ProtectedRoute>
-        <ProtectedRoute path='/add-category' exact>
-          <AddCategory />
-        </ProtectedRoute>
-        <ProtectedRoute path='/category-settings/:id' exact>
-          <CategorySettings />
-        </ProtectedRoute>
-        <ProtectedRoute path='/prototype/:id' exact>
-          <Prototype />
-        </ProtectedRoute>
-        <ProtectedRoute path='/clients' exact>
-          <Users />
-        </ProtectedRoute>
-        <ProtectedRoute path='/product-owners' exact>
-          <Users />
-        </ProtectedRoute>
-        <ProtectedRoute path='/developers' exact>
-          <Users />
-        </ProtectedRoute>
-        <ProtectedRoute path='/create-user/:role' exact>
-          <CreateUser />
-        </ProtectedRoute>
-        <ProtectedRoute path='/user-settings/:id' exact>
-          <UserSettings />
-        </ProtectedRoute>
-        <ProtectedRoute path='/settings' exact>
-          <Settings />
-        </ProtectedRoute>
-        <AuthRoute path='/login' exact>
-          <Login />
-        </AuthRoute>
-        <AuthRoute path='/signup' exact>
-          <Signup />
-        </AuthRoute>
-        <ProtectedRoute path='/additional-info' exact>
-          <AdditionalInfo />
-        </ProtectedRoute>
-        <AuthRoute path='/forgot-password' exact>
-          <ForgotPassword />
-        </AuthRoute>
-        <AuthRoute path='/recover-account' exact>
-          <RecoverAccount />
-        </AuthRoute>
-      </Switch>
+        </Protected>
+        } />
+        <Route
+          path='/project'
+          element={
+            <Protected>
+              <Project />
+            </Protected>
+          }
+        />
+        <Route
+          path='/project/:id'
+          element={
+            <Protected>
+              <Project />
+            </Protected>
+          }
+        />
+        <Route
+          path='/payments/:id'
+          element={
+            <Protected>
+              <Payments />
+            </Protected>
+          }
+        />
+        <Route
+          path='/add-project'
+          element={
+            <Protected>
+              <AddProject />
+            </Protected>
+          }
+        />
+        <Route
+          path='/project-settings/:id'
+          element={
+            <Protected>
+              <UpdateProject />
+            </Protected>
+          }
+        />
+        <Route
+          path='/support-messaging/:project'
+          element={
+            <Protected>
+              <SupportMessaging />
+            </Protected>
+          }
+        />
+        <Route
+          path='/support-messaging/:project/:id'
+          element={
+            <Protected>
+              <SupportMessaging />
+            </Protected>
+          }
+        />
+        <Route
+          path='/template'
+          element={
+            <Protected>
+              <Template />
+            </Protected>
+          }
+        />
+        <Route
+          path='/template/:id'
+          element={
+            <Protected>
+              <Template />
+            </Protected>
+          }
+        />
+        <Route
+          path='/add-template'
+          element={
+            <Protected>
+              <AddTemplate />
+            </Protected>
+          }
+        />
+        <Route
+          path='/template-settings/:id'
+          element={
+            <Protected>
+              <TemplateSettings />
+            </Protected>
+          }
+        />
+        <Route
+          path='/add-template'
+          element={
+            <Protected>
+              <AddTemplate />
+            </Protected>
+          }
+        />
+        <Route
+          path='/feature'
+          element={
+            <Protected>
+              <Feature />
+            </Protected>
+          }
+        />
+        <Route
+          path='/feature/:id'
+          element={
+            <Protected>
+              <Feature />
+            </Protected>
+          }
+        />
+        <Route
+          path='/add-feature'
+          element={
+            <Protected>
+              <AddFeature />
+            </Protected>
+          }
+        />
+        <Route
+          path='/feature-settings/:id'
+          element={
+            <Protected>
+              <FeatureSettings />
+            </Protected>
+          }
+        />
+        <Route
+          path='/category'
+          element={
+            <Protected>
+              <Category />
+            </Protected>
+          }
+        />
+        <Route
+          path='/category/:id'
+          element={
+            <Protected>
+              <Category />
+            </Protected>
+          }
+        />
+        <Route
+          path='/add-category'
+          element={
+            <Protected>
+              <AddCategory />
+            </Protected>
+          }
+        />
+        <Route
+          path='/category-settings/:id'
+          element={
+            <Protected>
+              <CategorySettings />
+            </Protected>
+          }
+        />
+        <Route
+          path='/prototype/:id'
+          element={
+            <Protected>
+              <Prototype />
+            </Protected>
+          }
+        />
+        <Route
+          path='/clients'
+          element={
+            <Protected>
+              <Users />
+            </Protected>
+          }
+        />
+        <Route
+          path='/product-owners'
+          element={
+            <Protected>
+              <Users />
+            </Protected>
+          }
+        />
+        <Route
+          path='/developers'
+          element={
+            <Protected>
+              <Users />
+            </Protected>
+          }
+        />
+        <Route
+          path='/create-user/:role'
+          element={
+            <Protected>
+              <CreateUser />
+            </Protected>
+          }
+        />
+        <Route
+          path='/user-settings/:id'
+          element={
+            <Protected>
+              <UserSettings />
+            </Protected>
+          }
+        />
+        <Route
+          path='/settings'
+          element={
+            <Protected>
+              <Settings />
+            </Protected>
+          }
+        />
+        <Route
+          path='/login'
+          element={
+            <Public>
+              <Login />
+            </Public>
+          }
+        />
+        <Route
+          path='/signup'
+          element={
+            <Public>
+              <Signup />
+            </Public>
+          }
+        />
+        <Route
+          path='/additional-info'
+          element={
+            <Protected>
+              <AdditionalInfo />
+            </Protected>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <Public>
+              <ForgotPassword />
+            </Public>
+          }
+        />
+        <Route
+          path='/recover-account'
+          element={
+            <Public>
+              <RecoverAccount />
+            </Public>
+          }
+        />
+      </Routes>
     </>
   ) : (
     <Spinner fullScreen color={role || 'client'} />

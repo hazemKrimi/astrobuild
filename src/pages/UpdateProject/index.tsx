@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useHistory, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -18,7 +18,7 @@ import { ArrowLeft } from '../../assets';
 import { theme } from '../../themes';
 
 const UpdateProject = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
   const [error, setError] = useState<string>('');
   const [project, setProject] = useState<ProjectOutput>();
@@ -39,10 +39,10 @@ const UpdateProject = () => {
     UpdateProjectMutationVariables
   >(UPDATE_PROJECT, {
     onCompleted() {
-      history.push(`/project/${id}`);
+      navigate(`/project/${id}`);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0].extensions?.info);
+      setError(graphQLErrors[0].extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -69,7 +69,7 @@ const UpdateProject = () => {
     onSubmit: ({ name, imageName, imageSource }) => {
       updateProject({
         variables: {
-          id,
+          id: id as string,
           name,
           image: { name: imageName, src: imageSource },
         },
@@ -92,7 +92,7 @@ const UpdateProject = () => {
               text='Back'
               color={role || 'client'}
               size='small'
-              onClick={() => history.goBack()}
+              onClick={() => navigate(-1)}
               iconLeft={<ArrowLeft />}
             />
             <Text variant='headline' weight='bold'>
@@ -157,7 +157,7 @@ const UpdateProject = () => {
                     basicInfoForm.setFieldValue('imageSource', '');
 
                     const data = await (
-                      await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                      await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                         method: 'POST',
                         body: formData,
                       })

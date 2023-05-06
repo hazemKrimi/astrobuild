@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import {
   useLazyQuery,
   useMutation,
@@ -38,7 +38,7 @@ import { GET_ALL_CATEGORIES } from '../../graphql/category.api';
 import { GET_ALL_FEATURES } from '../../graphql/feature.api';
 
 const AddTemplate = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
   const [newTemplate, setNewTemplate] = useState<TemplateInput>({
     name: '',
@@ -77,9 +77,8 @@ const AddTemplate = () => {
     features: [],
   });
 
-  const [availableFeatures, setAvailableFeatures] = useState<
-    Array<FeatureOutput>
-  >();
+  const [availableFeatures, setAvailableFeatures] =
+    useState<Array<FeatureOutput>>();
 
   const [selectedSection, setSelectedSection] = useState<
     'general' | 'specification' | 'features'
@@ -108,10 +107,10 @@ const AddTemplate = () => {
     AddTemplateMutationVariables
   >(ADD_TEMPLATE, {
     onCompleted({ addTemplate: { id } }) {
-      history.push(`/template/${id}`);
+      navigate(`/template/${id}`);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -275,7 +274,7 @@ const AddTemplate = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -368,7 +367,7 @@ const AddTemplate = () => {
 
                             const data = await (
                               await fetch(
-                                `${process.env.REACT_APP_CLOUDINARY_URL}`,
+                                `${import.meta.env.VITE_CLOUDINARY_URL}`,
                                 {
                                   method: 'POST',
                                   body: formData,
@@ -814,9 +813,9 @@ const AddTemplate = () => {
     </Wrapper>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'developer' && <Redirect to='/project' />)}
+        (role === 'developer' && <Navigate to='/project' />)}
     </>
   );
 };

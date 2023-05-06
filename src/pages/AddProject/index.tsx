@@ -2,7 +2,7 @@
 import Carousel, { consts } from 'react-elastic-carousel';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
 import { useState, useEffect } from 'react';
 import { roleVar, userVar } from '../../graphql/state';
@@ -64,7 +64,7 @@ import { CREATE_USER, GET_ALL_USERS } from '../../graphql/admin.api';
 import { GET_COUNTRY_CODES } from '../../graphql/auth.api';
 
 const AddProject = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
   const [error, setError] = useState<string>('');
@@ -86,14 +86,10 @@ const AddProject = () => {
   const [chosenFeatures, setChosenFeatures] = useState<Array<FeatureOutput>>(
     []
   );
-  const [
-    chosenDeliverables,
-    setChosenDeliverables,
-  ] = useState<DelivrableInput>();
-  const [
-    chosenPaymentOption,
-    setChosenPaymentOption,
-  ] = useState<PaymentOptionInput>();
+  const [chosenDeliverables, setChosenDeliverables] =
+    useState<DelivrableInput>();
+  const [chosenPaymentOption, setChosenPaymentOption] =
+    useState<PaymentOptionInput>();
   const [chosenPlatforms, setChosenPlatforms] = useState<Array<string>>([]);
   const [selectedFeature, setSelectedFeature] = useState<FeatureOutput>();
   const [categories, setCategories] = useState<Array<CategoryOutput>>([]);
@@ -200,33 +196,31 @@ const AddProject = () => {
       setStep('project-metadata');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
 
-  const [
-    addProjectProposal,
-    { loading: addProjectProposalLoading },
-  ] = useMutation<
-    AddProjectProposalMutation,
-    AddProjectProposalMutationVariables
-  >(ADD_PROJECT_PROPOSAL, {
-    onCompleted({ addProjectProposal: proposalData }) {
-      history.push(`/project/${proposalData.id}`);
-    },
-    onError({ graphQLErrors }) {
-      setError(graphQLErrors[0].extensions?.info);
-      setTimeout(() => setError(''), 3000);
-    },
-  });
+  const [addProjectProposal, { loading: addProjectProposalLoading }] =
+    useMutation<
+      AddProjectProposalMutation,
+      AddProjectProposalMutationVariables
+    >(ADD_PROJECT_PROPOSAL, {
+      onCompleted({ addProjectProposal: proposalData }) {
+        navigate(`/project/${proposalData.id}`);
+      },
+      onError({ graphQLErrors }) {
+        setError(graphQLErrors[0].extensions?.info as string);
+        setTimeout(() => setError(''), 3000);
+      },
+    });
 
   const [addProject, { loading: addProjectLoading }] = useMutation<
     AddProjectMutation,
     AddProjectMutationVariables
   >(ADD_PROJECT, {
     onCompleted({ addProject: projectData }) {
-      if (role === 'client') history.push(`/project/${projectData.id}`);
+      if (role === 'client') navigate(`/project/${projectData.id}`);
       else {
         addProjectProposal({
           variables: {
@@ -242,7 +236,7 @@ const AddProject = () => {
       }
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0].extensions?.info);
+      setError(graphQLErrors[0].extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -641,7 +635,7 @@ const AddProject = () => {
               text='Back'
               color={role || 'client'}
               size='small'
-              onClick={() => history.goBack()}
+              onClick={() => navigate(-1)}
               iconLeft={<ArrowLeft />}
             />
             <Text variant='headline' weight='bold'>
@@ -756,7 +750,7 @@ const AddProject = () => {
                       basicInfoForm.setFieldValue('imageSource', '');
 
                       const data = await (
-                        await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                        await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                           method: 'POST',
                           body: formData,
                         })
@@ -1055,8 +1049,9 @@ const AddProject = () => {
                       {
                         ...deliverablesPlatformsForm.values
                           .selectedDeliverables,
-                        specification: !deliverablesPlatformsForm.values
-                          .selectedDeliverables.specification,
+                        specification:
+                          !deliverablesPlatformsForm.values.selectedDeliverables
+                            .specification,
                       }
                     );
                   }}
@@ -1087,8 +1082,9 @@ const AddProject = () => {
                       {
                         ...deliverablesPlatformsForm.values
                           .selectedDeliverables,
-                        design: !deliverablesPlatformsForm.values
-                          .selectedDeliverables.design,
+                        design:
+                          !deliverablesPlatformsForm.values.selectedDeliverables
+                            .design,
                       }
                     );
                   }}
@@ -1149,8 +1145,9 @@ const AddProject = () => {
                       {
                         ...deliverablesPlatformsForm.values
                           .selectedDeliverables,
-                        fullBuild: !deliverablesPlatformsForm.values
-                          .selectedDeliverables.fullBuild,
+                        fullBuild:
+                          !deliverablesPlatformsForm.values.selectedDeliverables
+                            .fullBuild,
                       }
                     );
                   }}

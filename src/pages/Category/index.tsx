@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
-import { Redirect, useHistory, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Empty, Settings } from '../../assets';
 import { Box, Button, Spinner, Text } from '../../components';
@@ -19,7 +19,7 @@ import {
 
 const Category = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<CategoryOutput>();
 
@@ -77,7 +77,7 @@ const Category = () => {
                     text='Settings'
                     iconLeft={<Settings />}
                     onClick={() =>
-                      history.push(`/category-settings/${id || category.id}`)
+                      navigate(`/category-settings/${id || category.id}`)
                     }
                   />
                 </Box>
@@ -109,9 +109,9 @@ const Category = () => {
     </>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };

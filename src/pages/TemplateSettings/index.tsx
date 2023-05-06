@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import {
   useLazyQuery,
   useMutation,
@@ -47,7 +47,7 @@ import { GET_ALL_CATEGORIES } from '../../graphql/category.api';
 import { GET_ALL_FEATURES } from '../../graphql/feature.api';
 
 const TemplateSettings = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const role = useReactiveVar(roleVar);
   const [template, setTemplate] = useState<TemplateOutput>({
@@ -88,9 +88,8 @@ const TemplateSettings = () => {
     features: [],
   });
 
-  const [availableFeatures, setAvailableFeatures] = useState<
-    Array<FeatureOutput>
-  >();
+  const [availableFeatures, setAvailableFeatures] =
+    useState<Array<FeatureOutput>>();
 
   const [selectedSection, setSelectedSection] = useState<
     'general' | 'specification' | 'features'
@@ -98,9 +97,8 @@ const TemplateSettings = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
 
-  const [deleteTemplateModal, setDeleteTemplateModal] = useState<boolean>(
-    false
-  );
+  const [deleteTemplateModal, setDeleteTemplateModal] =
+    useState<boolean>(false);
 
   const { data: categories, loading: categoriesLoading } = useQuery<
     GetAllCategoriesQuery,
@@ -139,7 +137,7 @@ const TemplateSettings = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -149,16 +147,16 @@ const TemplateSettings = () => {
     DeleteTemplateMutationVariables
   >(DELETE_TEMPLATE, {
     onCompleted() {
-      history.push('/template');
+      navigate('/template');
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
 
   useEffect(() => {
-    getTemplate({ variables: { id } });
+    getTemplate({ variables: { id: id as string } });
     getFeatures();
 
     // eslint-disable-next-line
@@ -189,7 +187,7 @@ const TemplateSettings = () => {
       });
       updateTemplate({
         variables: {
-          id,
+          id: id as string,
           template: {
             name,
             description,
@@ -203,35 +201,42 @@ const TemplateSettings = () => {
           specification: {
             introduction: {
               purpose: template.specification?.introduction.purpose!,
-              documentConventions: template.specification?.introduction
-                .documentConventions!,
-              intendedAudience: template.specification?.introduction
-                .intendedAudience!,
+              documentConventions:
+                template.specification?.introduction.documentConventions!,
+              intendedAudience:
+                template.specification?.introduction.intendedAudience!,
               projectScope: template.specification?.introduction.projectScope!,
             },
             overallDescription: {
-              perspective: template.specification?.overallDescription
-                .perspective!,
-              userCharacteristics: template.specification?.overallDescription
-                .userCharacteristics!,
-              operatingEnvironment: template.specification?.overallDescription
-                .operatingEnvironment!,
-              designImplementationConstraints: template.specification
-                ?.overallDescription.designImplementationConstraints!,
-              userDocumentation: template.specification?.overallDescription
-                .userDocumentation!,
-              assemptionsDependencies: template.specification
-                ?.overallDescription.assemptionsDependencies!,
+              perspective:
+                template.specification?.overallDescription.perspective!,
+              userCharacteristics:
+                template.specification?.overallDescription.userCharacteristics!,
+              operatingEnvironment:
+                template.specification?.overallDescription
+                  .operatingEnvironment!,
+              designImplementationConstraints:
+                template.specification?.overallDescription
+                  .designImplementationConstraints!,
+              userDocumentation:
+                template.specification?.overallDescription.userDocumentation!,
+              assemptionsDependencies:
+                template.specification?.overallDescription
+                  .assemptionsDependencies!,
             },
             nonFunctionalRequirements: {
-              performanceRequirements: template.specification
-                ?.nonFunctionalRequirements.performanceRequirements!,
-              safetyRequirements: template.specification
-                ?.nonFunctionalRequirements.safetyRequirements!,
-              securityRequirements: template.specification
-                ?.nonFunctionalRequirements.securityRequirements!,
-              softwareQualityAttributes: template.specification
-                ?.nonFunctionalRequirements.softwareQualityAttributes!,
+              performanceRequirements:
+                template.specification?.nonFunctionalRequirements
+                  .performanceRequirements!,
+              safetyRequirements:
+                template.specification?.nonFunctionalRequirements
+                  .safetyRequirements!,
+              securityRequirements:
+                template.specification?.nonFunctionalRequirements
+                  .securityRequirements!,
+              softwareQualityAttributes:
+                template.specification?.nonFunctionalRequirements
+                  .softwareQualityAttributes!,
             },
             otherRequirements: template.specification?.otherRequirements!,
             glossary: template.specification?.glossary!,
@@ -375,7 +380,7 @@ const TemplateSettings = () => {
       });
       updateTemplate({
         variables: {
-          id,
+          id: id as string,
           template: {
             name: template.name,
             description: template.description,
@@ -425,7 +430,7 @@ const TemplateSettings = () => {
     onSubmit: ({ features }) => {
       updateTemplate({
         variables: {
-          id,
+          id: id as string,
           template: {
             name: template.name,
             description: template.description,
@@ -439,35 +444,42 @@ const TemplateSettings = () => {
           specification: {
             introduction: {
               purpose: template.specification?.introduction.purpose!,
-              documentConventions: template.specification?.introduction
-                .documentConventions!,
-              intendedAudience: template.specification?.introduction
-                .intendedAudience!,
+              documentConventions:
+                template.specification?.introduction.documentConventions!,
+              intendedAudience:
+                template.specification?.introduction.intendedAudience!,
               projectScope: template.specification?.introduction.projectScope!,
             },
             overallDescription: {
-              perspective: template.specification?.overallDescription
-                .perspective!,
-              userCharacteristics: template.specification?.overallDescription
-                .userCharacteristics!,
-              operatingEnvironment: template.specification?.overallDescription
-                .operatingEnvironment!,
-              designImplementationConstraints: template.specification
-                ?.overallDescription.designImplementationConstraints!,
-              userDocumentation: template.specification?.overallDescription
-                .userDocumentation!,
-              assemptionsDependencies: template.specification
-                ?.overallDescription.assemptionsDependencies!,
+              perspective:
+                template.specification?.overallDescription.perspective!,
+              userCharacteristics:
+                template.specification?.overallDescription.userCharacteristics!,
+              operatingEnvironment:
+                template.specification?.overallDescription
+                  .operatingEnvironment!,
+              designImplementationConstraints:
+                template.specification?.overallDescription
+                  .designImplementationConstraints!,
+              userDocumentation:
+                template.specification?.overallDescription.userDocumentation!,
+              assemptionsDependencies:
+                template.specification?.overallDescription
+                  .assemptionsDependencies!,
             },
             nonFunctionalRequirements: {
-              performanceRequirements: template.specification
-                ?.nonFunctionalRequirements.performanceRequirements!,
-              safetyRequirements: template.specification
-                ?.nonFunctionalRequirements.safetyRequirements!,
-              securityRequirements: template.specification
-                ?.nonFunctionalRequirements.securityRequirements!,
-              softwareQualityAttributes: template.specification
-                ?.nonFunctionalRequirements.softwareQualityAttributes!,
+              performanceRequirements:
+                template.specification?.nonFunctionalRequirements
+                  .performanceRequirements!,
+              safetyRequirements:
+                template.specification?.nonFunctionalRequirements
+                  .safetyRequirements!,
+              securityRequirements:
+                template.specification?.nonFunctionalRequirements
+                  .securityRequirements!,
+              softwareQualityAttributes:
+                template.specification?.nonFunctionalRequirements
+                  .softwareQualityAttributes!,
             },
             otherRequirements: template.specification?.otherRequirements!,
             glossary: template.specification?.glossary!,
@@ -487,7 +499,7 @@ const TemplateSettings = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -541,7 +553,9 @@ const TemplateSettings = () => {
                       description='
               If you delete this template you cannot recover it.'
                       onClose={() => setDeleteTemplateModal(false)}
-                      onConfirm={() => deleteTemplate({ variables: { id } })}
+                      onConfirm={() =>
+                        deleteTemplate({ variables: { id: id as string } })
+                      }
                     ></Modal>
                   )}
                   <Box
@@ -599,7 +613,7 @@ const TemplateSettings = () => {
 
                             const data = await (
                               await fetch(
-                                `${process.env.REACT_APP_CLOUDINARY_URL}`,
+                                `${import.meta.env.VITE_CLOUDINARY_URL}`,
                                 {
                                   method: 'POST',
                                   body: formData,
@@ -1064,9 +1078,9 @@ const TemplateSettings = () => {
     </Wrapper>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'developer' && <Redirect to='/project' />)}
+        (role === 'developer' && <Navigate to='/project' />)}
     </>
   );
 };

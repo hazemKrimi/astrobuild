@@ -17,4 +17,9 @@ export const Wrapper = styled.div<WrapperProps>`
   grid-template-rows: 1fr auto;
   justify-content: center;
   padding: 55px 0px;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 1px;
+  }
 `;

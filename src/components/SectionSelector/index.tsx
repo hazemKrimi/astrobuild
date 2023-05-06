@@ -1,7 +1,7 @@
 import { Wrapper } from './styles';
 
 type SectionSelectorProps = {
-  icon: React.SVGProps<SVGSVGElement>;
+  icon: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
   text: string;
   color: 'client' | 'productOwner' | 'developer' | 'admin';
   selected?: boolean;

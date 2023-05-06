@@ -5,6 +5,7 @@ module.exports = {
     'plugin:jest/recommended',
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended'
   ],
   plugins: ['react', '@typescript-eslint', 'jest', 'prettier'],
   env: {
@@ -54,18 +55,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-explicit-any': 0,
     'linebreak-style': 'off',
-    'jsx-a11y/label-has-associated-control': [
-      'error',
-      {
-        labelComponents: [],
-        labelAttributes: [],
-        controlComponents: [],
-        assert: 'either',
-        depth: 25,
-      },
-    ],
-    'jsx-a11y/control-has-associated-label': 0,
-    'jsx-a11y/anchor-is-valid': 0,
     'prettier/prettier': [
       'error',
       {

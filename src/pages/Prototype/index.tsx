@@ -1,19 +1,24 @@
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, {
-  removeElements,
   addEdge,
   MiniMap,
   Controls,
   ControlButton,
-  FlowElement,
-  Elements,
   Connection,
   Edge,
-  ArrowHeadType,
-} from 'react-flow-renderer';
-import { useEffect, useState, useRef } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+  Node,
+  MarkerType,
+  applyNodeChanges,
+  applyEdgeChanges,
+  NodeChange,
+  EdgeChange,
+  useEdgesState,
+  useNodesState
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { roleVar } from '../../graphql/state';
 import { Empty, ArrowLeft, Edit, CheckCircle } from '../../assets';
 import {
@@ -29,6 +34,7 @@ import { Wrapper } from './styles';
 import {
   AddPrototypeMutation,
   AddPrototypeMutationVariables,
+  FeatureOutput,
   GetPrototypeByIdQuery,
   GetPrototypeByIdQueryVariables,
   GetTemplateByIdQuery,
@@ -47,11 +53,13 @@ import {
 
 const Prototype = () => {
   const role = useReactiveVar(roleVar);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const nodeTypes = useMemo(() => ({ featureCard: FrontendFeatureCard }), []);
   const [template, setTemplate] = useState<TemplateOutput>();
   const [prototype, setPrototype] = useState<Array<ProtoTypeOutput>>();
-  const [elements, setElements] = useState<Elements>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<FeatureOutput>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [editing, setEditing] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
@@ -86,7 +94,7 @@ const Prototype = () => {
       setTimeout(() => setSuccess(false), 3000);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -107,91 +115,66 @@ const Prototype = () => {
       getTemplate({ variables: { id } });
       getPrototype({ variables: { id } });
     }
-
-    // eslint-disable-next-line
   }, [id]);
 
   useEffect(() => {
     if (template && template.features) {
-      const initialElements = template.features.map((feature, index) => {
-        if (['frontend', 'fullstack'].includes(feature.featureType)) {
-          return {
-            id: feature.id,
-            type: 'default',
-            data: {
-              label: <FrontendFeatureCard feature={feature} />,
-            },
-            position: { x: index * 100, y: index * 200 },
-            style: {
-              width: 'auto',
-            },
-            connectable: role === 'developer' && editing,
-          } as FlowElement;
-        }
-        return {} as FlowElement;
-      });
+      const initialNodes = template?.features?.map((feature, index) => ({
+        id: feature.id,
+        type: 'featureCard',
+        data: feature,
+        position: { x: index * 100, y: index * 200 },
+        style: {
+          width: 'auto',
+        },
+        connectable: role === 'developer' && editing
+      }));
 
-      if (initialElements) setElements(initialElements);
+      if (initialNodes) setNodes(initialNodes);
     }
 
     if (prototype) {
-      const initialElements: Array<Edge> = [];
+      const initialEdges: Array<Edge> = [];
+
       prototype.forEach((link) => {
         link.connections.forEach((connection) => {
-          initialElements.push({
+          initialEdges.push({
             id: `edge-${link.feature.id}`,
             source: link.feature.id,
             target: connection.to,
-            arrowHeadType: ArrowHeadType.ArrowClosed,
-            className: 'normal-edge',
+            markerEnd: MarkerType.Arrow,
+            className: 'normal-edge'
           });
         });
       });
 
-      if (initialElements) setElements((els) => [...els, ...initialElements]);
+      if (initialEdges) setEdges(initialEdges);
     }
-
-    // eslint-disable-next-line
   }, [template, prototype, editing]);
 
-  const onElementsRemove = (elementsToRemove: Elements<any>) =>
-    setElements((els) => removeElements(elementsToRemove, els));
-  const onConnect = (params: Edge<any> | Connection) =>
-    setElements((els) =>
-      addEdge({ ...params, arrowHeadType: ArrowHeadType.ArrowClosed }, els)
-    );
+  const onConnect = useCallback(
+    (params: Edge | Connection) => setEdges((els) => addEdge(params, els)),
+    [setEdges]
+  );
 
   const handleEditPrototype = () => {
     if (editing) {
-      const prototypeInput = elements
-        // @ts-ignore
-        .filter((element) => element.source || element.target)
-        .map((element) => {
-          if (
-            element.hasOwnProperty('source') ||
-            element.hasOwnProperty('target')
-          ) {
-            return {
-              // @ts-ignore
-              featureId: element.source,
-              connections: [
-                {
-                  // @ts-ignore
-                  to: element.target,
-                  releations: { back: false, forword: true },
-                },
-              ],
-            };
-          }
-          return {};
-        });
+      const prototypeInput = edges
+        .map((edge) => ({
+          featureId: edge.source,
+          connections: [
+            {
+              to: edge.target,
+              releations: { back: false, forword: true },
+            },
+          ],
+        }));
       if (prototypeInput && prototypeInput.length > 0) {
         if (prototype) {
           updatePrototype({
             variables: {
               prototype: {
-                templateId: id,
-                // @ts-ignore
+                templateId: id as string,
                 prototype: prototypeInput,
               },
             },
@@ -200,8 +183,7 @@ const Prototype = () => {
           addPrototype({
             variables: {
               prototype: {
-                templateId: id,
-                // @ts-ignore
+                templateId: id as string,
                 prototype: prototypeInput,
               },
             },
@@ -235,7 +217,7 @@ const Prototype = () => {
                       text='Back'
                       color={role || 'client'}
                       size='small'
-                      onClick={() => history.goBack()}
+                      onClick={() => navigate(-1)}
                       iconLeft={<ArrowLeft />}
                     />
                     <Text variant='headline' weight='bold'>
@@ -283,18 +265,20 @@ const Prototype = () => {
                           height='auto'
                         >
                           <ReactFlow
-                            elements={elements}
-                            onElementsRemove={onElementsRemove}
+                            fitView
+                            nodes={nodes}
+                            edges={edges}
+                            nodeTypes={nodeTypes}
+                            onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
                             onConnect={onConnect}
-                            deleteKeyCode={46}
-                            edgeTypes={{ arrowHeadType: 'arrow' }}
                           >
                             {role === 'developer' && (
                               <>
                                 <MiniMap />
                                 <Controls
                                   showInteractive={false}
-                                  showFitView={false}
+                                  showFitView
                                 >
                                   <ControlButton onClick={handleEditPrototype}>
                                     {!editing ? <Edit /> : <CheckCircle />}
@@ -364,7 +348,7 @@ const Prototype = () => {
       )}
     </>
   ) : (
-    <>{role === 'admin' && <Redirect to='/clients' />}</>
+    <>{role === 'admin' && <Navigate to='/clients' />}</>
   );
 };
 

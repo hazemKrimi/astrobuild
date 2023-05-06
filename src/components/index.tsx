@@ -15,8 +15,8 @@ import CheckBox from './CheckBox';
 import Menu from './Menu';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import ProtectedRoute from './ProtectedRoute';
-import AuthRoute from './AuthRoute';
+import Protected from './Protected';
+import Public from './Public';
 import SectionSelector from './SectionSelector';
 import Modal from './Modal';
 import SidebarItem from './SidebarItem';
@@ -48,8 +48,8 @@ export {
   CheckBox,
   Navbar,
   Sidebar,
-  ProtectedRoute,
-  AuthRoute,
+  Protected,
+  Public,
   SectionSelector,
   Modal,
   SidebarItem,

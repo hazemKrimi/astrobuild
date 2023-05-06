@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Redirect, useHistory } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import React, { useState } from 'react';
 import { roleVar } from '../../graphql/state';
@@ -22,7 +22,7 @@ import {
 import { ADD_CATEGORY } from '../../graphql/category.api';
 
 const AddCategory = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const role = useReactiveVar(roleVar);
 
   const [error, setError] = useState<string>('');
@@ -32,10 +32,10 @@ const AddCategory = () => {
     AddCategoryMutationVariables
   >(ADD_CATEGORY, {
     onCompleted({ addCategory: { id } }) {
-      history.push(`/category/${id}`);
+      navigate(`/category/${id}`);
     },
     onError({ graphQLErrors }) {
-      setError(graphQLErrors[0]?.extensions?.info);
+      setError(graphQLErrors[0]?.extensions?.info as string);
       setTimeout(() => setError(''), 3000);
     },
   });
@@ -73,7 +73,7 @@ const AddCategory = () => {
           text='Back'
           color={role || 'client'}
           size='small'
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           iconLeft={<ArrowLeft />}
         />
         <Text variant='headline' weight='bold'>
@@ -144,7 +144,7 @@ const AddCategory = () => {
                     formData.append('upload_preset', 'xofll5kc');
 
                     const data = await (
-                      await fetch(`${process.env.REACT_APP_CLOUDINARY_URL}`, {
+                      await fetch(`${import.meta.env.VITE_CLOUDINARY_URL}`, {
                         method: 'POST',
                         body: formData,
                       })
@@ -190,9 +190,9 @@ const AddCategory = () => {
     </Wrapper>
   ) : (
     <>
-      {role === 'admin' && <Redirect to='/clients' />}
+      {role === 'admin' && <Navigate to='/clients' />}
       {role === 'client' ||
-        (role === 'productOwner' && <Redirect to='/project' />)}
+        (role === 'productOwner' && <Navigate to='/project' />)}
     </>
   );
 };
