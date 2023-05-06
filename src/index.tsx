@@ -74,9 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     root.render(
       <React.StrictMode>
         <ApolloProvider client={clientMain}>
+          {/* @ts-ignore */}
           <ThemeProvider theme={theme}>
             <BrowserRouter>
               <App />
+              {/* @ts-ignore */}
               <GlobalStyles />
             </BrowserRouter>
           </ThemeProvider>
