@@ -2,13 +2,7 @@ import jwtDecode from 'jwt-decode';
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useLazyQuery, useReactiveVar } from '@apollo/client';
-import {
-  Protected,
-  Public,
-  Navbar,
-  Sidebar,
-  Spinner,
-} from './components';
+import { Protected, Public, Navbar, Sidebar, Spinner } from './components';
 import { roleVar, tokenVar, userVar } from './graphql/state';
 import {
   AdditionalInfo,
@@ -89,15 +83,18 @@ const App = () => {
         </>
       )}
       <Routes>
-        <Route path='/' element={
-          <Protected>
-          {role !== 'admin' ? (
-            <Navigate to='/project' />
-          ) : (
-            <Navigate to='/clients' />
-          )}
-        </Protected>
-        } />
+        <Route
+          path='/'
+          element={
+            <Protected>
+              {role !== 'admin' ? (
+                <Navigate to='/project' />
+              ) : (
+                <Navigate to='/clients' />
+              )}
+            </Protected>
+          }
+        />
         <Route
           path='/project'
           element={
