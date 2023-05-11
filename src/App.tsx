@@ -28,7 +28,7 @@ import {
   AddProject,
   UpdateProject,
   Payments,
-  SupportMessaging,
+  Support,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
 import { GET_USER_BY_ID } from './graphql/auth.api';
@@ -136,18 +136,18 @@ const App = () => {
           }
         />
         <Route
-          path='/support-messaging/:project'
+          path='/support/:project'
           element={
             <Protected>
-              <SupportMessaging />
+              <Support />
             </Protected>
           }
         />
         <Route
-          path='/support-messaging/:project/:id'
+          path='/support/:project/:id'
           element={
             <Protected>
-              <SupportMessaging />
+              <Support />
             </Protected>
           }
         />

@@ -14,7 +14,7 @@ import {
   UpdateProjectMutationVariables,
 } from '../../graphql/types';
 import { GET_PROJECT_BY_ID, UPDATE_PROJECT } from '../../graphql/project.api';
-import { ArrowLeft } from '../../assets';
+import { ArrowLeft, Empty } from '../../assets';
 import { theme } from '../../themes';
 
 const UpdateProject = () => {
@@ -24,14 +24,13 @@ const UpdateProject = () => {
   const [project, setProject] = useState<ProjectOutput>();
   const { id } = useParams<{ id: string }>();
 
-  const [getProject, { loading: projectLoading }] = useLazyQuery<
+  const [getProject, { loading: projectLoading, error: projectError }] = useLazyQuery<
     GetProjectByIdQuery,
     GetProjectByIdQueryVariables
   >(GET_PROJECT_BY_ID, {
     onCompleted({ getProjectById }) {
       setProject(getProjectById);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [updateProject, { loading: updateProjectLoading }] = useMutation<
@@ -51,8 +50,6 @@ const UpdateProject = () => {
     if (id) {
       getProject({ variables: { id } });
     }
-
-    // eslint-disable-next-line
   }, [id]);
 
   const basicInfoForm = useFormik({
@@ -78,7 +75,27 @@ const UpdateProject = () => {
     enableReinitialize: true,
   });
 
-  return !projectLoading ? (
+  if (projectLoading) return (
+    <Spinner fullScreen color={role || 'client'} />
+  );
+
+  if (projectError || !project) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
     <Wrapper>
       <Box padding='35px 45px 30px 120px'>
         <Box
@@ -210,8 +227,6 @@ const UpdateProject = () => {
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <Spinner fullScreen color={role || 'client'} />
   );
 };
 

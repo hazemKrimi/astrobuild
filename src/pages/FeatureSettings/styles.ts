@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
 
   .feature-type {
     background: ${({ theme }) => theme.colors.gray.dark};
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

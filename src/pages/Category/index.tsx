@@ -23,24 +23,22 @@ const Category = () => {
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<CategoryOutput>();
 
-  const [getCategories, { loading: categoriesLoading }] = useLazyQuery<
+  const [getCategories, { loading: categoriesLoading, error: categoriesError }] = useLazyQuery<
     GetAllCategoriesQuery,
     GetAllCategoriesQueryVariables
   >(GET_ALL_CATEGORIES, {
     onCompleted({ getAllCategories }) {
       setCategory(getAllCategories[0]);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
-  const [getCategory, { loading: categoryLoading }] = useLazyQuery<
+  const [getCategory, { loading: categoryLoading, error: categoryError }] = useLazyQuery<
     GetCategoryByIdQuery,
     GetCategoryByIdQueryVariables
   >(GET_CATEGORY_BY_ID, {
     onCompleted({ getCategoryById }) {
       setCategory(getCategoryById);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   useEffect(() => {
@@ -49,70 +47,65 @@ const Category = () => {
     } else {
       getCategories();
     }
-
-    // eslint-disable-next-line
   }, [id]);
 
-  return role === 'developer' ? (
-    <>
-      {!categoriesLoading && !categoryLoading ? (
-        <>
-          {category ? (
-            <Wrapper>
-              <Box padding='35px 45px 0px 120px'>
-                <Box
-                  display='flex'
-                  flexDirection='row'
-                  alignItems='center'
-                  marginBottom='20px'
-                >
-                  <Box flexGrow='1'>
-                    <Text variant='headline' weight='bold'>
-                      {category.name}
-                    </Text>
-                  </Box>
-                  <Button
-                    color={role || 'client'}
-                    variant='primary-action'
-                    text='Settings'
-                    iconLeft={<Settings />}
-                    onClick={() =>
-                      navigate(`/category-settings/${id || category.id}`)
-                    }
-                  />
-                </Box>
-                <Box>
-                  <Text variant='headline'>Description</Text>
-                  <Text>{category.description}</Text>
-                </Box>
-              </Box>
-            </Wrapper>
-          ) : (
-            <Wrapper color={role}>
-              <Box
-                width='100%'
-                height='100vh'
-                display='grid'
-                alignItems='center'
-                justifyContent='center'
-              >
-                <Box>
-                  <Empty />
-                </Box>
-              </Box>
-            </Wrapper>
-          )}
-        </>
-      ) : (
-        <Spinner fullScreen color={role || 'client'} />
-      )}
-    </>
-  ) : (
+  if (role !== 'developer') return (
     <>
       {role === 'admin' && <Navigate to='/clients' />}
-      {role === 'client' ||
-        (role === 'productOwner' && <Navigate to='/project' />)}
+      {['client', 'productOwer'].includes(role as string) && <Navigate to='/project' />}
     </>
+  )
+
+  if (categoriesLoading || categoryLoading) return (
+    <Spinner fullScreen color={role || 'client'} />
+  );
+
+  if (categoriesError || categoryError || !category) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
+    <Wrapper>
+      <Box padding='35px 45px 0px 120px'>
+        <Box
+          display='flex'
+          flexDirection='row'
+          alignItems='center'
+          marginBottom='20px'
+        >
+          <Box flexGrow='1'>
+            <Text variant='headline' weight='bold'>
+              {category.name}
+            </Text>
+          </Box>
+          <Button
+            color={role || 'client'}
+            variant='primary-action'
+            text='Settings'
+            iconLeft={<Settings />}
+            onClick={() =>
+              navigate(`/category-settings/${id || category.id}`)
+            }
+          />
+        </Box>
+        <Box>
+          <Text variant='headline'>Description</Text>
+          <Text>{category.description}</Text>
+        </Box>
+      </Box>
+    </Wrapper>
   );
 };
 

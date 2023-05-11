@@ -66,7 +66,14 @@ const AddCategory = () => {
     },
   });
 
-  return role === 'developer' ? (
+  if (role !== 'developer') return (
+    <>
+      {role === 'admin' && <Navigate to='/clients' />}
+      {['client', 'productOwer'].includes(role as string) && <Navigate to='/project' />}
+    </>
+  )
+
+  return (
     <Wrapper>
       <Box>
         <Button
@@ -188,12 +195,6 @@ const AddCategory = () => {
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <>
-      {role === 'admin' && <Navigate to='/clients' />}
-      {role === 'client' ||
-        (role === 'productOwner' && <Navigate to='/project' />)}
-    </>
   );
 };
 

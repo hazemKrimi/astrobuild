@@ -15,7 +15,7 @@ import {
   Spinner,
 } from '../../components';
 import { Wrapper } from './styles';
-import { ArrowLeft, Profile, Security } from '../../assets';
+import { ArrowLeft, Empty, Profile, Security } from '../../assets';
 import {
   UpdateUserInfoMutation,
   UpdateUserPasswordMutation,
@@ -39,11 +39,17 @@ const UserSettings = () => {
   const role = useReactiveVar(roleVar);
   const [userToEdit, setUserToEdit] = useState<UserOutput>();
   const { id } = useParams<{ id: string }>();
+  const [selectedSection, setSelectedSection] = useState<
+    'general' | 'security'
+  >('general');
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<boolean>(false);
+
   const { data: countryCodes, loading: countryCodesLoading } = useQuery<
     GetCountryCodesQuery,
     GetCountryCodesQueryVariables
   >(GET_COUNTRY_CODES);
-  const { loading: userInfoLoading } = useQuery<
+  const { loading: userInfoLoading, error: userInforError } = useQuery<
     GetUserByIdQuery,
     GetUserByIdQueryVariables
   >(GET_USER_BY_ID, {
@@ -54,12 +60,6 @@ const UserSettings = () => {
       setUserToEdit(getUserById);
     },
   });
-
-  const [selectedSection, setSelectedSection] = useState<
-    'general' | 'security'
-  >('general');
-  const [error, setError] = useState<string>('');
-  const [success, setSuccess] = useState<boolean>(false);
 
   const [updateUserInfo, { loading: generalLoading }] = useMutation<
     UpdateUserInfoMutation,
@@ -182,7 +182,27 @@ const UserSettings = () => {
       }),
   });
 
-  return role === 'admin' ? (
+  if (role !== 'admin') return (
+    <Navigate to='/' />
+  )
+
+  if (userInforError || !userToEdit) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
     <Wrapper>
       <Box>
         <Button
@@ -480,8 +500,6 @@ const UserSettings = () => {
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <Navigate to='/' />
   );
 };
 

@@ -16,7 +16,7 @@ import {
   Modal,
 } from '../../components';
 import { Wrapper } from './styles';
-import { ArrowLeft, General } from '../../assets';
+import { ArrowLeft, Empty, General } from '../../assets';
 import {
   CategoryOutput,
   DeleteCategoryMutation,
@@ -44,14 +44,13 @@ const CategorySettings = () => {
   const [deleteCategoryModal, setDeleteCategoryModal] =
     useState<boolean>(false);
 
-  const [getCategory, { loading: categoryLoading }] = useLazyQuery<
+  const [getCategory, { loading: categoryLoading, error: categoryError }] = useLazyQuery<
     GetCategoryByIdQuery,
     GetCategoryByIdQueryVariables
   >(GET_CATEGORY_BY_ID, {
     onCompleted({ getCategoryById }) {
       setCategory(getCategoryById);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [updateCategory, { loading }] = useMutation<
@@ -84,8 +83,6 @@ const CategorySettings = () => {
 
   useEffect(() => {
     getCategory({ variables: { id: id as string } });
-
-    // eslint-disable-next-line
   }, [id]);
 
   const form = useFormik({
@@ -116,7 +113,34 @@ const CategorySettings = () => {
     enableReinitialize: true,
   });
 
-  return role === 'developer' ? (
+  if (role !== 'developer') return (
+    <>
+      {role === 'admin' && <Navigate to='/clients' />}
+      {['client', 'productOwer'].includes(role as string) && <Navigate to='/project' />}
+    </>
+  )
+
+  if (categoryLoading) return (
+    <Spinner fullScreen color={role || 'client'} />
+  );
+
+  if (categoryError || !category) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
     <Wrapper>
       {deleteCategoryModal && (
         <Modal
@@ -176,7 +200,6 @@ const CategorySettings = () => {
               <Alert color='success' text='Category updated successfully' />
             )}
           </Box>
-          {!categoryLoading ? (
             <form onSubmit={form.handleSubmit}>
               <Box
                 display='grid'
@@ -262,20 +285,9 @@ const CategorySettings = () => {
                 </Box>
               </Box>
             </form>
-          ) : (
-            <Box display='grid' alignItems='center' justifyContent='center'>
-              <Spinner color={role || 'client'} />
-            </Box>
-          )}
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <>
-      {role === 'admin' && <Navigate to='/clients' />}
-      {role === 'client' ||
-        (role === 'productOwner' && <Navigate to='/project' />)}
-    </>
   );
 };
 

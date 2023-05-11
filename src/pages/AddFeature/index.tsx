@@ -86,7 +86,6 @@ const AddFeature = () => {
       imageName: Yup.string().required('Image is required'),
       imageSource: Yup.string().required('Image is required'),
       featureType: Yup.string().required('Feature Type is required'),
-      // prettier-ignore
       price: Yup.number().typeError('Price must be a number').required('Price is required'),
       repo: Yup.string().required('Repo is required'),
     }),
@@ -122,7 +121,14 @@ const AddFeature = () => {
     },
   });
 
-  return role === 'developer' ? (
+  if (role !== 'developer') return (
+    <>
+      {role === 'admin' && <Navigate to='/clients' />}
+      {['client', 'productOwer'].includes(role as string) && <Navigate to='/project' />}
+    </>
+  )
+
+  return (
     <Wrapper>
       <Box>
         <Button
@@ -477,12 +483,6 @@ const AddFeature = () => {
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <>
-      {role === 'admin' && <Navigate to='/clients' />}
-      {role === 'client' ||
-        (role === 'productOwner' && <Navigate to='/project' />)}
-    </>
   );
 };
 

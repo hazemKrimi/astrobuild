@@ -22,7 +22,7 @@ import {
   FeatureCard,
 } from '../../components';
 import { Wrapper } from './styles';
-import { ArrowLeft, General, Specification, Features } from '../../assets';
+import { ArrowLeft, General, Specification, Features, Empty } from '../../assets';
 import {
   AddTemplateMutation,
   AddTemplateMutationVariables,
@@ -85,14 +85,14 @@ const AddTemplate = () => {
   >('general');
   const [error, setError] = useState<string>('');
 
-  const { data: categories, loading: categoriesLoading } = useQuery<
+  const { data: categories, loading: categoriesLoading, error: categoriesError } = useQuery<
     GetAllCategoriesQuery,
     GetAllCategoriesQueryVariables
   >(GET_ALL_CATEGORIES, {
     fetchPolicy: 'network-only',
   });
 
-  const [getFeatures, { loading: featuresLoading }] = useLazyQuery<
+  const [getFeatures, { loading: featuresLoading, error: featuresError }] = useLazyQuery<
     GetAllFeaturesQuery,
     GetAllFeaturesQueryVariables
   >(GET_ALL_FEATURES, {
@@ -267,7 +267,34 @@ const AddTemplate = () => {
     },
   });
 
-  return role === 'productOwner' ? (
+  if (role !== 'productOwner') return (
+    <>
+      {role === 'admin' && <Navigate to='/clients' />}
+      {['client', 'developer'].includes(role as string) && <Navigate to='/project' />}
+    </>
+  );
+
+  if (categoriesLoading || featuresLoading) return (
+    <Spinner fullScreen color={role || 'client'} />
+  );
+
+  if (categoriesError || featuresError || !availableFeatures || !categories) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
     <Wrapper>
       <Box>
         <Button
@@ -734,89 +761,75 @@ const AddTemplate = () => {
           )}
           {selectedSection === 'features' && (
             <>
-              {!featuresLoading ? (
-                <>
-                  <Box
-                    display='grid'
-                    gridTemplateColumns='auto 1fr'
-                    columnGap='1rem'
-                    alignItems='center'
-                    marginBottom='50px'
-                  >
-                    <Text variant='subheader' weight='bold'>
-                      Features
-                    </Text>
-                    {error && <Alert color='error' text={error} />}
-                  </Box>
-                  <form onSubmit={featuresForm.handleSubmit}>
-                    <Box
-                      display='grid'
-                      gridTemplateColumns='repeat(2, 1fr)'
-                      columnGap='40px'
-                      rowGap='45px'
-                      alignItems='stretch'
-                    >
-                      {availableFeatures &&
-                        availableFeatures.map((feature) => (
-                          <FeatureCard
-                            feature={feature}
-                            selectable
-                            selected={featuresForm.values.features.includes(
+              <Box
+                display='grid'
+                gridTemplateColumns='auto 1fr'
+                columnGap='1rem'
+                alignItems='center'
+                marginBottom='50px'
+              >
+                <Text variant='subheader' weight='bold'>
+                  Features
+                </Text>
+                {error && <Alert color='error' text={error} />}
+              </Box>
+              <form onSubmit={featuresForm.handleSubmit}>
+                <Box
+                  display='grid'
+                  gridTemplateColumns='repeat(2, 1fr)'
+                  columnGap='40px'
+                  rowGap='45px'
+                  alignItems='stretch'
+                >
+                  {availableFeatures &&
+                    availableFeatures.map((feature) => (
+                      <FeatureCard
+                        feature={feature}
+                        selectable
+                        selected={featuresForm.values.features.includes(
+                          feature.id
+                        )}
+                        toggleSelect={() => {
+                          if (
+                            !featuresForm.values.features.includes(
                               feature.id
-                            )}
-                            toggleSelect={() => {
-                              if (
-                                !featuresForm.values.features.includes(
-                                  feature.id
-                                )
-                              ) {
-                                featuresForm.setFieldValue('features', [
-                                  ...featuresForm.values.features,
-                                  feature.id,
-                                ]);
-                              } else {
-                                featuresForm.setFieldValue(
-                                  'features',
-                                  featuresForm.values.features.filter(
-                                    (id) => id !== feature.id
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                        ))}
-                    </Box>
-                    <Box
-                      marginTop='1rem'
-                      display='flex'
-                      justifyContent='flex-end'
-                    >
-                      <Button
-                        variant='primary-action'
-                        color={role || 'client'}
-                        text='Save'
-                        type='submit'
-                        loading={loading}
+                            )
+                          ) {
+                            featuresForm.setFieldValue('features', [
+                              ...featuresForm.values.features,
+                              feature.id,
+                            ]);
+                          } else {
+                            featuresForm.setFieldValue(
+                              'features',
+                              featuresForm.values.features.filter(
+                                (id) => id !== feature.id
+                              )
+                            );
+                          }
+                        }}
                       />
-                    </Box>
-                  </form>
-                </>
-              ) : (
-                <Box display='grid' alignItems='center' justifyContent='center'>
-                  <Spinner color={role || 'client'} />
+                    ))}
                 </Box>
-              )}
+                <Box
+                  marginTop='1rem'
+                  display='flex'
+                  justifyContent='flex-end'
+                >
+                  <Button
+                    variant='primary-action'
+                    color={role || 'client'}
+                    text='Save'
+                    type='submit'
+                    loading={loading}
+                  />
+                </Box>
+              </form>
             </>
           )}
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <>
-      {role === 'admin' && <Navigate to='/clients' />}
-      {role === 'client' ||
-        (role === 'developer' && <Navigate to='/project' />)}
-    </>
   );
 };
 

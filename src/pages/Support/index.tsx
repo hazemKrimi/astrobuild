@@ -31,7 +31,7 @@ import {
 import { theme } from '../../themes';
 import { clientSupport } from '../..';
 
-const SupportMessaging = () => {
+const Support = () => {
   const { project, id } = useParams<{ id: string; project: string }>();
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
@@ -97,8 +97,6 @@ const SupportMessaging = () => {
         });
       }
     })();
-
-    // eslint-disable-next-line
   }, [id]);
 
   const createThreadForm = useFormik({
@@ -123,7 +121,7 @@ const SupportMessaging = () => {
         },
       });
       navigate(
-        `/support-messaging/${project}/${createdThread.data?.createThread}`
+        `/support/${project}/${createdThread.data?.createThread}`
       );
     },
   });
@@ -338,4 +336,4 @@ const SupportMessaging = () => {
   );
 };
 
-export default SupportMessaging;
+export default Support;

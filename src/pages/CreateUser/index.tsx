@@ -172,7 +172,11 @@ const CreateUser = () => {
     },
   });
 
-  return role === 'admin' ? (
+  if (role !== 'admin') return (
+    <Navigate to='/' />
+  )
+
+  return (
     <Wrapper>
       <Box>
         <Button
@@ -470,8 +474,6 @@ const CreateUser = () => {
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <Navigate to='/' />
   );
 };
 

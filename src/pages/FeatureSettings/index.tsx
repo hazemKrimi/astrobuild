@@ -18,7 +18,7 @@ import {
   ImagePreview,
 } from '../../components';
 import { Wrapper } from './styles';
-import { ArrowLeft, Design, General } from '../../assets';
+import { ArrowLeft, Design, Empty, General } from '../../assets';
 import {
   DeleteFeatureMutation,
   DeleteFeatureMutationVariables,
@@ -59,14 +59,13 @@ const FeatureSettings = () => {
 
   const [deleteFeatureModal, setDeleteFeatureModal] = useState<boolean>(false);
 
-  const [getFeature, { loading: featureLoading }] = useLazyQuery<
+  const [getFeature, { loading: featureLoading, error: featureError }] = useLazyQuery<
     GetFeatureByIdQuery,
     GetFeatureByIdQueryVariables
   >(GET_FEATURE_BY_ID, {
     onCompleted({ getFeatureById }) {
       setFeature(getFeatureById);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [updateFeature, { loading }] = useMutation<
@@ -99,8 +98,6 @@ const FeatureSettings = () => {
 
   useEffect(() => {
     getFeature({ variables: { id: id as string } });
-
-    // eslint-disable-next-line
   }, [id]);
 
   const generalForm = useFormik({
@@ -178,7 +175,34 @@ const FeatureSettings = () => {
     enableReinitialize: true,
   });
 
-  return role === 'developer' ? (
+  if (role !== 'developer') return (
+    <>
+      {role === 'admin' && <Navigate to='/clients' />}
+      {['client', 'productOwer'].includes(role as string) && <Navigate to='/project' />}
+    </>
+  )
+
+  if (featureLoading || featureLoading) return (
+    <Spinner fullScreen color={role || 'client'} />
+  );
+
+  if (featureError || !feature) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
     <Wrapper>
       <Box>
         <Button
@@ -238,262 +262,254 @@ const FeatureSettings = () => {
           </Box>
           {selectedSection === 'general' && (
             <>
-              {!featureLoading ? (
-                <>
-                  {deleteFeatureModal && (
-                    <Modal
-                      color={role || 'client'}
-                      title='Delete Feature'
-                      description='
-              If you delete this feature you cannot recover it.'
-                      onClose={() => setDeleteFeatureModal(false)}
-                      onConfirm={() =>
-                        deleteFeature({ variables: { id: id as string } })
+              {deleteFeatureModal && (
+                <Modal
+                  color={role || 'client'}
+                  title='Delete Feature'
+                  description='
+          If you delete this feature you cannot recover it.'
+                  onClose={() => setDeleteFeatureModal(false)}
+                  onConfirm={() =>
+                    deleteFeature({ variables: { id: id as string } })
+                  }
+                ></Modal>
+              )}
+              <form onSubmit={generalForm.handleSubmit}>
+                <Box
+                  display='grid'
+                  gridTemplateColumns='auto'
+                  rowGap='0.5rem'
+                  position='relative'
+                >
+                  <Input
+                    name='name'
+                    label='Name'
+                    color={role || 'client'}
+                    value={generalForm.values.name}
+                    onChange={generalForm.handleChange}
+                    onBlur={generalForm.handleBlur}
+                    error={
+                      generalForm.touched.name && !!generalForm.errors.name
+                    }
+                    errorMessage={generalForm.errors.name}
+                  />
+                  <Input
+                    type='file'
+                    label='Image'
+                    color={role || 'client'}
+                    onChange={async (
+                      event: React.ChangeEvent<HTMLInputElement>
+                    ) => {
+                      const formData = new FormData();
+
+                      if (event.target.files && event.target.files[0]) {
+                        formData.append('file', event.target.files[0]);
+                        formData.append('upload_preset', 'xofll5kc');
+
+                        generalForm.setFieldValue('imageName', '');
+                        generalForm.setFieldValue('imageSource', '');
+
+                        const data = await (
+                          await fetch(
+                            `${import.meta.env.VITE_CLOUDINARY_URL}`,
+                            {
+                              method: 'POST',
+                              body: formData,
+                            }
+                          )
+                        ).json();
+
+                        const filename = data.original_filename;
+                        const filesource = data.secure_url;
+
+                        generalForm.setFieldValue('imageName', filename);
+                        generalForm.setFieldValue(
+                          'imageSource',
+                          filesource
+                        );
                       }
-                    ></Modal>
-                  )}
-                  <form onSubmit={generalForm.handleSubmit}>
+                    }}
+                    error={
+                      generalForm.touched.imageName &&
+                      (!!generalForm.errors.imageName ||
+                        !!generalForm.errors.imageSource)
+                    }
+                    errorMessage={generalForm.errors.imageName}
+                  />
+                  <Box>
                     <Box
-                      display='grid'
-                      gridTemplateColumns='auto'
-                      rowGap='0.5rem'
-                      position='relative'
+                      display='flex'
+                      flexDirection='row'
+                      alignItems='center'
+                      justifyContent='space-between'
                     >
-                      <Input
-                        name='name'
-                        label='Name'
-                        color={role || 'client'}
-                        value={generalForm.values.name}
-                        onChange={generalForm.handleChange}
-                        onBlur={generalForm.handleBlur}
-                        error={
-                          generalForm.touched.name && !!generalForm.errors.name
-                        }
-                        errorMessage={generalForm.errors.name}
-                      />
-                      <Input
-                        type='file'
-                        label='Image'
-                        color={role || 'client'}
-                        onChange={async (
-                          event: React.ChangeEvent<HTMLInputElement>
-                        ) => {
-                          const formData = new FormData();
-
-                          if (event.target.files && event.target.files[0]) {
-                            formData.append('file', event.target.files[0]);
-                            formData.append('upload_preset', 'xofll5kc');
-
-                            generalForm.setFieldValue('imageName', '');
-                            generalForm.setFieldValue('imageSource', '');
-
-                            const data = await (
-                              await fetch(
-                                `${import.meta.env.VITE_CLOUDINARY_URL}`,
-                                {
-                                  method: 'POST',
-                                  body: formData,
-                                }
-                              )
-                            ).json();
-
-                            const filename = data.original_filename;
-                            const filesource = data.secure_url;
-
-                            generalForm.setFieldValue('imageName', filename);
-                            generalForm.setFieldValue(
-                              'imageSource',
-                              filesource
-                            );
-                          }
-                        }}
-                        error={
-                          generalForm.touched.imageName &&
-                          (!!generalForm.errors.imageName ||
-                            !!generalForm.errors.imageSource)
-                        }
-                        errorMessage={generalForm.errors.imageName}
-                      />
-                      <Box>
-                        <Box
-                          display='flex'
-                          flexDirection='row'
-                          alignItems='center'
-                          justifyContent='space-between'
+                      <Box justifySelf='flex-start'>
+                        <Text
+                          variant='body'
+                          weight='bold'
+                          className='feature-type'
                         >
-                          <Box justifySelf='flex-start'>
-                            <Text
-                              variant='body'
-                              weight='bold'
-                              className='feature-type'
-                            >
-                              Type
-                            </Text>
-                          </Box>
-                          {!!generalForm.errors.featureType && (
-                            <Box justifySelf='flex-end'>
-                              <Text variant='body' color='error'>
-                                {generalForm.errors.featureType}
-                              </Text>
-                            </Box>
-                          )}
-                        </Box>
-                        <Box
-                          display='flex'
-                          flexDirection='row'
-                          alignItems='center'
-                          marginTop='5px'
-                        >
-                          <Box marginRight='50px'>
-                            <CheckBox
-                              label='Frontend'
-                              name='featureType'
-                              color={role || 'client'}
-                              onClick={() => {
-                                if (
-                                  generalForm.values.featureType === 'fullstack'
-                                ) {
-                                  generalForm.setFieldValue(
-                                    'featureType',
-                                    'backend'
-                                  );
-                                  return;
-                                }
-                                if (
-                                  generalForm.values.featureType === 'backend'
-                                ) {
-                                  generalForm.setFieldValue(
-                                    'featureType',
-                                    'fullstack'
-                                  );
-                                  return;
-                                }
-                                if (
-                                  generalForm.values.featureType === 'frontend'
-                                ) {
-                                  generalForm.setFieldValue('featureType', '');
-                                  return;
-                                }
-                                generalForm.setFieldValue(
-                                  'featureType',
-                                  'frontend'
-                                );
-                              }}
-                              checked={
-                                generalForm.values.featureType === 'frontend' ||
-                                generalForm.values.featureType === 'fullstack'
-                              }
-                            />
-                          </Box>
-                          <Box>
-                            <CheckBox
-                              label='Backend'
-                              name='featureType'
-                              color={role || 'client'}
-                              onClick={() => {
-                                if (
-                                  generalForm.values.featureType === 'fullstack'
-                                ) {
-                                  generalForm.setFieldValue(
-                                    'featureType',
-                                    'frontend'
-                                  );
-                                  return;
-                                }
-                                if (
-                                  generalForm.values.featureType === 'frontend'
-                                ) {
-                                  generalForm.setFieldValue(
-                                    'featureType',
-                                    'fullstack'
-                                  );
-                                  return;
-                                }
-                                if (
-                                  generalForm.values.featureType === 'backend'
-                                ) {
-                                  generalForm.setFieldValue('featureType', '');
-                                  return;
-                                }
-                                generalForm.setFieldValue(
-                                  'featureType',
-                                  'backend'
-                                );
-                              }}
-                              checked={
-                                generalForm.values.featureType === 'backend' ||
-                                generalForm.values.featureType === 'fullstack'
-                              }
-                            />
-                          </Box>
-                        </Box>
+                          Type
+                        </Text>
                       </Box>
-                      <TextArea
-                        name='description'
-                        label='Description'
-                        color={role || 'client'}
-                        value={generalForm.values.description}
-                        onChange={generalForm.handleChange}
-                        onBlur={generalForm.handleBlur}
-                        error={
-                          generalForm.touched.description &&
-                          !!generalForm.errors.description
-                        }
-                        errorMessage={generalForm.errors.description}
-                      />
-                      <Input
-                        name='price'
-                        label='Price'
-                        color={role || 'client'}
-                        value={generalForm.values.price}
-                        onChange={generalForm.handleChange}
-                        onBlur={generalForm.handleBlur}
-                        error={
-                          generalForm.touched.price &&
-                          !!generalForm.errors.price
-                        }
-                        errorMessage={generalForm.errors.price}
-                      />
-                      <Input
-                        name='repo'
-                        label='Repo'
-                        color={role || 'client'}
-                        value={generalForm.values.repo}
-                        onChange={generalForm.handleChange}
-                        onBlur={generalForm.handleBlur}
-                        error={
-                          generalForm.touched.repo && !!generalForm.errors.repo
-                        }
-                        errorMessage={generalForm.errors.repo}
-                      />
-                      <Box
-                        marginTop='0.5rem'
-                        display='flex'
-                        justifyContent='space-between'
-                      >
-                        <Button
-                          variant='text'
-                          color='error'
-                          text='Delete Feature'
-                          onClick={() => setDeleteFeatureModal(true)}
-                        />
-                        <Button
-                          variant='primary-action'
+                      {!!generalForm.errors.featureType && (
+                        <Box justifySelf='flex-end'>
+                          <Text variant='body' color='error'>
+                            {generalForm.errors.featureType}
+                          </Text>
+                        </Box>
+                      )}
+                    </Box>
+                    <Box
+                      display='flex'
+                      flexDirection='row'
+                      alignItems='center'
+                      marginTop='5px'
+                    >
+                      <Box marginRight='50px'>
+                        <CheckBox
+                          label='Frontend'
+                          name='featureType'
                           color={role || 'client'}
-                          text='Save'
-                          type='submit'
-                          loading={loading}
-                          disabled={loading}
+                          onClick={() => {
+                            if (
+                              generalForm.values.featureType === 'fullstack'
+                            ) {
+                              generalForm.setFieldValue(
+                                'featureType',
+                                'backend'
+                              );
+                              return;
+                            }
+                            if (
+                              generalForm.values.featureType === 'backend'
+                            ) {
+                              generalForm.setFieldValue(
+                                'featureType',
+                                'fullstack'
+                              );
+                              return;
+                            }
+                            if (
+                              generalForm.values.featureType === 'frontend'
+                            ) {
+                              generalForm.setFieldValue('featureType', '');
+                              return;
+                            }
+                            generalForm.setFieldValue(
+                              'featureType',
+                              'frontend'
+                            );
+                          }}
+                          checked={
+                            generalForm.values.featureType === 'frontend' ||
+                            generalForm.values.featureType === 'fullstack'
+                          }
+                        />
+                      </Box>
+                      <Box>
+                        <CheckBox
+                          label='Backend'
+                          name='featureType'
+                          color={role || 'client'}
+                          onClick={() => {
+                            if (
+                              generalForm.values.featureType === 'fullstack'
+                            ) {
+                              generalForm.setFieldValue(
+                                'featureType',
+                                'frontend'
+                              );
+                              return;
+                            }
+                            if (
+                              generalForm.values.featureType === 'frontend'
+                            ) {
+                              generalForm.setFieldValue(
+                                'featureType',
+                                'fullstack'
+                              );
+                              return;
+                            }
+                            if (
+                              generalForm.values.featureType === 'backend'
+                            ) {
+                              generalForm.setFieldValue('featureType', '');
+                              return;
+                            }
+                            generalForm.setFieldValue(
+                              'featureType',
+                              'backend'
+                            );
+                          }}
+                          checked={
+                            generalForm.values.featureType === 'backend' ||
+                            generalForm.values.featureType === 'fullstack'
+                          }
                         />
                       </Box>
                     </Box>
-                  </form>
-                </>
-              ) : (
-                <Box display='grid' alignItems='center' justifyContent='center'>
-                  <Spinner color={role || 'client'} />
+                  </Box>
+                  <TextArea
+                    name='description'
+                    label='Description'
+                    color={role || 'client'}
+                    value={generalForm.values.description}
+                    onChange={generalForm.handleChange}
+                    onBlur={generalForm.handleBlur}
+                    error={
+                      generalForm.touched.description &&
+                      !!generalForm.errors.description
+                    }
+                    errorMessage={generalForm.errors.description}
+                  />
+                  <Input
+                    name='price'
+                    label='Price'
+                    color={role || 'client'}
+                    value={generalForm.values.price}
+                    onChange={generalForm.handleChange}
+                    onBlur={generalForm.handleBlur}
+                    error={
+                      generalForm.touched.price &&
+                      !!generalForm.errors.price
+                    }
+                    errorMessage={generalForm.errors.price}
+                  />
+                  <Input
+                    name='repo'
+                    label='Repo'
+                    color={role || 'client'}
+                    value={generalForm.values.repo}
+                    onChange={generalForm.handleChange}
+                    onBlur={generalForm.handleBlur}
+                    error={
+                      generalForm.touched.repo && !!generalForm.errors.repo
+                    }
+                    errorMessage={generalForm.errors.repo}
+                  />
+                  <Box
+                    marginTop='0.5rem'
+                    display='flex'
+                    justifyContent='space-between'
+                  >
+                    <Button
+                      variant='text'
+                      color='error'
+                      text='Delete Feature'
+                      onClick={() => setDeleteFeatureModal(true)}
+                    />
+                    <Button
+                      variant='primary-action'
+                      color={role || 'client'}
+                      text='Save'
+                      type='submit'
+                      loading={loading}
+                      disabled={loading}
+                    />
+                  </Box>
                 </Box>
-              )}
+              </form>
             </>
           )}
           {selectedSection === 'wireframes' && (
@@ -564,12 +580,6 @@ const FeatureSettings = () => {
         </Box>
       </Box>
     </Wrapper>
-  ) : (
-    <>
-      {role === 'admin' && <Navigate to='/clients' />}
-      {role === 'client' ||
-        (role === 'productOwner' && <Navigate to='/project' />)}
-    </>
   );
 };
 

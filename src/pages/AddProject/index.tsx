@@ -153,8 +153,7 @@ const AddProject = () => {
   >(GET_ALL_CATEGORIES, {
     onCompleted({ getAllCategories }) {
       setCategories(getAllCategories);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [getTemplates, { loading: templatesLoading }] = useLazyQuery<
@@ -163,8 +162,7 @@ const AddProject = () => {
   >(GET_ALL_TEMPLATES_BY_CATEGORIES_ID, {
     onCompleted({ getAllTemplatesByCategoriesId }) {
       setTemplates(getAllTemplatesByCategoriesId);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [getFeatures, { loading: featuresLoading }] = useLazyQuery<
@@ -173,8 +171,7 @@ const AddProject = () => {
   >(GET_ALL_FEATURES, {
     onCompleted({ getAllFeatures }) {
       setFeatures(getAllFeatures);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [getDevelopers, { loading: developersLoading }] = useLazyQuery<
@@ -183,8 +180,7 @@ const AddProject = () => {
   >(GET_ALL_USERS, {
     onCompleted({ getAllUsers }) {
       setDevelopers(getAllUsers.filter((user) => user.role === 'Developer'));
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [createUser, { loading: createUserLoading }] = useMutation<
@@ -248,8 +244,6 @@ const AddProject = () => {
     if (step === 'features') getFeatures();
     if (step === 'client-creation') getCountryCodes();
     if (step === 'project-metadata') getDevelopers();
-
-    // eslint-disable-next-line
   }, [step]);
 
   const basicInfoForm = useFormik({
@@ -512,7 +506,6 @@ const AddProject = () => {
     validationSchema: Yup.object().shape({
       summary: Yup.string().required('Summary is required'),
       purpose: Yup.string().required('Purpose is required'),
-      // prettier-ignore
       months: Yup.number().typeError('Months must be a number').required('Months is required'),
     }),
     onSubmit: ({

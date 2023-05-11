@@ -21,7 +21,7 @@ import TemplateSettings from './TemplateSettings';
 import AddProject from './AddProject';
 import UpdateProject from './UpdateProject';
 import Payments from './Payments';
-import SupportMessaging from './SupportMessaging';
+import Support from './Support';
 
 export {
   Login,
@@ -47,5 +47,5 @@ export {
   AddProject,
   UpdateProject,
   Payments,
-  SupportMessaging,
+  Support,
 };

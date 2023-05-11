@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 type WrapperProps = {
   color?: 'client' | 'productOwner' | 'developer' | 'admin';
-  empty: boolean;
+  empty?: boolean;
 };
 
 export const Wrapper = styled.div<WrapperProps>`
@@ -11,6 +11,7 @@ export const Wrapper = styled.div<WrapperProps>`
   .table-head {
     p {
       background: ${({ theme }) => theme.colors.gray.dark};
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }

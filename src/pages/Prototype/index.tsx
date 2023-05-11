@@ -6,12 +6,7 @@ import ReactFlow, {
   ControlButton,
   Connection,
   Edge,
-  Node,
   MarkerType,
-  applyNodeChanges,
-  applyEdgeChanges,
-  NodeChange,
-  EdgeChange,
   useEdgesState,
   useNodesState
 } from 'reactflow';
@@ -65,17 +60,16 @@ const Prototype = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const diagramParentRef = useRef<HTMLDivElement>(null);
 
-  const [getTemplate, { loading: templateLoading }] = useLazyQuery<
+  const [getTemplate, { loading: templateLoading, error: templateError }] = useLazyQuery<
     GetTemplateByIdQuery,
     GetTemplateByIdQueryVariables
   >(GET_TEMPLATE_BY_ID, {
     onCompleted({ getTemplateById }) {
       setTemplate(getTemplateById);
     },
-    fetchPolicy: 'network-only',
   });
 
-  const [getPrototype, { loading: prototypeLoading }] = useLazyQuery<
+  const [getPrototype, { loading: prototypeLoading, error: prototypeError }] = useLazyQuery<
     GetPrototypeByIdQuery,
     GetPrototypeByIdQueryVariables
   >(GET_PROTOTYPE_BY_ID, {
@@ -197,158 +191,154 @@ const Prototype = () => {
     }
   };
 
-  return role === 'productOwner' ||
-    role === 'developer' ||
-    role === 'client' ? (
-    <>
-      {!templateLoading && !prototypeLoading ? (
-        <>
-          {template ? (
-            <Wrapper color={role}>
-              <Box padding='35px 45px 0px 120px'>
-                <Box
-                  display='flex'
-                  flexDirection='row'
-                  alignItems='center'
-                  marginBottom='20px'
-                >
-                  <Box marginRight='50px'>
-                    <Button
-                      text='Back'
-                      color={role || 'client'}
-                      size='small'
-                      onClick={() => navigate(-1)}
-                      iconLeft={<ArrowLeft />}
-                    />
-                    <Text variant='headline' weight='bold'>
-                      Prototype
-                    </Text>
-                  </Box>
-                  {success && (
-                    <Alert
-                      color='success'
-                      text='Prototype updated successfully'
-                    />
-                  )}
-                  {error && <Alert color='error' text={error} />}
-                </Box>
-                {template.features && (
-                  <>
-                    <Box
-                      display='flex'
-                      flexDirection='column'
-                      marginBottom='30px'
-                    >
-                      <Box marginBottom='10px'>
-                        <Text variant='headline' gutterBottom>
-                          Frontend Features
-                        </Text>
-                      </Box>
-                      <Box
-                        display='grid'
-                        background='#F9FAFA'
-                        boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
-                        borderRadius='10px'
-                        width='100%'
-                        height='400px'
-                        ref={diagramParentRef}
-                      >
-                        <Box
-                          width={
-                            diagramParentRef.current
-                              ? `${
-                                  getComputedStyle(diagramParentRef.current)
-                                    ?.width
-                                }}px`
-                              : '100%'
-                          }
-                          height='auto'
-                        >
-                          <ReactFlow
-                            fitView
-                            nodes={nodes}
-                            edges={edges}
-                            nodeTypes={nodeTypes}
-                            onNodesChange={onNodesChange}
-                            onEdgesChange={onEdgesChange}
-                            onConnect={onConnect}
-                          >
-                            {role === 'developer' && (
-                              <>
-                                <MiniMap />
-                                <Controls
-                                  showInteractive={false}
-                                  showFitView
-                                >
-                                  <ControlButton onClick={handleEditPrototype}>
-                                    {!editing ? <Edit /> : <CheckCircle />}
-                                  </ControlButton>
-                                </Controls>
-                              </>
-                            )}
-                          </ReactFlow>
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box
-                      display='flex'
-                      flexDirection='column'
-                      marginBottom='30px'
-                    >
-                      <Box marginBottom='10px'>
-                        <Text variant='headline' gutterBottom>
-                          Backend Features
-                        </Text>
-                      </Box>
-                      <Box
-                        display='grid'
-                        gridTemplateColumns='repeat(3, 1fr)'
-                        gap='20px'
-                        alignItems='stretch'
-                        justifyContent='center'
-                      >
-                        {template.features.map((feature) => {
-                          if (
-                            feature.featureType === 'backend' ||
-                            feature.featureType === 'fullstack'
-                          ) {
-                            return (
-                              <BackendFeatureCard
-                                feature={feature}
-                                key={feature.id}
-                              />
-                            );
-                          }
-                          return null;
-                        })}
-                      </Box>
-                    </Box>
-                  </>
-                )}
+  if (role === 'admin') return (
+    <Navigate to='/clients' />
+  )
+
+  if (templateLoading || prototypeLoading) return (
+    <Spinner fullScreen color={role || 'client'} />
+  );
+
+  if (templateError || prototypeError || !template || !prototype) return (
+    <Wrapper color={role}>
+      <Box
+        width='100%'
+        height='100vh'
+        display='grid'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box>
+          <Empty />
+        </Box>
+      </Box>
+    </Wrapper>
+  );
+
+  return (
+    <Wrapper color={role}>
+      <Box padding='35px 45px 0px 120px'>
+        <Box
+          display='flex'
+          flexDirection='row'
+          alignItems='center'
+          marginBottom='20px'
+        >
+          <Box marginRight='50px'>
+            <Button
+              text='Back'
+              color={role || 'client'}
+              size='small'
+              onClick={() => navigate(-1)}
+              iconLeft={<ArrowLeft />}
+            />
+            <Text variant='headline' weight='bold'>
+              Prototype
+            </Text>
+          </Box>
+          {success && (
+            <Alert
+              color='success'
+              text='Prototype updated successfully'
+            />
+          )}
+          {error && <Alert color='error' text={error} />}
+        </Box>
+        {template.features && (
+          <>
+            <Box
+              display='flex'
+              flexDirection='column'
+              marginBottom='30px'
+            >
+              <Box marginBottom='10px'>
+                <Text variant='headline' gutterBottom>
+                  Frontend Features
+                </Text>
               </Box>
-            </Wrapper>
-          ) : (
-            <Wrapper color={role}>
               <Box
-                width='100%'
-                height='100vh'
                 display='grid'
-                alignItems='center'
+                background='#F9FAFA'
+                boxShadow='1px 1px 10px rgba(50, 59, 105, 0.25)'
+                borderRadius='10px'
+                width='100%'
+                height='400px'
+                ref={diagramParentRef}
+              >
+                <Box
+                  width={
+                    diagramParentRef.current
+                      ? `${
+                          getComputedStyle(diagramParentRef.current)
+                            ?.width
+                        }}px`
+                      : '100%'
+                  }
+                  height='auto'
+                >
+                  <ReactFlow
+                    fitView
+                    nodes={nodes}
+                    edges={edges}
+                    nodeTypes={nodeTypes}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                  >
+                    {role === 'developer' && (
+                      <>
+                        <MiniMap />
+                        <Controls
+                          showInteractive={false}
+                          showFitView
+                        >
+                          <ControlButton onClick={handleEditPrototype}>
+                            {!editing ? <Edit /> : <CheckCircle />}
+                          </ControlButton>
+                        </Controls>
+                      </>
+                    )}
+                  </ReactFlow>
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              display='flex'
+              flexDirection='column'
+              marginBottom='30px'
+            >
+              <Box marginBottom='10px'>
+                <Text variant='headline' gutterBottom>
+                  Backend Features
+                </Text>
+              </Box>
+              <Box
+                display='grid'
+                gridTemplateColumns='repeat(3, 1fr)'
+                gap='20px'
+                alignItems='stretch'
                 justifyContent='center'
               >
-                <Box>
-                  <Empty />
-                </Box>
+                {template.features.map((feature) => {
+                  if (
+                    feature.featureType === 'backend' ||
+                    feature.featureType === 'fullstack'
+                  ) {
+                    return (
+                      <BackendFeatureCard
+                        feature={feature}
+                        key={feature.id}
+                      />
+                    );
+                  }
+                  return null;
+                })}
               </Box>
-            </Wrapper>
-          )}
-        </>
-      ) : (
-        <Spinner fullScreen color={role || 'client'} />
-      )}
-    </>
-  ) : (
-    <>{role === 'admin' && <Navigate to='/clients' />}</>
+            </Box>
+          </>
+        )}
+      </Box>
+    </Wrapper>
   );
 };
 

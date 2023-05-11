@@ -56,8 +56,7 @@ const Sidebar = () => {
     },
     onCompleted({ getAllProjectsByClientId }) {
       setProjects(getAllProjectsByClientId);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [getProjects] = useLazyQuery<
@@ -66,8 +65,7 @@ const Sidebar = () => {
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
       setProjects(getAllProjects);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [getTemplates] = useLazyQuery<
@@ -77,7 +75,6 @@ const Sidebar = () => {
     onCompleted({ getAllTemplates }) {
       setTemplates(getAllTemplates);
     },
-    fetchPolicy: 'network-only',
   });
 
   const [getFeatures] = useLazyQuery<
@@ -87,7 +84,6 @@ const Sidebar = () => {
     onCompleted({ getAllFeatures }) {
       setFeatures(getAllFeatures);
     },
-    fetchPolicy: 'network-only',
   });
 
   const [getCategories] = useLazyQuery<
@@ -97,7 +93,6 @@ const Sidebar = () => {
     onCompleted({ getAllCategories }) {
       setCategories(getAllCategories);
     },
-    fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
@@ -123,8 +118,6 @@ const Sidebar = () => {
       setFeatures([]);
       setCategories([]);
     };
-
-    // eslint-disable-next-line
   }, [location.pathname]);
 
   return (
@@ -133,14 +126,15 @@ const Sidebar = () => {
         <>
           <Box display='flex' flexDirection='column'>
             {projects &&
-              projects.map((project) => (
+            new RegExp(/project/, 'i').test(location.pathname) &&
+              projects.map((project, index) => (
                 <Box marginBottom='20px' key={project.id}>
                   <div id={`project-${project.id}`}>
                     <SidebarItem
                       color={role}
-                      selected={new RegExp(project.id, 'i').test(
-                        location.pathname
-                      )}
+                      selected={
+                        new RegExp(project.id, 'i').test(location.pathname) ||
+                        (index === 0 && location.pathname === '/project')}
                       text={project.name[0]}
                       onClick={() => navigate(`/project/${project.id}`)}
                     />
@@ -152,6 +146,7 @@ const Sidebar = () => {
                 </Box>
               ))}
             {templates &&
+            new RegExp(/template/, 'i').test(location.pathname) &&
               templates.map((template, index) => (
                 <Box marginBottom='20px' key={template.id}>
                   <div id={`template-${template.id}`}>
@@ -172,6 +167,7 @@ const Sidebar = () => {
                 </Box>
               ))}
             {features &&
+            new RegExp(/feature/, 'i').test(location.pathname) &&
               features.map((feature, index) => (
                 <Box marginBottom='20px' key={feature.id}>
                   <div id={`feature-${feature.id}`}>
@@ -192,6 +188,7 @@ const Sidebar = () => {
                 </Box>
               ))}
             {categories &&
+            new RegExp(/category/, 'i').test(location.pathname) &&
               categories.map((category, index) => (
                 <Box marginBottom='20px' key={category.id}>
                   <div id={`category-${category.id}`}>
