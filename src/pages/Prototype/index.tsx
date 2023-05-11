@@ -69,7 +69,7 @@ const Prototype = () => {
     },
   });
 
-  const [getPrototype, { loading: prototypeLoading, error: prototypeError }] = useLazyQuery<
+  const [getPrototype, { loading: prototypeLoading }] = useLazyQuery<
     GetPrototypeByIdQuery,
     GetPrototypeByIdQueryVariables
   >(GET_PROTOTYPE_BY_ID, {
@@ -199,7 +199,7 @@ const Prototype = () => {
     <Spinner fullScreen color={role || 'client'} />
   );
 
-  if (templateError || prototypeError || !template || !prototype) return (
+  if (templateError || !template) return (
     <Wrapper color={role}>
       <Box
         width='100%'
