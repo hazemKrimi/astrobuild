@@ -15,7 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useReactiveVar } from '@apollo/client';
 import { Navigate } from 'react-router';
 import { roleVar } from '../../graphql/state';
-import { Empty, ArrowLeft, Edit, CheckCircle } from '../../assets';
+import { Empty, ArrowLeft, Edit, Close, CheckCircle } from '../../assets';
 import {
   Box,
   Text,
@@ -186,8 +186,6 @@ const Prototype = () => {
       }
 
       setEditing(false);
-    } else {
-      setEditing(true);
     }
   };
 
@@ -292,9 +290,21 @@ const Prototype = () => {
                           showInteractive={false}
                           showFitView
                         >
-                          <ControlButton onClick={handleEditPrototype}>
-                            {!editing ? <Edit /> : <CheckCircle />}
-                          </ControlButton>
+													{!editing && (
+														<ControlButton onClick={() => setEditing(true)}>
+															<Edit />
+														</ControlButton>
+													)}
+													{editing && (
+														<>
+															<ControlButton onClick={() => setEditing(false)}>
+																<Close />
+															</ControlButton>
+															<ControlButton onClick={handleEditPrototype}>
+																<CheckCircle />
+															</ControlButton>
+														</>
+													)}
                         </Controls>
                       </>
                     )}
