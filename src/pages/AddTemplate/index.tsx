@@ -278,7 +278,7 @@ const AddTemplate = () => {
     <Spinner fullScreen color={role || 'client'} />
   );
 
-  if (categoriesError || featuresError || !availableFeatures || !categories) return (
+  if (categoriesError || featuresError || !categories) return (
     <Wrapper color={role}>
       <Box
         width='100%'

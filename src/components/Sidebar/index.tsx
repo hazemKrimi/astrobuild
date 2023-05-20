@@ -120,6 +120,16 @@ const Sidebar = () => {
     };
   }, [location.pathname]);
 
+	const showAddButton = (role: string, pathname: string) => {
+		switch (role) {
+			case 'client': return (/project/i.test(pathname));
+			case 'productOwner': return (/template/i.test(pathname));
+			case 'developer': return (/feature/i.test(pathname) || /category/i.test(pathname));
+		}	
+		
+		return false;
+ 	}
+
   return (
     <Wrapper color={role}>
       {role !== 'admin' && (
@@ -210,27 +220,40 @@ const Sidebar = () => {
               ))}
           </Box>
           <Box display='flex' flexDirection='column'>
-            <Box marginBottom='20px'>
-              <IconButton
-                icon={<Add />}
-                color={role}
-                onClick={() => {
-                  if (/project/i.test(location.pathname)) {
-                    navigate('/add-project');
-                  }
-                  if (/template/i.test(location.pathname)) {
-                    navigate('/add-template');
-                  }
-                  if (/feature/i.test(location.pathname)) {
-                    navigate('/add-feature');
-                  }
-                  if (/category/i.test(location.pathname)) {
-                    navigate('/add-category');
-                  }
-                }}
-              />
-            </Box>
-            {/\/project/i.test(location.pathname) && (
+            {showAddButton(role, location.pathname) && (
+							<Box marginBottom='20px'>
+								<IconButton
+									icon={<Add />}
+									color={role}
+									onClick={() => {
+										switch(role) {
+											case 'client': {
+												if (/project/i.test(location.pathname)) {
+													navigate('/add-project');
+												}
+											}
+											case 'productOwner': {
+												if (/project/i.test(location.pathname)) {
+													navigate('/add-project');
+												}
+												if (/template/i.test(location.pathname)) {
+													navigate('/add-template');
+												}
+											}
+											case 'developer': {
+												if (/feature/i.test(location.pathname)) {
+													navigate('/add-feature');
+												}
+												if (/category/i.test(location.pathname)) {
+													navigate('/add-category');
+												}
+											}
+										}
+									}}
+								/>
+							</Box>
+						)}
+            {/project/i.test(location.pathname) && ['client', 'productOwner'].includes(role) && (
               <Box>
                 <IconButton
                   icon={<Messaging />}

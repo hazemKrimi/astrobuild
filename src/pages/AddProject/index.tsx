@@ -418,12 +418,10 @@ const AddProject = () => {
         .required('Email is required')
         .email('Email is invalid'),
       prefix: Yup.string().required('Prefix is required'),
-      // prettier-ignore
       number: Yup.number().typeError('Phone must be a number').required('Phone is required'),
       place: Yup.string().required('Address is required'),
       city: Yup.string().required('City is required'),
       country: Yup.string().required('Country is required'),
-      // prettier-ignore
       zip: Yup.number().typeError('Zip must be a number').required('Zip is required'),
     }),
     onSubmit: ({
