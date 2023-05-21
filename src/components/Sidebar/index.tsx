@@ -56,7 +56,7 @@ const Sidebar = () => {
     },
     onCompleted({ getAllProjectsByClientId }) {
       setProjects(getAllProjectsByClientId);
-    }
+    },
   });
 
   const [getProjects] = useLazyQuery<
@@ -65,7 +65,7 @@ const Sidebar = () => {
   >(GET_ALL_PROJECTS, {
     onCompleted({ getAllProjects }) {
       setProjects(getAllProjects);
-    }
+    },
   });
 
   const [getTemplates] = useLazyQuery<
@@ -120,15 +120,18 @@ const Sidebar = () => {
     };
   }, [location.pathname]);
 
-	const showAddButton = (role: string, pathname: string) => {
-		switch (role) {
-			case 'client': return (/project/i.test(pathname));
-			case 'productOwner': return (/template/i.test(pathname));
-			case 'developer': return (/feature/i.test(pathname) || /category/i.test(pathname));
-		}	
-		
-		return false;
- 	}
+  const showAddButton = (role: string, pathname: string) => {
+    switch (role) {
+      case 'client':
+        return /project/i.test(pathname);
+      case 'productOwner':
+        return /template/i.test(pathname);
+      case 'developer':
+        return /feature/i.test(pathname) || /category/i.test(pathname);
+    }
+
+    return false;
+  };
 
   return (
     <Wrapper color={role}>
@@ -136,7 +139,7 @@ const Sidebar = () => {
         <>
           <Box display='flex' flexDirection='column'>
             {projects &&
-            new RegExp(/project/, 'i').test(location.pathname) &&
+              new RegExp(/project/, 'i').test(location.pathname) &&
               projects.map((project, index) => (
                 <Box marginBottom='20px' key={project.id}>
                   <div id={`project-${project.id}`}>
@@ -144,7 +147,8 @@ const Sidebar = () => {
                       color={role}
                       selected={
                         new RegExp(project.id, 'i').test(location.pathname) ||
-                        (index === 0 && location.pathname === '/project')}
+                        (index === 0 && location.pathname === '/project')
+                      }
                       text={project.name[0]}
                       onClick={() => navigate(`/project/${project.id}`)}
                     />
@@ -156,7 +160,7 @@ const Sidebar = () => {
                 </Box>
               ))}
             {templates &&
-            new RegExp(/template/, 'i').test(location.pathname) &&
+              new RegExp(/template/, 'i').test(location.pathname) &&
               templates.map((template, index) => (
                 <Box marginBottom='20px' key={template.id}>
                   <div id={`template-${template.id}`}>
@@ -177,7 +181,7 @@ const Sidebar = () => {
                 </Box>
               ))}
             {features &&
-            new RegExp(/feature/, 'i').test(location.pathname) &&
+              new RegExp(/feature/, 'i').test(location.pathname) &&
               features.map((feature, index) => (
                 <Box marginBottom='20px' key={feature.id}>
                   <div id={`feature-${feature.id}`}>
@@ -198,7 +202,7 @@ const Sidebar = () => {
                 </Box>
               ))}
             {categories &&
-            new RegExp(/category/, 'i').test(location.pathname) &&
+              new RegExp(/category/, 'i').test(location.pathname) &&
               categories.map((category, index) => (
                 <Box marginBottom='20px' key={category.id}>
                   <div id={`category-${category.id}`}>
@@ -220,48 +224,55 @@ const Sidebar = () => {
               ))}
           </Box>
           <Box display='flex' flexDirection='column'>
-            {showAddButton(role, location.pathname) && (
-							<Box marginBottom='20px'>
-								<IconButton
-									icon={<Add />}
-									color={role}
-									onClick={() => {
-										switch(role) {
-											case 'client': {
-												if (/project/i.test(location.pathname)) {
-													navigate('/add-project');
-												}
-											}
-											case 'productOwner': {
-												if (/project/i.test(location.pathname)) {
-													navigate('/add-project');
-												}
-												if (/template/i.test(location.pathname)) {
-													navigate('/add-template');
-												}
-											}
-											case 'developer': {
-												if (/feature/i.test(location.pathname)) {
-													navigate('/add-feature');
-												}
-												if (/category/i.test(location.pathname)) {
-													navigate('/add-category');
-												}
-											}
-										}
-									}}
-								/>
-							</Box>
-						)}
-            {/project/i.test(location.pathname) && ['client', 'productOwner'].includes(role) && (
-              <Box>
+            {showAddButton(role as string, location.pathname) && (
+              <Box marginBottom='20px'>
                 <IconButton
-                  icon={<Messaging />}
+                  icon={<Add />}
                   color={role}
-                  onClick={() => setMessagingSidebarOpen(!messagingSidebarOpen)}
+                  onClick={() => {
+                    switch (role) {
+                      case 'client':
+                      default: {
+                        if (/project/i.test(location.pathname)) {
+                          navigate('/add-project');
+                        }
+                        break;
+                      }
+                      case 'productOwner': {
+                        if (/project/i.test(location.pathname)) {
+                          navigate('/add-project');
+                        }
+                        if (/template/i.test(location.pathname)) {
+                          navigate('/add-template');
+                        }
+                        break;
+                      }
+                      case 'developer': {
+                        if (/feature/i.test(location.pathname)) {
+                          navigate('/add-feature');
+                        }
+                        if (/category/i.test(location.pathname)) {
+                          navigate('/add-category');
+                        }
+                        break;
+                      }
+                    }
+                  }}
                 />
               </Box>
             )}
+            {/project/i.test(location.pathname) &&
+              ['client', 'productOwner'].includes(role as string) && (
+                <Box>
+                  <IconButton
+                    icon={<Messaging />}
+                    color={role}
+                    onClick={() =>
+                      setMessagingSidebarOpen(!messagingSidebarOpen)
+                    }
+                  />
+                </Box>
+              )}
           </Box>
         </>
       )}
