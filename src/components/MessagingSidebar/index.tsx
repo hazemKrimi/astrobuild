@@ -7,7 +7,7 @@ import { Wrapper } from './styles';
 import {
   GetProjectThreadsQuery,
   GetProjectThreadsQueryVariables,
-  ThreadObject,
+  Support,
 } from '../../graphql/types.support';
 import { GET_PROJECT_THREADS } from '../../graphql/chat.api.support';
 import { Add, Empty } from '../../assets';
@@ -21,7 +21,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
   const role = useReactiveVar(roleVar);
   const location = useLocation();
   const navigate = useNavigate();
-  const [projectThreads, setProjectThreads] = useState<Array<ThreadObject>>();
+  const [projectThreads, setProjectThreads] = useState<Array<Support>>();
 
   useEffect(() => {
     (async () => {
@@ -32,15 +32,13 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
         >({
           query: GET_PROJECT_THREADS,
           variables: {
-            projectId: location.pathname.split('/')[2]!,
+            projectId: location.pathname.split('/')[2] as string,
           },
           fetchPolicy: 'network-only',
         });
-        setProjectThreads(threads?.data?.getProjectThreads!);
+        setProjectThreads(threads?.data?.threads!);
       }
     })();
-
-    // eslint-disable-next-line
   }, [location.pathname]);
 
   return (
@@ -55,7 +53,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
         >
           <Box flexGrow='1'>
             <Text variant='title' weight='bold' color='white'>
-              Messaging Support
+              Support
             </Text>
           </Box>
           <Button
@@ -65,7 +63,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
             iconLeft={<Add />}
             onClick={() => {
               onClose();
-              navigate(`/support-messaging/${location.pathname.split('/')[2]}`);
+              navigate(`/support/${location.pathname.split('/')[2]}`);
             }}
           />
         </Box>
@@ -86,9 +84,7 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
                 onClick={() => {
                   onClose();
                   navigate(
-                    `/support-messaging/${location.pathname.split('/')[2]}/${
-                      thread.id
-                    }`
+                    `/support/${location.pathname.split('/')[2]}/${thread.id}`
                   );
                 }}
               >

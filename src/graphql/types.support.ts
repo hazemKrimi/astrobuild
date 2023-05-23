@@ -1,4 +1,6 @@
+/* eslint-disable */
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };
@@ -19,80 +21,78 @@ export type Scalars = {
 
 export type MutationRoot = {
   __typename?: 'MutationRoot';
-  createThread: Scalars['ID'];
-  deleteThread: ThreadObject;
-  sendMsg: Scalars['ID'];
+  createThread: Support;
+  deleteThread?: Maybe<Support>;
+  sendMessage: Scalars['ID'];
 };
 
 export type MutationRootCreateThreadArgs = {
   projectId: Scalars['String'];
-  title: Scalars['String'];
   threadDescription: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type MutationRootDeleteThreadArgs = {
   threadId: Scalars['String'];
 };
 
-export type MutationRootSendMsgArgs = {
+export type MutationRootSendMessageArgs = {
+  text: Scalars['String'];
   threadId: Scalars['String'];
   username: Scalars['String'];
-  msg: Scalars['String'];
 };
 
-export type MutationType = 'CREATED';
+export enum MutationType {
+  Created = 'CREATED',
+}
 
 export type QueryRoot = {
   __typename?: 'QueryRoot';
-  messages: Array<UserMessage>;
-  getProjectThreads: Array<ThreadObject>;
-  getThreadById: ThreadObject;
+  messages?: Maybe<Array<UserMessages>>;
+  thread?: Maybe<Support>;
+  threads?: Maybe<Array<Support>>;
 };
 
 export type QueryRootMessagesArgs = {
-  threadId: Scalars['String'];
+  threadId: Scalars['ID'];
 };
 
-export type QueryRootGetProjectThreadsArgs = {
-  projectId: Scalars['String'];
+export type QueryRootThreadArgs = {
+  threadId: Scalars['ID'];
 };
 
-export type QueryRootGetThreadByIdArgs = {
-  threadId: Scalars['String'];
+export type QueryRootThreadsArgs = {
+  projectId: Scalars['ID'];
 };
 
 export type StreamChanged = {
   __typename?: 'StreamChanged';
-  mutationType: MutationType;
   id: Scalars['ID'];
-  userMessage?: Maybe<UserMessageObject>;
+  mutationType: MutationType;
+  userMessages?: Maybe<UserMessages>;
 };
 
 export type SubscriptionRoot = {
   __typename?: 'SubscriptionRoot';
-  connectStream: StreamChanged;
+  interval: Scalars['Int'];
+  messages: StreamChanged;
 };
 
-export type SubscriptionRootConnectStreamArgs = {
-  mutationType?: Maybe<MutationType>;
+export type SubscriptionRootIntervalArgs = {
+  n?: Scalars['Int'];
 };
 
-export type ThreadObject = {
-  __typename?: 'ThreadObject';
-  id: Scalars['String'];
-  title: Scalars['String'];
+export type Support = {
+  __typename?: 'Support';
+  id: Scalars['ID'];
+  projectId: Scalars['ID'];
   threadDescription: Scalars['String'];
-  userMessages: Array<UserMessage>;
+  title: Scalars['String'];
+  userMessages: Array<UserMessages>;
 };
 
-export type UserMessage = {
-  __typename?: 'UserMessage';
-  username: Scalars['String'];
-  text: Scalars['String'];
-};
-
-export type UserMessageObject = {
-  __typename?: 'UserMessageObject';
+export type UserMessages = {
+  __typename?: 'UserMessages';
   id: Scalars['String'];
   username: Scalars['String'];
   text: Scalars['String'];
@@ -103,15 +103,15 @@ export type GetProjectThreadsQueryVariables = Exact<{
 }>;
 
 export type GetProjectThreadsQuery = { __typename?: 'QueryRoot' } & {
-  getProjectThreads: Array<
-    { __typename?: 'ThreadObject' } & Pick<
-      ThreadObject,
-      'id' | 'title' | 'threadDescription'
+  threads: Array<
+    { __typename?: 'Support' } & Pick<
+      Support,
+      'id' | 'title' | 'projectId' | 'threadDescription' | 'userMessages'
     > & {
         userMessages: Array<
           { __typename?: 'UserMessage' } & Pick<
-            UserMessage,
-            'username' | 'text'
+            UserMessages,
+            'id' | 'username' | 'text'
           >
         >;
       }
@@ -123,12 +123,12 @@ export type GetThreadByIdQueryVariables = Exact<{
 }>;
 
 export type GetThreadByIdQuery = { __typename?: 'QueryRoot' } & {
-  getThreadById: { __typename?: 'ThreadObject' } & Pick<
-    ThreadObject,
-    'id' | 'title' | 'threadDescription'
+  thread: { __typename?: 'Support' } & Pick<
+  Support,
+    'id' | 'title' | 'projectId' | 'threadDescription' | 'userMessages'
   > & {
       userMessages: Array<
-        { __typename?: 'UserMessage' } & Pick<UserMessage, 'username' | 'text'>
+        { __typename?: 'UserMessages' } & Pick<UserMessages, 'id' | 'username' | 'text'>
       >;
     };
 };
@@ -139,7 +139,7 @@ export type MessagesQueryVariables = Exact<{
 
 export type MessagesQuery = { __typename?: 'QueryRoot' } & {
   messages: Array<
-    { __typename?: 'UserMessage' } & Pick<UserMessage, 'username' | 'text'>
+    { __typename?: 'UserMessages' } & Pick<UserMessages, 'username' | 'text' | 'id'>
   >;
 };
 
@@ -157,28 +157,24 @@ export type CreateThreadMutation = { __typename?: 'MutationRoot' } & Pick<
 export type SendMsgMutationVariables = Exact<{
   threadId: Scalars['String'];
   username: Scalars['String'];
-  msg: Scalars['String'];
+  text: Scalars['String'];
 }>;
 
 export type SendMsgMutation = { __typename?: 'MutationRoot' } & Pick<
   MutationRoot,
-  'sendMsg'
+  'sendMessage'
 >;
 
-export type ConnectStreamSubscriptionVariables = Exact<{
-  mutationType?: Maybe<MutationType>;
-}>;
-
-export type ConnectStreamSubscription = { __typename?: 'SubscriptionRoot' } & {
-  connectStream: { __typename?: 'StreamChanged' } & Pick<
+export type MessagesSubscription = { __typename?: 'SubscriptionRoot' } & {
+  messages: { __typename?: 'StreamChanged' } & Pick<
     StreamChanged,
-    'mutationType' | 'id'
+    'mutationType'
   > & {
-      userMessage?: Maybe<
-        { __typename?: 'UserMessageObject' } & Pick<
-          UserMessageObject,
+      userMessages?: Maybe<
+        { __typename?: 'UserMessages' } & Pick<
+          UserMessages,
           'id' | 'username' | 'text'
         >
-      >;
+>;
     };
 };

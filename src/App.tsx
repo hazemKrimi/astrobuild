@@ -136,7 +136,7 @@ const App = () => {
           }
         />
         <Route
-          path='/support/:project'
+          path='/support/:projectId'
           element={
             <Protected>
               <Support />
@@ -144,7 +144,7 @@ const App = () => {
           }
         />
         <Route
-          path='/support/:project/:id'
+          path='/support/:projectId/:threadId'
           element={
             <Protected>
               <Support />

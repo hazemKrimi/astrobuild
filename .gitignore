@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# development
+codegen-main.yml
+codegen-support.ts
+
 # testing
 /coverage
 

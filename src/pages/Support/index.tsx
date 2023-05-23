@@ -6,56 +6,53 @@ import { useState, useEffect } from 'react';
 import { roleVar, userVar } from '../../graphql/state';
 import { Wrapper } from './styles';
 import {
-  ConnectStreamSubscription,
-  ConnectStreamSubscriptionVariables,
   CreateThreadMutation,
   CreateThreadMutationVariables,
   GetThreadByIdQuery,
   GetThreadByIdQueryVariables,
   MessagesQuery,
   MessagesQueryVariables,
+  MessagesSubscription,
   SendMsgMutation,
   SendMsgMutationVariables,
-  ThreadObject,
-  UserMessageObject,
+  Support as SupportType,
+  UserMessages,
 } from '../../graphql/types.support';
 import { Box, Button, Input, TextArea, Text } from '../../components';
 import { Send, ThreadClient, ThreadProductOwner } from '../../assets';
 import {
-  CONNECT_STREAM,
   CREATE_THREAD,
   GET_THREAD_BY_ID,
   MESSAGES,
+  MESSAGES_SUBSCRIPTION,
   SEND_MSG,
 } from '../../graphql/chat.api.support';
 import { theme } from '../../themes';
 import { clientSupport } from '../..';
 
 const Support = () => {
-  const { project, id } = useParams<{ id: string; project: string }>();
+  const { projectId, threadId } = useParams<{ projectId: string, threadId: string }>();
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
   const navigate = useNavigate();
-  const [thread, setThread] = useState<ThreadObject>();
-  const [messages, setMessages] = useState<Array<UserMessageObject>>([]);
-  const [addedMessages, setAddedMessages] = useState<Array<UserMessageObject>>(
-    []
-  );
+  const [thread, setThread] = useState<SupportType>();
+  const [messages, setMessages] = useState<Array<UserMessages>>([]);
+  const [addedMessages, setAddedMessages] = useState<Array<UserMessages>>([]);
 
   useEffect(() => {
     (async () => {
-      if (id) {
+      if (threadId) {
         const threadResult = await clientSupport.query<
           GetThreadByIdQuery,
           GetThreadByIdQueryVariables
         >({
           query: GET_THREAD_BY_ID,
           variables: {
-            threadId: id!,
+            threadId: threadId!,
           },
         });
 
-        setThread(threadResult?.data?.getThreadById);
+        setThread(threadResult?.data?.thread);
 
         const messagesResult = await clientSupport.query<
           MessagesQuery,
@@ -63,41 +60,37 @@ const Support = () => {
         >({
           query: MESSAGES,
           variables: {
-            threadId: id!,
+            threadId: threadId!,
           },
           fetchPolicy: 'network-only',
         });
         setMessages(
-          Array.from(messagesResult?.data?.messages).map((message, index) => ({
-            text: message.text,
-            username: message.username,
-            id: index.toString(),
-          }))
+          Array.from(messagesResult?.data?.messages).map(
+            (message: UserMessages) => ({
+              text: message.text,
+              username: message.username,
+              id: message.id,
+            })
+          )
         );
 
-        const messageSubscriber = clientSupport.subscribe<
-          ConnectStreamSubscription,
-          ConnectStreamSubscriptionVariables
+        clientSupport.subscribe<
+          MessagesSubscription
         >({
-          query: CONNECT_STREAM,
-          variables: {
-            mutationType: 'CREATED',
-          },
-        });
-
-        messageSubscriber.subscribe(({ data }) => {
+          query: MESSAGES_SUBSCRIPTION,
+        }).subscribe(({ data }) => {
           setAddedMessages((prevMessages) => [
             ...prevMessages,
             {
-              id: messages.length.toString(),
-              username: data?.connectStream?.userMessage?.username!,
-              text: data?.connectStream?.userMessage?.text!,
+              id: data?.messages?.userMessages?.id!,
+              username: data?.messages?.userMessages?.username!,
+              text: data?.messages?.userMessages?.text!,
             },
           ]);
         });
       }
     })();
-  }, [id]);
+  }, [threadId]);
 
   const createThreadForm = useFormik({
     initialValues: {
@@ -115,14 +108,12 @@ const Support = () => {
       >({
         mutation: CREATE_THREAD,
         variables: {
-          projectId: project as string,
+          projectId: projectId as string,
           title,
           threadDescription: description,
         },
       });
-      navigate(
-        `/support/${project}/${createdThread.data?.createThread}`
-      );
+      navigate(`/support/${projectId}/${createdThread.data?.createThread.id}`);
     },
   });
 
@@ -137,9 +128,9 @@ const Support = () => {
       await clientSupport.mutate<SendMsgMutation, SendMsgMutationVariables>({
         mutation: SEND_MSG,
         variables: {
-          threadId: id as string,
+          threadId: threadId as string,
           username: `${currentUser?.firstName} ${currentUser?.lastName}`,
-          msg,
+          text: msg,
         },
       });
       resetForm();

@@ -2,11 +2,12 @@ import gql from 'graphql-tag';
 
 export const GET_PROJECT_THREADS = gql`
   query GetProjectThreads($projectId: String!) {
-    getProjectThreads(projectId: $projectId) {
+    threads(projectId: $projectId) {
       id
       title
       threadDescription
       userMessages {
+        id
         username
         text
       }
@@ -16,11 +17,12 @@ export const GET_PROJECT_THREADS = gql`
 
 export const GET_THREAD_BY_ID = gql`
   query GetThreadById($threadId: String!) {
-    getThreadById(threadId: $threadId) {
+    thread(threadId: $threadId) {
       id
       title
       threadDescription
       userMessages {
+        id
         username
         text
       }
@@ -47,22 +49,24 @@ export const CREATE_THREAD = gql`
       projectId: $projectId
       title: $title
       threadDescription: $threadDescription
-    )
+    ) {
+      id
+    }
   }
 `;
 
 export const SEND_MSG = gql`
-  mutation SendMsg($threadId: String!, $username: String!, $msg: String!) {
-    sendMsg(threadId: $threadId, username: $username, msg: $msg)
+  mutation SendMessage($threadId: String!, $username: String!, $text: String!) {
+    sendMessage(threadId: $threadId, username: $username, text: $text)
   }
 `;
 
-export const CONNECT_STREAM = gql`
-  subscription ConnectStream($mutationType: MutationType) {
-    connectStream(mutationType: $mutationType) {
+export const MESSAGES_SUBSCRIPTION = gql`
+  subscription messagesSubscription {
+    messages {
       mutationType
       id
-      userMessage {
+      userMessages {
         id
         username
         text
