@@ -11,7 +11,6 @@ import {
   Empty,
   FullBuild,
   MVP,
-  Payment,
   Settings,
   Specification,
 } from '../../assets';
@@ -86,38 +85,41 @@ const Project = () => {
   const [fullBuildModal, setFullBuildModal] = useState<boolean>(false);
   const [transactionsData, setTransactionsData] = useState<TransactionData>();
 
-  const [getProjectsByClientId, { loading: clientProjectsLoading, error: clientProjectsError }] =
-    useLazyQuery<
-      GetAllProjectsByClientIdQuery,
-      GetAllProjectsByClientIdQueryVariables
-    >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
-      variables: {
-        id: currentUser?.id!,
-      },
-      onCompleted({ getAllProjectsByClientId }) {
-        if (getAllProjectsByClientId.length > 0)
+  const [
+    getProjectsByClientId,
+    { loading: clientProjectsLoading, error: clientProjectsError },
+  ] = useLazyQuery<
+    GetAllProjectsByClientIdQuery,
+    GetAllProjectsByClientIdQueryVariables
+  >(GET_ALL_PROJECTS_BY_CLIENT_ID, {
+    variables: {
+      id: currentUser?.id!,
+    },
+    onCompleted({ getAllProjectsByClientId }) {
+      if (getAllProjectsByClientId.length > 0)
         setProject(getAllProjectsByClientId[0]);
-      },
-    });
-
-  const [getProjects, { loading: projectsLoading, error: projectsError }] = useLazyQuery<
-    GetAllProjectsQuery,
-    GetAllUsersQueryVariables
-  >(GET_ALL_PROJECTS, {
-    onCompleted({ getAllProjects }) {
-      if (getAllProjects.length > 0)
-        setProject(getAllProjects[0]);
-    }
+    },
   });
 
-  const [getProject, { loading: projectLoading, error: projectError }] = useLazyQuery<
-    GetProjectByIdQuery,
-    GetProjectByIdQueryVariables
-  >(GET_PROJECT_BY_ID, {
-    onCompleted({ getProjectById }) {
-      setProject(getProjectById);
-    }
-  });
+  const [getProjects, { loading: projectsLoading, error: projectsError }] =
+    useLazyQuery<GetAllProjectsQuery, GetAllUsersQueryVariables>(
+      GET_ALL_PROJECTS,
+      {
+        onCompleted({ getAllProjects }) {
+          if (getAllProjects.length > 0) setProject(getAllProjects[0]);
+        },
+      }
+    );
+
+  const [getProject, { loading: projectLoading, error: projectError }] =
+    useLazyQuery<GetProjectByIdQuery, GetProjectByIdQueryVariables>(
+      GET_PROJECT_BY_ID,
+      {
+        onCompleted({ getProjectById }) {
+          setProject(getProjectById);
+        },
+      }
+    );
 
   const [changeProjectState] = useMutation<
     ChangeProjectStateMutation,
@@ -277,29 +279,27 @@ const Project = () => {
     },
   });
 
-  if (role === 'admin') return (
-    <Navigate to='/clients' />
-  );
+  if (role === 'admin') return <Navigate to='/clients' />;
 
-  if (clientProjectsLoading || projectsLoading || projectLoading) return (
-    <Spinner fullScreen color={role || 'client'} />
-  );
+  if (clientProjectsLoading || projectsLoading || projectLoading)
+    return <Spinner fullScreen color={role || 'client'} />;
 
-  if (clientProjectsError || projectsError || projectError || !project) return (
-    <Wrapper color={role}>
-      <Box
-        width='100%'
-        height='100vh'
-        display='grid'
-        alignItems='center'
-        justifyContent='center'
-      >
-        <Box>
-          <Empty />
+  if (clientProjectsError || projectsError || projectError || !project)
+    return (
+      <Wrapper color={role}>
+        <Box
+          width='100%'
+          height='100vh'
+          display='grid'
+          alignItems='center'
+          justifyContent='center'
+        >
+          <Box>
+            <Empty />
+          </Box>
         </Box>
-      </Box>
-    </Wrapper>
-  );
+      </Wrapper>
+    );
 
   return (
     <>
@@ -316,9 +316,7 @@ const Project = () => {
             label='File'
             file
             color={role || 'client'}
-            onChange={async (
-              event: React.ChangeEvent<HTMLInputElement>
-            ) => {
+            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
               const formData = new FormData();
 
               if (event.target.files && event.target.files[0]) {
@@ -364,9 +362,7 @@ const Project = () => {
             label='File'
             file
             color={role || 'client'}
-            onChange={async (
-              event: React.ChangeEvent<HTMLInputElement>
-            ) => {
+            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
               const formData = new FormData();
 
               if (event.target.files && event.target.files[0]) {
@@ -392,8 +388,7 @@ const Project = () => {
             }}
             error={
               addMvpForm.touched.fileName &&
-              (!!addMvpForm.errors.fileName ||
-                !!addMvpForm.errors.fileSource)
+              (!!addMvpForm.errors.fileName || !!addMvpForm.errors.fileSource)
             }
             errorMessage={addMvpForm.errors.fileName}
           />
@@ -459,18 +454,6 @@ const Project = () => {
                   />
                 </Box>
                 {role === 'client' && (
-                  <Box marginRight='20px'>
-                    <Button
-                      color={role || 'client'}
-                      variant='primary-action'
-                      text='Payments'
-                      iconLeft={<Payment />}
-                      disabled={transactionsData?.status}
-                      onClick={() => navigate(`/payments/${project.id}`)}
-                    />
-                  </Box>
-                )}
-                {role === 'client' && (
                   <Box>
                     <Button
                       color={role || 'client'}
@@ -484,8 +467,7 @@ const Project = () => {
               </>
             ) : (
               <>
-                {project.state === 'OnReview' &&
-                role === 'productOwner' ? (
+                {project.state === 'OnReview' && role === 'productOwner' ? (
                   <>
                     <Box marginRight='20px'>
                       <Button
@@ -540,11 +522,7 @@ const Project = () => {
             )}
           </Box>
           {project.template.features && (
-            <Box
-              display='flex'
-              flexDirection='column'
-              marginBottom='30px'
-            >
+            <Box display='flex' flexDirection='column' marginBottom='30px'>
               <Box marginBottom='10px'>
                 <Text variant='headline' gutterBottom>
                   Features
@@ -590,11 +568,7 @@ const Project = () => {
                   justifyContent='space-between'
                   marginBottom='10px'
                 >
-                  <Box
-                    display='flex'
-                    flexDirection='row'
-                    alignItems='center'
-                  >
+                  <Box display='flex' flexDirection='row' alignItems='center'>
                     <Box marginRight='10px'>
                       <Specification />
                     </Box>
@@ -627,11 +601,7 @@ const Project = () => {
                   justifyContent='space-between'
                   marginBottom='10px'
                 >
-                  <Box
-                    display='flex'
-                    flexDirection='row'
-                    alignItems='center'
-                  >
+                  <Box display='flex' flexDirection='row' alignItems='center'>
                     <Box marginRight='10px'>
                       <Design />
                     </Box>
@@ -703,11 +673,7 @@ const Project = () => {
                   justifyContent='space-between'
                   marginBottom='10px'
                 >
-                  <Box
-                    display='flex'
-                    flexDirection='row'
-                    alignItems='center'
-                  >
+                  <Box display='flex' flexDirection='row' alignItems='center'>
                     <Box marginRight='10px'>
                       <MVP />
                     </Box>
@@ -784,11 +750,7 @@ const Project = () => {
                   justifyContent='space-between'
                   marginBottom='10px'
                 >
-                  <Box
-                    display='flex'
-                    flexDirection='row'
-                    alignItems='center'
-                  >
+                  <Box display='flex' flexDirection='row' alignItems='center'>
                     <Box marginRight='10px'>
                       <FullBuild />
                     </Box>
@@ -861,16 +823,15 @@ const Project = () => {
               </Box>
             </Box>
           )}
-          {project.template.specification &&
-            project.template.features && (
-              <Box display='none'>
-                <SpecificationPrint
-                  ref={printRef}
-                  specification={project.template.specification}
-                  features={project.template.features}
-                />
-              </Box>
-            )}
+          {project.template.specification && project.template.features && (
+            <Box display='none'>
+              <SpecificationPrint
+                ref={printRef}
+                specification={project.template.specification}
+                features={project.template.features}
+              />
+            </Box>
+          )}
         </Box>
       </Wrapper>
     </>
