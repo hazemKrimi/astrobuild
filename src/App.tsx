@@ -27,7 +27,6 @@ import {
   TemplateSettings,
   AddProject,
   UpdateProject,
-  Payments,
   Support,
 } from './pages';
 import { GetUserByIdQuery, GetUserByIdQueryVariables } from './graphql/types';
@@ -108,14 +107,6 @@ const App = () => {
           element={
             <Protected>
               <Project />
-            </Protected>
-          }
-        />
-        <Route
-          path='/payments/:id'
-          element={
-            <Protected>
-              <Payments />
             </Protected>
           }
         />
