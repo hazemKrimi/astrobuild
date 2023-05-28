@@ -28,7 +28,7 @@ import Specification from './Specification';
 import Chip from './Chip';
 import CategoryCard from './CategoryCard';
 import TemplateCard from './TemplateCard';
-import MessagingSidebar from './MessagingSidebar';
+import SupportSidebar from './SupportSidebar';
 
 export {
   Button,
@@ -61,5 +61,5 @@ export {
   Chip,
   CategoryCard,
   TemplateCard,
-  MessagingSidebar,
+  SupportSidebar,
 };

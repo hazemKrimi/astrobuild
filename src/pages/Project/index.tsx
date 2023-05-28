@@ -55,23 +55,6 @@ import {
   GET_PROJECT_BY_ID,
 } from '../../graphql/project.api';
 
-type Transaction = {
-  amount: number;
-  created: boolean;
-  selectedOption: number;
-  _id: string;
-};
-
-type TransactionData = {
-  transactions: Array<Transaction>;
-  remaining_amount: number;
-  amount: number;
-  project_id: string;
-  status: boolean;
-  total_amount: number;
-  _id: string;
-};
-
 const Project = () => {
   const role = useReactiveVar(roleVar);
   const currentUser = useReactiveVar(userVar);
@@ -83,7 +66,6 @@ const Project = () => {
   const [designModal, setDesignModal] = useState<boolean>(false);
   const [mvpModal, setMvpModal] = useState<boolean>(false);
   const [fullBuildModal, setFullBuildModal] = useState<boolean>(false);
-  const [transactionsData, setTransactionsData] = useState<TransactionData>();
 
   const [
     getProjectsByClientId,
@@ -96,8 +78,10 @@ const Project = () => {
       id: currentUser?.id!,
     },
     onCompleted({ getAllProjectsByClientId }) {
-      if (getAllProjectsByClientId.length > 0)
+      if (getAllProjectsByClientId.length > 0) {
         setProject(getAllProjectsByClientId[0]);
+        navigate(`/project/${getAllProjectsByClientId[0]?.id}`, { replace: true })
+      }
     },
   });
 
@@ -182,7 +166,7 @@ const Project = () => {
   useEffect(() => {
     if (id) {
       getProject({ variables: { id } });
-    } else if (role === 'client') {
+    } else if (role === 'client' && currentUser?.id) {
       getProjectsByClientId({
         variables: {
           id: currentUser?.id!,
@@ -194,31 +178,6 @@ const Project = () => {
       setProject(undefined);
     };
   }, [id, role]);
-
-  useEffect(() => {
-    (async () => {
-      if (project) {
-        try {
-          const transactionsResult = await (
-            await fetch(`${import.meta.env.VITE_PAYMENT_API}/transactions`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ project_id: project.id }),
-            })
-          ).json();
-          if (transactionsResult) setTransactionsData(transactionsResult);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    })();
-
-    return () => {
-      setTransactionsData(undefined);
-    };
-  }, [project]);
 
   const handlePrint = useReactToPrint({
     content: () => printRef.current,

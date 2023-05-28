@@ -6,7 +6,7 @@ import {
   Box,
   ContextMenu,
   IconButton,
-  MessagingSidebar,
+  SupportSidebar,
   SidebarItem,
 } from '..';
 import { Add, Messaging } from '../../assets';
@@ -44,7 +44,7 @@ const Sidebar = () => {
   const [templates, setTemplates] = useState<Array<TemplateOutput>>();
   const [features, setFeatures] = useState<Array<FeatureOutput>>();
   const [categories, setCategories] = useState<Array<CategoryOutput>>();
-  const [messagingSidebarOpen, setMessagingSidebarOpen] =
+  const [supportSideBarOpen, setSupportSideBarOpen] =
     useState<boolean>(false);
 
   const [getProjectsByClientId] = useLazyQuery<
@@ -268,7 +268,7 @@ const Sidebar = () => {
                     icon={<Messaging />}
                     color={role}
                     onClick={() =>
-                      setMessagingSidebarOpen(!messagingSidebarOpen)
+                      setSupportSideBarOpen(!supportSideBarOpen)
                     }
                   />
                 </Box>
@@ -276,8 +276,8 @@ const Sidebar = () => {
           </Box>
         </>
       )}
-      {messagingSidebarOpen && (
-        <MessagingSidebar onClose={() => setMessagingSidebarOpen(false)} />
+      {supportSideBarOpen && (
+        <SupportSidebar onClose={() => setSupportSideBarOpen(false)} />
       )}
     </Wrapper>
   );

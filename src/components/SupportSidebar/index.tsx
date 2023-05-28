@@ -13,11 +13,11 @@ import { GET_PROJECT_THREADS } from '../../graphql/chat.api.support';
 import { Add, Empty } from '../../assets';
 import { clientSupport } from '../..';
 
-type MessagingSidebarProps = {
+type SupportSideBarProps = {
   onClose: () => void;
 };
 
-const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
+const SupportSidebar = ({ onClose }: SupportSideBarProps) => {
   const role = useReactiveVar(roleVar);
   const location = useLocation();
   const navigate = useNavigate();
@@ -110,4 +110,4 @@ const MessagingSidebar = ({ onClose }: MessagingSidebarProps) => {
   );
 };
 
-export default MessagingSidebar;
+export default SupportSidebar;
