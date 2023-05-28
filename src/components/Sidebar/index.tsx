@@ -96,7 +96,7 @@ const Sidebar = () => {
   });
 
   useEffect(() => {
-    if (/project/i.test(location.pathname)) {
+    if (/(project|support)/i.test(location.pathname)) {
       if (role !== 'client') getProjects();
       else getProjectsByClientId({ variables: { id: currentUser?.id! } });
     }
@@ -123,7 +123,7 @@ const Sidebar = () => {
   const showAddButton = (role: string, pathname: string) => {
     switch (role) {
       case 'client':
-        return /project/i.test(pathname);
+        return /(project|support)/i.test(pathname);
       case 'productOwner':
         return /template/i.test(pathname);
       case 'developer':
@@ -139,7 +139,7 @@ const Sidebar = () => {
         <>
           <Box display='flex' flexDirection='column'>
             {projects &&
-              new RegExp(/project/, 'i').test(location.pathname) &&
+              new RegExp(/(project|support)/, 'i').test(location.pathname) &&
               projects.map((project, index) => (
                 <Box marginBottom='20px' key={project.id}>
                   <div id={`project-${project.id}`}>
@@ -261,7 +261,7 @@ const Sidebar = () => {
                 />
               </Box>
             )}
-            {/project/i.test(location.pathname) &&
+            {/(project|support)/i.test(location.pathname) &&
               ['client', 'productOwner'].includes(role as string) && (
                 <Box>
                   <IconButton

@@ -72,11 +72,11 @@ const Navbar = () => {
             <Link
               href='/template'
               color={
-                new RegExp('template', 'i').test(location.pathname)
+                new RegExp(/(template|prototype)/, 'i').test(location.pathname)
                   ? 'developer'
                   : 'black'
               }
-              selected={new RegExp('template', 'i').test(location.pathname)}
+              selected={new RegExp(/(template|prototype)/, 'i').test(location.pathname)}
             >
               Templates
             </Link>
@@ -109,22 +109,22 @@ const Navbar = () => {
             <Link
               href='/project'
               color={
-                new RegExp('project', 'i').test(location.pathname)
+                new RegExp(/(project|support)/, 'i').test(location.pathname)
                   ? 'productOwner'
                   : 'black'
               }
-              selected={new RegExp('project', 'i').test(location.pathname)}
+              selected={new RegExp(/(project|support)/, 'i').test(location.pathname)}
             >
               Projects
             </Link>
             <Link
               href='/template'
               color={
-                new RegExp('template', 'i').test(location.pathname)
+                new RegExp(/(template|prototype)/, 'i').test(location.pathname)
                   ? 'productOwner'
                   : 'black'
               }
-              selected={new RegExp('template', 'i').test(location.pathname)}
+              selected={new RegExp(/(template|prototype)/, 'i').test(location.pathname)}
             >
               Templates
             </Link>
