@@ -6,8 +6,7 @@
 .pnp.js
 
 # development
-/codegen-support.ts
-/codegen-main.yml
+codegen-*
 
 # testing
 /coverage
