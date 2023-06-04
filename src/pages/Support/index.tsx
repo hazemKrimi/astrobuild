@@ -61,8 +61,7 @@ const Support = () => {
           query: MESSAGES,
           variables: {
             threadId: threadId!,
-          },
-          fetchPolicy: 'network-only',
+          }
         });
         setMessages(
           Array.from(messagesResult?.data?.messages).map(

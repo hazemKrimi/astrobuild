@@ -58,11 +58,23 @@ const authLink = setContext((_, { headers }) => {
 export const clientMain = new ApolloClient({
   link: authLink.concat(httpLinkMain),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+      nextFetchPolicy: 'cache-and-network',
+    },
+  }
 });
 
 export const clientSupport = new ApolloClient({
   link: authLink.concat(splitLink),
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'network-only',
+      nextFetchPolicy: 'cache-and-network',
+    },
+  }
 });
 
 let root: ReactDOMClient.Root | null = null;

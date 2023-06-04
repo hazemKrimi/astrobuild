@@ -49,8 +49,7 @@ const Payments = () => {
   >(GET_PROJECT_BY_ID, {
     onCompleted({ getProjectById }) {
       setProject(getProjectById);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   useEffect(() => {

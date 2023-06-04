@@ -33,8 +33,7 @@ const SupportSidebar = ({ onClose }: SupportSideBarProps) => {
           query: GET_PROJECT_THREADS,
           variables: {
             projectId: location.pathname.split('/')[2] as string,
-          },
-          fetchPolicy: 'network-only',
+          }
         });
         setProjectThreads(threads?.data?.threads!);
       }

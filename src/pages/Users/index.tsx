@@ -46,8 +46,7 @@ const Users = () => {
           ? 'ProductOwner'
           : 'Developer';
       setUsers(getAllUsers.filter((user) => user.role === userRole));
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   useEffect(() => {

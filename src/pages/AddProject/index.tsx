@@ -461,8 +461,7 @@ const AddProject = () => {
         'country',
         getCountryCode[0].country
       );
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const clientCreationSecurityForm = useFormik({

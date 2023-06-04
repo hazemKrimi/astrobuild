@@ -103,9 +103,7 @@ const TemplateSettings = () => {
   const { data: categories, loading: categoriesLoading } = useQuery<
     GetAllCategoriesQuery,
     GetAllCategoriesQueryVariables
-  >(GET_ALL_CATEGORIES, {
-    fetchPolicy: 'network-only',
-  });
+  >(GET_ALL_CATEGORIES);
 
   const [getFeatures, { loading: featuresLoading }] = useLazyQuery<
     GetAllFeaturesQuery,
@@ -113,8 +111,7 @@ const TemplateSettings = () => {
   >(GET_ALL_FEATURES, {
     onCompleted({ getAllFeatures }) {
       setAvailableFeatures(getAllFeatures);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [getTemplate, { loading: templateLoading }] = useLazyQuery<
@@ -123,8 +120,7 @@ const TemplateSettings = () => {
   >(GET_TEMPLATE_BY_ID, {
     onCompleted({ getTemplateById }) {
       setTemplate(getTemplateById);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [updateTemplate, { loading }] = useMutation<

@@ -88,9 +88,7 @@ const AddTemplate = () => {
   const { data: categories, loading: categoriesLoading, error: categoriesError } = useQuery<
     GetAllCategoriesQuery,
     GetAllCategoriesQueryVariables
-  >(GET_ALL_CATEGORIES, {
-    fetchPolicy: 'network-only',
-  });
+  >(GET_ALL_CATEGORIES);
 
   const [getFeatures, { loading: featuresLoading, error: featuresError }] = useLazyQuery<
     GetAllFeaturesQuery,
@@ -98,8 +96,7 @@ const AddTemplate = () => {
   >(GET_ALL_FEATURES, {
     onCompleted({ getAllFeatures }) {
       setAvailableFeatures(getAllFeatures);
-    },
-    fetchPolicy: 'network-only',
+    }
   });
 
   const [addTemplate, { loading }] = useMutation<
