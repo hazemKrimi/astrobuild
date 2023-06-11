@@ -4,17 +4,17 @@
 - Email: client@client.cc
 - Password: 123456
 ```
-3. Product Owner
+2. Product Owner
 ```
 - Email: po@po.cc
 - Password: 123456
 ```
-5. Developer
+3. Developer
 ```
 - Email: dev@dev.cc
 - Password: 123456
 ```
-7. Admin
+4. Admin
 ```
 - Email: admin@admin.cc
 - Password: 123456
