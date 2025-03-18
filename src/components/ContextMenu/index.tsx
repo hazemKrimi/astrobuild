@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+
 import { Wrapper } from './styles';
-import { Text } from '..';
+
+import Text from '../Text';
 
 type ContextMenuProps = {
   className?: string;
@@ -10,7 +12,7 @@ type ContextMenuProps = {
 
 const ContextMenu = ({ items, component, className }: ContextMenuProps) => {
   const [open, setOpen] = useState(false);
-  const parentComponentRef = useRef<HTMLDivElement>();
+  const parentComponentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     parentComponentRef.current = document.querySelector(`#${component}`) as HTMLDivElement;
@@ -31,7 +33,7 @@ const ContextMenu = ({ items, component, className }: ContextMenuProps) => {
       parentComponentRef.current?.removeEventListener('mouseenter', openMenu);
       parentComponentRef.current?.removeEventListener('mouseleave', closeMenu);
     };
-  }, []);
+  }, [component]);
 
   return (
     <Wrapper

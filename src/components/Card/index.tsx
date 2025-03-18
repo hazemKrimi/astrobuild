@@ -1,22 +1,25 @@
-import { Box, Text } from '..';
-import { CategoryOutput } from '../../graphql/types';
+import Box from '../Box';
+import Text from '../Text';
+
 import { theme } from '../../themes';
 
-type CategoryCardProps = {
-  category: CategoryOutput;
+type CardProps = {
+  title: string;
+	description: string;
   selectable?: boolean;
   selected?: boolean;
   toggleSelect?: () => void;
   color: 'client' | 'productOwner' | 'developer' | 'admin';
 };
 
-const CategoryCard = ({
-  category,
+const Card = ({
+  title,
+	description,
   selectable = false,
   selected = false,
   toggleSelect = () => {},
   color,
-}: CategoryCardProps) => {
+}: CardProps) => {
   return (
     <Box
       padding='10px'
@@ -34,17 +37,17 @@ const CategoryCard = ({
       <Box display='flex' flexDirection='row' alignItems='center'>
         <Box flexGrow='1'>
           <Text variant='title' weight='bold'>
-            {category.name}
+            {title}
           </Text>
         </Box>
       </Box>
       <Box display='flex' flexDirection='row' alignItems='center'>
         <Box flexGrow='1'>
-          <Text variant='body'>{category.description}</Text>
+          <Text variant='body'>{description}</Text>
         </Box>
       </Box>
     </Box>
   );
 };
 
-export default CategoryCard;
+export default Card;

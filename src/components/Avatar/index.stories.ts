@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Alert from '.';
+import Avatar from '.';
 
 const meta = {
-  title: 'Alert',
-  component: Alert,
+  title: 'Avatar',
+  component: Avatar,
   parameters: {
     layout: 'centered',
   },
@@ -12,8 +12,9 @@ const meta = {
   argTypes: {
     text: { control: 'text' },
     color: { options: ['client', 'productOwner', 'developer', 'admin'] },
+    size: { options: ['big', 'small'] },
   },
-} satisfies Meta<typeof Alert>;
+} satisfies Meta<typeof Avatar>;
 
 export default meta;
 
@@ -21,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
-    text: 'Alert',
-		color: 'client'
+    text: 'A',
+		color: 'admin'
   },
 };

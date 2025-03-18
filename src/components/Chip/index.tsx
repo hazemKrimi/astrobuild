@@ -1,5 +1,6 @@
 import { Wrapper } from './styles';
-import { Text } from '..';
+
+import Text from '../Text';
 
 type ChipProps = {
   variant?: 'outlined' | 'filled';

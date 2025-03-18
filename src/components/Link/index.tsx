@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { JSX } from 'react';
 import { Wrapper } from './styles';
 
 type LinkProps = {
@@ -18,7 +18,7 @@ type LinkProps = {
     | string;
   selected?: boolean;
   className?: string;
-  iconLeft?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
+  iconLeft?: React.ReactNode;
   onClick?: () => void;
   target?: '_self' | '_blank';
 };
@@ -35,10 +35,10 @@ const Link = ({
   return (
     <Wrapper {...props} selected={selected}>
       {href && !url ? (
-        <RouterLink to={href} target={target}>
+        <a href={href} target={target}>
           {iconLeft && <span className='icon left'>{iconLeft}</span>}
           {children}
-        </RouterLink>
+        </a>
       ) : (
         <a href={href} target={target}>
           {iconLeft && <span className='icon left'>{iconLeft}</span>}

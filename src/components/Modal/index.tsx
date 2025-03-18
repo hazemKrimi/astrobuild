@@ -1,5 +1,10 @@
+import { JSX } from 'react';
 import { theme } from '../../themes';
-import { Box, Button, Text } from '..';
+
+import Box from '../Box';
+import Button from '../Button';
+import Text from '../Text';
+
 import { Wrapper } from './styles';
 
 type ModalProps = {

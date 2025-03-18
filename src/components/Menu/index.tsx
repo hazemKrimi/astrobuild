@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Wrapper } from './styles';
-import { Text } from '..';
+
+import Text from '../Text';
 
 type MenuProps = {
   className?: string;
   items: Array<{
-    icon: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
+    icon?: React.ReactNode;
     avoid?: boolean;
     label: string;
     action?: () => void;
@@ -16,7 +17,7 @@ type MenuProps = {
 const Menu = ({ items, component, className }: MenuProps) => {
   const [open, setOpen] = useState(false);
   const componentRef = useRef<HTMLDivElement>(null);
-  const parentComponentRef = useRef<HTMLDivElement>();
+  const parentComponentRef = useRef<HTMLDivElement>(null);
 
   const openMenu = () => setOpen(true);
   const closeMenu = () => setOpen(false);
@@ -31,7 +32,7 @@ const Menu = ({ items, component, className }: MenuProps) => {
       parentComponentRef.current?.removeEventListener('mouseenter', openMenu);
       componentRef.current?.removeEventListener('mouseleave', closeMenu);
     };
-  }, []);
+  }, [component]);
 
   return (
     <Wrapper

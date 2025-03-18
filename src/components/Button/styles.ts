@@ -4,8 +4,8 @@ type WrapperProps = {
   color: 'client' | 'productOwner' | 'developer' | 'admin' | 'error';
   size?: 'small' | 'big';
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
-  iconLeft?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
-  iconRight?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
   load?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;

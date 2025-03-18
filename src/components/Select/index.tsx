@@ -1,5 +1,6 @@
 import { Wrapper } from './styles';
-import { Text } from '..';
+
+import Text from '../Text';
 
 type SelectProps = {
   className?: string;
@@ -15,9 +16,9 @@ type SelectProps = {
     | 'white';
   error?: boolean;
   errorMessage?: string;
-  options: Array<{ value: any; label: string }>;
+  options: Array<{ value: string | number; label: string }>;
   value: string;
-  select?: any;
+  selected?: string | number;
   name: string;
   label?: string;
   fullWidth?: boolean;
@@ -30,7 +31,7 @@ const Select = ({
   label,
   name,
   value,
-  select = null,
+  selected = undefined,
   options,
   onChange,
   onBlur,
@@ -55,7 +56,7 @@ const Select = ({
       <div className='select'>
         <div>
           <select
-            value={select || value}
+            value={selected || value}
             name={name}
             onChange={onChange}
             onBlur={onBlur}

@@ -10,7 +10,7 @@ type AvatarProps = {
 const Avatar = ({ color, size = 'small', text, className }: AvatarProps) => {
   return (
     <Wrapper color={color} size={size} className={className}>
-      {text}
+      {text[0]}
     </Wrapper>
   );
 };

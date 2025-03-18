@@ -1,7 +1,7 @@
 import { Wrapper } from './styles';
 
 type TextProps = {
-  children?: React.ReactNode | JSX.Element | string;
+  children?: string;
   className?: string;
   variant?: 'display' | 'headline' | 'title' | 'subheader' | 'body' | 'caption';
   color?:

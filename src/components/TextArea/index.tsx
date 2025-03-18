@@ -1,5 +1,6 @@
 import { Wrapper } from './styles';
-import { Text } from '..';
+
+import Text from '../Text';
 
 type TextAreaProps = {
   className?: string;

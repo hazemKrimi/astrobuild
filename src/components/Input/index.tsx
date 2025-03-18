@@ -1,4 +1,5 @@
-import { Text } from '..';
+import Text from '../Text';
+
 import { Upload } from '../../assets';
 import { Wrapper } from './styles';
 

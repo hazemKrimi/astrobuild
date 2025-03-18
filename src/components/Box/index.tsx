@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { Wrapper } from './styles';
 
 export type BoxProps = {
   className?: string;
-  children?: React.ReactNode | JSX.Element | string;
+  children?: React.ReactNode | JSX.Element | JSX.Element[] | string;
+	ref?: React.Ref<HTMLElement>;
 
   onClick?: () => void;
   cursor?: 'pointer' | 'default';
@@ -38,11 +39,11 @@ export type BoxProps = {
 
   alignItems?: 'center' | 'flex-start' | 'flex-end' | 'stretch';
   justifyContent?:
-    | 'center'
-    | 'flex-start'
-    | 'flex-end'
-    | 'space-between'
-    | 'space-around';
+  | 'center'
+  | 'flex-start'
+  | 'flex-end'
+  | 'space-between'
+  | 'space-around';
   alignSelf?: 'center' | 'flex-start' | 'flex-end';
   justifySelf?: 'center' | 'flex-start' | 'flex-end';
 
@@ -86,14 +87,12 @@ export type BoxProps = {
   textDecoration?: string;
 };
 
-const Box = React.forwardRef<HTMLDivElement, BoxProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <Wrapper {...props} draggable='false' ref={ref}>
-        {children}
-      </Wrapper>
-    );
-  }
-);
+function Box({ children, ref, ...props }: BoxProps) {
+  return (
+    <Wrapper {...props} draggable='false' ref={ref}>
+      {children}
+    </Wrapper>
+  );
+};
 
 export default Box;

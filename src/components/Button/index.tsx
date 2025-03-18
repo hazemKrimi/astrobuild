@@ -1,4 +1,5 @@
-import { Spinner } from '..';
+import Spinner from '../Spinner';
+
 import { Wrapper } from './styles';
 
 type ButtonProps = {
@@ -6,8 +7,8 @@ type ButtonProps = {
   size?: 'small' | 'big';
   variant?: 'primary-action' | 'secondary-action' | 'outlined' | 'text';
   type?: 'submit' | 'button' | 'reset';
-  iconLeft?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
-  iconRight?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
   fullWidth?: boolean;
   loading?: boolean;
   disabled?: boolean;

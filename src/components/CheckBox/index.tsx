@@ -1,19 +1,19 @@
 import { Wrapper } from './styles';
-import { Text } from '..';
+
+import Text from '../Text';
+
 import { Check } from '../../assets';
 
 type CheckBoxProps = {
   className?: string;
   color?: 'client' | 'productOwner' | 'developer' | 'admin';
   label: string;
-  name: string;
   checked: boolean;
   onClick: () => void;
 };
 
 const CheckBox = ({
   label,
-  name,
   checked,
   onClick,
   ...props

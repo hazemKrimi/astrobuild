@@ -1,19 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Alert from '.';
+import Link from '.';
 
 const meta = {
-  title: 'Alert',
-  component: Alert,
+  title: 'Link',
+  component: Link,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
-    text: { control: 'text' },
-    color: { options: ['client', 'productOwner', 'developer', 'admin'] },
+    color: { options: ['success', 'error', 'warning', 'black'] },
   },
-} satisfies Meta<typeof Alert>;
+} satisfies Meta<typeof Link>;
 
 export default meta;
 
@@ -21,7 +20,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
-    text: 'Alert',
-		color: 'client'
+		color: 'success',
+		children: 'Link',
+		url: true,
+		href: 'https://hazemkrimi.tech',
+		target: '_blank'
   },
 };

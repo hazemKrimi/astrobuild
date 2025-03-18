@@ -16,7 +16,7 @@ type ImagePreviewProps = {
   error?: boolean;
   errorMessage?: string;
   name?: string;
-  image: { name: string; src: string } | undefined;
+  image?: { name: string; src: string } | undefined;
   deletable?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onDelete?: () => void;

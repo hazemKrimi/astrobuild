@@ -1,5 +1,6 @@
 import { Wrapper } from './styles';
-import { Search as SearchIcon } from '../../assets';
+
+import SearchIcon from '../../assets/icons/search.svg?react';
 
 type SearchProps = {
   className?: string;

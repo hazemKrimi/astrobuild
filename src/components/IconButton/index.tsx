@@ -3,7 +3,7 @@ import { Wrapper } from './styles';
 type IconButtonProps = {
   color?: 'client' | 'productOwner' | 'developer' | 'admin';
   size?: 'small' | 'medium' | 'big';
-  icon?: React.FunctionComponentElement<React.SVGProps<SVGSVGElement>>;
+  icon?: React.ReactNode;
   onClick: () => void;
 };
 

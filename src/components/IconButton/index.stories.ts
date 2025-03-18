@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Alert from '.';
+import IconButton from '.';
 
 const meta = {
-  title: 'Alert',
-  component: Alert,
+  title: 'IconButton',
+  component: IconButton,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
-    text: { control: 'text' },
     color: { options: ['client', 'productOwner', 'developer', 'admin'] },
+    size: { options: ['small', 'medium', 'big'] },
   },
-} satisfies Meta<typeof Alert>;
+} satisfies Meta<typeof IconButton>;
 
 export default meta;
 
@@ -21,7 +21,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
-    text: 'Alert',
-		color: 'client'
+		color: 'admin',
+		size: 'medium',
+		onClick: () => window.alert('Hello, World!')
   },
 };

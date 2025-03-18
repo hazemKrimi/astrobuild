@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Alert from '.';
+import CheckBox from '.';
 
 const meta = {
-  title: 'Alert',
-  component: Alert,
+  title: 'CheckBox',
+  component: CheckBox,
   parameters: {
     layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
-    text: { control: 'text' },
     color: { options: ['client', 'productOwner', 'developer', 'admin'] },
+    label: { control: 'text' },
   },
-} satisfies Meta<typeof Alert>;
+} satisfies Meta<typeof CheckBox>;
 
 export default meta;
 
@@ -21,7 +21,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
-    text: 'Alert',
-		color: 'client'
+		color: 'admin',
+		label: 'Hello, World!',
+		checked: false,
+		onClick: () => window.alert('Clicked!'),
   },
 };
