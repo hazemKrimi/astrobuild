@@ -5,6 +5,7 @@ export type BoxProps = {
   className?: string;
   children?: React.ReactNode | JSX.Element | JSX.Element[] | string;
 	ref?: React.Ref<HTMLElement>;
+  id?: string;
 
   onClick?: () => void;
   cursor?: 'pointer' | 'default';
